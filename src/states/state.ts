@@ -1,0 +1,70 @@
+import { atom } from 'recoil'
+
+const localStorageEffect =
+  (
+    //@ts-ignore
+    key,
+  ) =>
+  //@ts-ignore
+  ({ setSelf, onSet }) => {
+    const savedValue = localStorage.getItem(key)
+    if (savedValue != null && savedValue != 'undefined') {
+      setSelf(JSON.parse(savedValue))
+    }
+    //@ts-ignore
+    onSet((newValue) => {
+      //@ts-ignore
+      if (newValue instanceof DefaultValue) {
+        localStorage.removeItem(key)
+      } else {
+        localStorage.setItem(key, JSON.stringify(newValue))
+      }
+    })
+  }
+
+export const sidbarSelectionState = atom({
+  key: 'dashboardState',
+  default: '',
+})
+
+export const role = atom({
+  key: 'role',
+  default: 'admin',
+})
+
+export const loaderState = atom({
+  key: 'LoaderState',
+  default: false,
+})
+
+export const alertState = atom({
+  key: 'alertState',
+  default: false,
+})
+
+export const alertTextState = atom({
+  key: 'alertText',
+  default: 'Success',
+})
+
+export const alertTypeState = atom({
+  key: 'alerttype',
+  default: '',
+})
+
+// <STUDENT>
+export const studentListState = atom({
+  key: 'studentlist',
+  default: [],
+})
+
+export const notificationState = atom({
+  key: 'studentlist',
+  default: [],
+})
+
+export const selectedAppState = atom({
+  key: 'selectedAppState',
+  default: '',
+  effects_UNSTABLE: [localStorageEffect('selectedAppState')],
+})
