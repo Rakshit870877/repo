@@ -11,9 +11,10 @@ function IndexPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          flexDirection: 'column',
-          height: 'calc(100vh - 142px)',
+          flexDirection: 'row',
+          // height: 'calc(100vh - 142px)',
           borderRadius: '12px',
+          margn: 'auto',
         }}
       >
         <Typography variant="h1"></Typography>

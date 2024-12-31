@@ -132,6 +132,11 @@ const DashboardLayout = () => {
           sx={{
             color: theme.palette.secondary.light,
             fontSize: '40px',
+
+            color: theme.palette.primary.light,
+            '&:hover': {
+              color: theme.palette.primary.main, // Change the color to blue on hover
+            },
           }}
         />
       ),
@@ -143,6 +148,11 @@ const DashboardLayout = () => {
           sx={{
             color: theme.palette.secondary.light,
             fontSize: '40px',
+
+            color: theme.palette.primary.light,
+            '&:hover': {
+              color: theme.palette.primary.main, // Change the color to blue on hover
+            },
           }}
         />
       ),
@@ -244,6 +254,7 @@ const DashboardLayout = () => {
   const handleLogout = () => {
     // Add your logout logic here
     console.log('Logout clicked')
+    navigate('/login')
   }
   return (
     <ThemeProvider theme={theme}>
@@ -344,7 +355,10 @@ const DashboardLayout = () => {
                     textAlign: 'center',
                     alignItems: 'center',
                   }}
-                  onClick={() => handleSidebarClick(item.label)}
+                  onClick={() => {
+                    handleSidebarClick(item.label)
+                    navigate(item.label.toLocaleLowerCase())
+                  }}
                 >
                   <Stack>
                     <Item>
@@ -352,6 +366,13 @@ const DashboardLayout = () => {
                         sx={{
                           textAlign: 'center',
                           justifyContent: 'center',
+                          color: selectedApp === item.label ? theme.palette.primary.light : 'inherit', // Change color if selected
+                          '&:hover': {
+                            color: theme.palette.primary.main, // Change the color to blue on hover
+                          },
+                        }}
+                        onClick={() => {
+                          navigate(item.label.toLocaleLowerCase())
                         }}
                       >
                         {item.icon}
@@ -418,7 +439,7 @@ const DashboardLayout = () => {
                   // justifyContent: isDrawerOpen ? 'flex-start' : 'center',
                   textAlign: 'center',
                   alignItems: 'center',
-                  backgroundColor: 'pink',
+                  // backgroundColor: 'pink',
                 }}
                 onClick={handleLogout}
               >

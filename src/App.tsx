@@ -138,7 +138,7 @@ function App() {
                 <Route path="driver" element={<DriverList />} />
                 <Route path="users" element={<UserList />} />
                 <Route path="users/add" element={<UserAdd />} />
-                <Route path="dashboard" element={<Dashboard />} />
+                {/* <Route path="dashboard" element={<Dashboard />} /> */}
                 <Route path="logs" element={<LogsList />} />
                 <Route path="logs/add" element={<NewLog />} />
                 <Route path="schedule" element={<Scheduler />} />
@@ -164,7 +164,7 @@ function App() {
                 <Route path="driver" element={<DriverList />} />
                 <Route path="users" element={<UserList />} />
                 <Route path="users/add" element={<UserAdd />} />
-                <Route path="dashboard" element={<Dashboard />} />
+                {/* <Route path="dashboard" element={<Dashboard />} /> */}
                 <Route path="logs" element={<LogsList />} />
                 <Route path="logs/add" element={<NewLog />} />
                 <Route path="schedule" element={<Scheduler />} />

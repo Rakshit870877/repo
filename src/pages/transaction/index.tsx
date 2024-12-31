@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box, Button, Typography, Chip, TextField, Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { useTheme } from '@emotion/react'
+// import { useTheme } from '@emotion/react'
 
 interface Transaction {
   id: string
@@ -28,7 +29,7 @@ interface Transaction {
   }
 }
 
-const theme = useTheme()
+// const theme = useTheme()
 const transactionsData: Transaction[] = [
   {
     id: 'INSA0023',
@@ -83,8 +84,9 @@ const transactionsData: Transaction[] = [
 const TransactionPage: React.FC = () => {
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  let theme = useTheme()
 
-  const theme = useTheme()
+  // const theme = useTheme()
   const columns: GridColDef[] = [
     {
       field: 'id',
@@ -154,6 +156,7 @@ const TransactionPage: React.FC = () => {
       <DataGrid
         rows={rows}
         columns={columns}
+        //@ts-ignore
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
@@ -177,8 +180,21 @@ const TransactionPage: React.FC = () => {
 
       {/* Modal for Transaction Details */}
       <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ backgroundColor: theme.palette.primary.main, color: '#fff', textAlign: 'center' }}>Transaction Details</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+          sx={{
+            //@ts-ignore
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+            textAlign: 'center',
+          }}
+        >
+          Transaction Details
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            marginTop: '10px',
+          }}
+        >
           {selectedTransaction && (
             <Box>
               {/* Transaction ID and Status */}
