@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Button, Drawer, Grid, TextField, Typography, Select, MenuItem, FormControl, InputLabel, Divider, useTheme, Avatar } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
+import VerifyDocumentModal from '@/components/verify-document'
 // import { theme } from '@/contants/theme'
 const mockData = [
   {
@@ -12,30 +13,133 @@ const mockData = [
     idProof: 'Passport',
     addressProof: 'Utility Bill',
     verificationStatus: 'Pending',
+    pemanentAddress: {
+      country: 'South Africa',
+      zipCode: '233002',
+      state: 'CapTown',
+      city: 'Labnon',
+    },
+    currentAddress: {
+      country: 'South Africa',
+      zipCode: '233002',
+      state: 'CapTown',
+      city: 'Labnon',
+    },
+
+    kyc: {
+      idProof: {
+        idType: 'Pasport',
+        verificationType: 'Sybrin',
+        documentStatus: 'uploaded/NotUploaded',
+        documentLink: 'www.aws.....***.com',
+        verificationStatus: '',
+        documnentNumber: '23232323232',
+        expiryDate: '12/21/2021',
+        nameAsPerDocument: 'Chakshu Document',
+        issuingAuthoriy: 'SA Republic',
+        additionalComment: '',
+      },
+
+      addressProof: {
+        idType: 'Pasport',
+        verificationType: 'Sybrin',
+        documentStatus: 'uploaded/NotUploaded',
+        documentLink: 'www.aws.....***.com',
+        verificationStatus: '',
+        documnentNumber: '23232323232',
+        expiryDate: '12/21/2021',
+        nameAsPerDocument: 'Chakshu Document',
+        issuingAuthoriy: 'SA Republic',
+        additionalComment: '',
+      },
+
+      incomeProof: {
+        idType: 'Passport',
+        verificationType: 'Sybrin',
+        documentStatus: 'uploaded/NotUploaded',
+        documentLink: 'www.aws.....***.com',
+        verificationStatus: '',
+        documnentNumber: '23232323232',
+        expiryDate: '12/21/2021',
+        nameAsPerDocument: 'Chakshu Document',
+        issuingAuthoriy: 'SA Republic',
+        additionalComment: '',
+        failureCause: 'Poor Qulaity Image',
+      },
+    },
     dob: '1990-05-20',
     phone: '+91 1234567890',
     email: 'chakshu@gmail.com',
-    address: '123, Victoria Street, South Africa',
     kycSubmittedOn: '2024-01-01',
     verifiedOn: 'N/A',
-    comments: 'Under review for address proof.',
   },
   {
     id: 2,
-    kycId: 'KYCIN0013',
-    customerName: 'John Doe',
-    nationality: 'American',
-    residentCountry: 'USA',
-    idProof: 'Driving License',
-    addressProof: 'Tax Document',
-    verificationStatus: 'Verified',
-    dob: '1985-07-15',
-    phone: '+1 9876543210',
-    email: 'john.doe@gmail.com',
-    address: '456, Elm Street, New York, USA',
-    kycSubmittedOn: '2024-01-15',
-    verifiedOn: '2024-01-20',
-    comments: 'All documents verified successfully.',
+    kycId: 'KYCIN0012',
+    customerName: 'Chakshu Chopra',
+    nationality: 'Indian',
+    residentCountry: 'South Africa',
+    idProof: 'Passport',
+    addressProof: 'Utility Bill',
+    verificationStatus: 'Pending',
+    pemanentAddress: {
+      country: 'South Africa',
+      zipCode: '233002',
+      state: 'CapTown',
+      city: 'Labnon',
+    },
+    currentAddress: {
+      country: 'South Africa',
+      zipCode: '233002',
+      state: 'CapTown',
+      city: 'Labnon',
+    },
+
+    kyc: {
+      idProof: {
+        idType: 'Pasport',
+        verificationType: 'Sybrin',
+        documentStatus: 'uploaded/NotUploaded',
+        documentLink: 'www.aws.....***.com',
+        verificationStatus: '',
+        documnentNumber: '23232323232',
+        expiryDate: '12/21/2021',
+        nameAsPerDocument: 'Chakshu Document',
+        issuingAuthoriy: 'SA Republic',
+        additionalComment: '',
+      },
+
+      addressProof: {
+        idType: 'Pasport',
+        verificationType: 'Sybrin',
+        documentStatus: 'uploaded/NotUploaded',
+        documentLink: 'www.aws.....***.com',
+        verificationStatus: '',
+        documnentNumber: '23232323232',
+        expiryDate: '12/21/2021',
+        nameAsPerDocument: 'Chakshu Document',
+        issuingAuthoriy: 'SA Republic',
+        additionalComment: '',
+      },
+
+      incomeProof: {
+        idType: 'Pasport',
+        verificationType: 'Sybrin',
+        documentStatus: 'uploaded/NotUploaded',
+        documentLink: 'www.aws.....***.com',
+        verificationStatus: '',
+        documnentNumber: '23232323232',
+        expiryDate: '12/21/2021',
+        nameAsPerDocument: 'Chakshu Document',
+        issuingAuthoriy: 'SA Republic',
+        additionalComment: '',
+      },
+    },
+    dob: '1990-05-20',
+    phone: '+91 1234567890',
+    email: 'chakshu@gmail.com',
+    kycSubmittedOn: '2024-01-01',
+    verifiedOn: 'N/A',
   },
 ]
 
@@ -50,6 +154,7 @@ const KYCPage = () => {
   const [filteredData, setFilteredData] = useState(mockData)
   const [selectedKYC, setSelectedKYC] = useState(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [selectedVerifcationOpen, setselectedVerifcationOpen] = useState(false)
 
   const handleFilterChange = (key: string, value: string) => {
     setFilterValues((prev) => ({ ...prev, [key]: value }))
@@ -77,15 +182,14 @@ const KYCPage = () => {
   }
 
   const handleClose = () => {
-     //@ts-ignore
-    setOpen(false)
-    
-    //@ts-ignore
+    console.log('thi is the data')
+    setselectedVerifcationOpen(false)
   }
   return (
    
     <Box padding={3}>
-       <h1>fadsfas</h1>
+      <VerifyDocumentModal open={selectedVerifcationOpen} onClose={handleClose}></VerifyDocumentModal>
+
       <Typography variant="h4" gutterBottom>
         <strong>Know-Your Customer</strong>
       </Typography>
@@ -266,11 +370,10 @@ const KYCPage = () => {
 
       <Drawer
         anchor="right"
-         //@ts-ignore
-        open={open}
-        onClose={handleClose}
+        open={isDrawerOpen}
+        onClose={closeDrawer}
         PaperProps={{
-          sx: { width: '70%', height: '100%', padding: 4 },
+          sx: { width: '70%', height: '100%', padding: 1 },
         }}
       >
         <Box
@@ -311,20 +414,22 @@ const KYCPage = () => {
                     <TextField label="Residence Country" variant="filled" defaultValue="South Africa" />
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant="subtitle1">Permanent Address</Typography>
-                    <TextField label="Address" fullWidth defaultValue="Indian" />
+                    <Typography variant="caption" sx={{ color: 'grey', marginBottom: '1000px' }}>
+                      Permanent Address
+                    </Typography>
+                    <TextField label="Address" variant="filled" fullWidth defaultValue="Indian" />
                     <Grid container spacing={2} mt={1}>
                       <Grid item xs={3}>
-                        <TextField label="City" fullWidth defaultValue="South Africa" />
+                        <TextField label="City" variant="filled" fullWidth defaultValue="South Africa" />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="State" fullWidth defaultValue="South Africa" />
+                        <TextField label="State" variant="filled" fullWidth defaultValue="South Africa" />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Zip Code" fullWidth defaultValue="South Africa" />
+                        <TextField label="Zip Code" variant="filled" fullWidth defaultValue="South Africa" />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Country" fullWidth defaultValue="South Africa" />
+                        <TextField label="Country" variant="filled" fullWidth defaultValue="South Africa" />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -337,28 +442,28 @@ const KYCPage = () => {
                         marginbutton: '2%',
                       }}
                     >
-                      Permanent Address
+                      Current Address
                     </Typography>
-                    <TextField label="Address" fullWidth defaultValue="Indian" />
+                    <TextField label="Address" fullWidth defaultValue="Indian" variant="filled" />
                     <Grid container spacing={2} mt={1}>
                       <Grid item xs={3}>
-                        <TextField label="City" fullWidth defaultValue="South Africa" />
+                        <TextField label="City" fullWidth defaultValue="South Africa" variant="filled" />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="State" fullWidth defaultValue="South Africa" />
+                        <TextField label="State" fullWidth defaultValue="South Africa" variant="filled" />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Zip Code" fullWidth defaultValue="South Africa" />
+                        <TextField label="Zip Code" fullWidth defaultValue="South Africa" variant="filled" />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Country" fullWidth defaultValue="South Africa" />
+                        <TextField label="Country" fullWidth defaultValue="South Africa" variant="filled" />
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-                <Box width={100} height={100} border="2px solid #000" borderRadius="50%" display="flex" alignItems="center" justifyContent="center">
+                <Box width={100} height={100} border="2px solid " borderRadius="50%" display="flex" alignItems="center" justifyContent="center">
                   <Typography>Applicant Picture</Typography>
                 </Box>
                 <Typography mt={2} color="green">
@@ -369,29 +474,43 @@ const KYCPage = () => {
 
             {/* KYC Status Section */}
             <Box mt={4}>
-              <Typography variant="h6">KYC Status</Typography>
+              <Typography variant="h6">
+                <strong>KYC Status</strong>
+              </Typography>
               {['ID Proof', 'Address Proof', 'Income Proof'].map((proofType) => (
                 <Grid container spacing={2} alignItems="center" mt={1} key={proofType}>
                   <Grid item xs={2}>
-                    <FormControl fullWidth>
-                      <InputLabel>ID Type</InputLabel>
-                      <Select defaultValue="Passport">
-                        <MenuItem value="Passport">Passport</MenuItem>
-                        <MenuItem value="ID Card">ID Card</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <TextField label="ID Type" fullWidth defaultValue="Passport" />
                   </Grid>
                   <Grid item xs={2}>
                     <TextField label="Verification Type" fullWidth defaultValue="Auto (Sybrin)" />
                   </Grid>
                   <Grid item xs={2}>
-                    <Button variant="outlined">Uploaded</Button>
+                    <TextField label="Document Status" fullWidth defaultValue="Uploaded" />
                   </Grid>
+                  <Grid item xs={2}>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        textAlign: 'center',
+                      }}
+                    >
+                      <u
+                        onClick={() => {
+                          setselectedVerifcationOpen(true)
+                        }}
+                      >
+                        view more
+                      </u>
+                    </Typography>
+                    {/* <Button variant="outlined">Uploaded</Button> */}
+                  </Grid>
+
                   <Grid item xs={2}>
                     <Typography
                       style={{
                         backgroundColor: proofType === 'ID Proof' ? '#C8E6C9' : proofType === 'Address Proof' ? '#FFEEBA' : '#FFCDD2',
-                        padding: '4px 8px',
+                        // padding: '4px 8px',
                         borderRadius: '4px',
                         textAlign: 'center',
                       }}
@@ -399,7 +518,7 @@ const KYCPage = () => {
                       {proofType === 'ID Proof' ? 'Verified' : proofType === 'Address Proof' ? 'Pending' : 'Failed'}
                     </Typography>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={2}>
                     <TextField label="Additional Comments" fullWidth defaultValue="comment" />
                   </Grid>
                 </Grid>
@@ -408,17 +527,10 @@ const KYCPage = () => {
 
             {/* Buttons */}
             <Box mt={4} display="flex" justifyContent="flex-end">
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ marginRight: 8 }}
-                onClick={() => {
-                  setIsDrawerOpen(false)
-                }}
-              >
+              <Button variant="contained" color="primary" style={{ marginRight: 8 }} onClick={handleClose}>
                 Save
               </Button>
-              <Button variant="contained" color="success">
+              <Button variant="contained" color="success" onClick={handleClose}>
                 Save and Verify
               </Button>
             </Box>
