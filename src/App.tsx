@@ -40,6 +40,9 @@ import TransactionPage from './pages/transaction'
 import LoaderBackdrop from './components/loader/loader'
 import CustomSnackbar from './components/customsnackbar/snackbar'
 import KYCPage from './pages/kyc'
+import ApplicantPage from './pages/applicant'
+import CustomerDatabase from './pages/customer-database'
+// import ApplicantPage from './pages/applicant'
 
 // const { VITE_APP_VAPID_KEY } = import.meta.env
 
@@ -155,10 +158,12 @@ function App() {
                 {/* <Route path="driver/add" element={<CreateDriver />} /> */}
                 <Route path="transaction" element={<TransactionPage />} />
                 <Route path="kyc" element={<KYCPage />} />
+                <Route path='applicant' element={<ApplicantPage/>}/>
                 <Route path="driver" element={<DriverList />} />
                 <Route path="users" element={<UserList />} />
                 {/* <Route path="users/add" element={<UserAdd />} /> */}
                 <Route path="dashboard" element={<Dashboard />} />
+                <Route path="customer" element={<CustomerDatabase/>}/>
                 <Route path="logs" element={<LogsList />} />
                 <Route path="logs/add" element={<NewLog />} />
                 {/* <Route path="schedule" element={<Scheduler />} /> */}
@@ -177,6 +182,7 @@ function App() {
                 <Route path="schedule" element={<Scheduler />} />
 
                 <Route path="*" element={<IndexPage />} />
+                {/* <Route path="applicant" element={<ApplicantPage/>}/> */}
               </Route>
             )}
 

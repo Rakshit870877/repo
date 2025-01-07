@@ -40,6 +40,7 @@ const mockData = [
 ]
 
 const KYCPage = () => {
+  console.log("sdffsdfas")
   const theme = useTheme()
   const [filterValues, setFilterValues] = useState({
     kycId: '',
@@ -76,10 +77,15 @@ const KYCPage = () => {
   }
 
   const handleClose = () => {
+     //@ts-ignore
     setOpen(false)
+    
+    //@ts-ignore
   }
   return (
+   
     <Box padding={3}>
+       <h1>fadsfas</h1>
       <Typography variant="h4" gutterBottom>
         <strong>Know-Your Customer</strong>
       </Typography>
@@ -105,6 +111,7 @@ const KYCPage = () => {
                 fontWeight: 'bold',
               },
             }}
+            //@ts-ignore
             sx={{
               // Label
               '& .MuiInputLabel-standard': {
@@ -249,6 +256,7 @@ const KYCPage = () => {
               ),
             },
           ]}
+           //@ts-ignore 
           pageSize={5}
           rowsPerPageOptions={[5]}
         />
@@ -258,13 +266,15 @@ const KYCPage = () => {
 
       <Drawer
         anchor="right"
+         //@ts-ignore
         open={open}
         onClose={handleClose}
         PaperProps={{
           sx: { width: '70%', height: '100%', padding: 4 },
         }}
       >
-        <Box>
+        <Box
+        >
           <Box p={3}>
             {/* Header */}
             <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
