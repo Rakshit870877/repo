@@ -1,6 +1,6 @@
 import { BaseService } from './base.service'
 import api1 from './apis/api1'
-import { BaseResponse, LoginResponse, Loginreq } from '@/types/auth.type'
+import { BaseResponse, CustomerResponse, LoginResponse, Loginreq } from '@/types/auth.type'
 import { LocalStorageService } from '../helpers/local-storage-service'
 // import instance from "../services/apis/api1"
 import axios, { AxiosResponse } from 'axios'
@@ -63,17 +63,8 @@ class AuthService extends BaseService {
     }
   }
 
-  async loginAdmin(payload: { email: String; password: String; notification_token: String }): Promise<{
-    message: String
-    access_token: any
-    refresh_token: any
-    user: {
-      email: string
-      user_id: String
-      role: String
-    }
-  }> {
-    let url = '/users/login'
+  async loginAdmin(payload: { email: String; password: String; notification_token?: String }): Promise<CustomerResponse> {
+    let url = '/user/login'
     try {
       let { data } = await api1.post(url, payload)
       return data

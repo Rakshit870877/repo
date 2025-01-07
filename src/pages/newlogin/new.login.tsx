@@ -1,20 +1,49 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, TextField, Button, Box, Typography, InputAdornment, IconButton, useTheme } from '@mui/material'
+import { Grid, TextField, Button, Box, Typography, InputAdornment, IconButton, useTheme, Snackbar } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { AuthService } from '@/services/auth.service'
 import { LocalStorageService } from '@/helpers/local-storage-service'
 import { Logo } from '@/assets/images' // Assuming the logo is properly imported
-
+import { useRecoilState } from 'recoil'
+import { alertState, alertTextState, alertTypeState, loaderState } from '@/states/state'
+import LoaderBackdrop from '@/components/loader/loader'
+import CustomSnackbar from '@/components/customsnackbar/snackbar'
+import CloseIcon from '@mui/icons-material/Close'
 const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [text, setText] = useState('')
+  const [type, setType] = useState('')
+  const [open, setOpen] = useState(false)
+  const [commonloader, setcommonloader] = useRecoilState(loaderState)
+
+  const [openSnackbar, setOpenSnackBar] = useState(false)
 
   const auth_service = new AuthService()
   const local_service = new LocalStorageService()
   const navigate = useNavigate()
   const theme = useTheme()
+
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpen(false)
+  }
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  )
 
   useEffect(() => {
     if (local_service.get_accesstoken()) {
@@ -24,6 +53,8 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
+      // setcommonloader(true)
+
       auth_service
         .loginAdmin({
           email,
@@ -31,12 +62,22 @@ const LoginPage = () => {
           notification_token: '',
         })
         .then((data) => {
-          local_service.set_accesstoken(data?.access_token)
-          local_service.set_user(data?.user)
-          local_service.set_role(data?.user?.role)
-
-          if (data?.access_token) {
-            navigate('/dashboard')
+          console.log(data)
+          if (data.success == true) {
+            setText('User SuccesFully Logged In')
+            setType('success')
+            setOpen(true)
+            local_service.set_accesstoken(data?.customer.token)
+            local_service.set_user(data?.customer)
+            local_service.set_role(data?.customer?.role)
+            if (data?.customer?.token) {
+              navigate('/transaction')
+            }
+          } else {
+            console.log('i m in the not success page')
+            setText('Unable to Verify Your Identity')
+            setType('error')
+            setOpen(true)
           }
         })
         .catch((err) => {
@@ -59,6 +100,10 @@ const LoginPage = () => {
         backgroundColor: 'red',
       }}
     >
+      <LoaderBackdrop openloader={commonloader} />
+
+      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} message={text} action={action} />
+      {/* <CustomSnackbar /> */}
       <Box
         sx={{
           height: '100%',

@@ -1,222 +1,154 @@
-import React, { useEffect, useState } from 'react'
-import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid'
-import { Container, Box, Button, Typography, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import { UserService } from '@/services/user.service'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { useRecoilState } from 'recoil'
-import { alertState, alertTextState, alertTypeState, loaderState } from '@/states/state'
+import React, { useState } from 'react'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
-export interface User {
-  id: string
-  user_code: string
-  first_name: string
-  last_name: string
-  email: string
-  phone: string
-  created_at: string
-  role: string
-  notification_token: string
-}
-
-const UserList: React.FC = () => {
-  const user_service = new UserService()
-  const [users, setUsers] = useState<User[]>([])
-  const [openDialog, setOpenDialog] = useState(false)
-  const [editableUser, setEditableUser] = useState<Partial<User>>({})
-  const [text, setText] = useRecoilState(alertTextState)
-  const [type, setType] = useRecoilState(alertTypeState)
-  const [open, setOpen] = useRecoilState(alertState)
-  const [commonloader, setcommonloader] = useRecoilState(loaderState)
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    user_service.getUserList().then((data) => {
-      if (data) {
-        const filteredUsers = data.filter((user: User) => user.role !== 'admin')
-        setUsers(filteredUsers)
-      }
-    })
-  }, [])
-
-  const handleEditClick = (user: User) => {
-    setEditableUser(user)
-    setOpenDialog(true)
+const UserPage: React.FC = () => {
+  const payload = {
+    dataLength: 1,
+    success: true,
+    data: [
+      {
+        residentialAddress: {
+          address1: 'house no 4 , road streel factory ',
+          address2: 'Building no 302',
+          city: 'gurugram',
+          state: 'Haryana',
+          country: 'India',
+          zipCode: '987654',
+        },
+        postalAddress: {
+          address1: 'house no 4 , road streel gate ',
+          address2: 'Gali  no B - 03',
+          city: 'gurugram',
+          state: 'haryana',
+          country: 'India',
+          zipCode: '987654',
+        },
+        citizenshipDetails: {
+          birthCountry: 'India',
+          residenceCountry: 'SOUTH AFRICA',
+          citizenship: 'INDIAN',
+          passportNo: 'S87F8S7F8S7D8F',
+        },
+        salaryDetails: {
+          monthlySalary: '2,33,4443',
+          isSalaryAgree: true,
+        },
+        _id: '67729e446ae77a42f3b56220',
+        firstName: 'Pankaj',
+        middleName: 'Kumar',
+        lastName: 'Sethi',
+        email: 'pankaj.tomar@yopmail.com',
+        phone: '0909090909',
+        gender: 'Female',
+        dateOfBirth: '16-Dec-2024',
+        role: 'user',
+      },
+    ],
   }
 
-  const handleDialogClose = () => {
-    setOpenDialog(false)
-    setEditableUser({})
+  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [open, setOpen] = useState(false)
+
+  const handleRowClick = (params: any) => {
+    setSelectedUser(params.row)
+    setOpen(true)
   }
 
-  const handleInputChange = (field: keyof User, value: string) => {
-    setEditableUser((prev) => ({ ...prev, [field]: value }))
-  }
-
-  const handleSaveClick = () => {
-    if (editableUser.id) {
-      user_service
-        .editUser(
-          editableUser.id,
-
-          //@ts-ignore
-          editableUser,
-        )
-        .then((data) => {
-          if (data.id) {
-            setType('success')
-            setText('User Edited Successfully')
-            setOpen(true)
-            setTimeout(() => setOpen(false), 2000)
-
-            setUsers((prev) => prev.map((user) => (user.id === editableUser.id ? { ...user, ...data } : user)))
-            handleDialogClose()
-          } else {
-            setType('error')
-            setText('User Edit Failed')
-            setOpen(true)
-            setTimeout(() => setOpen(false), 2000)
-          }
-          setcommonloader(false)
-        })
-    }
-  }
-
-  const handleDeleteClick = (id: string) => {
-    user_service
-      .deleteUser(id)
-      .then(() => {
-        setUsers((prev) => prev.filter((user) => user.id !== id))
-
-        setType('success')
-        setText('User Deleted Successfully')
-        setOpen(true)
-        setTimeout(() => setOpen(false), 2000)
-      })
-      .catch(() => {
-        setType('error')
-        setText('User Deletion Failed')
-        setOpen(true)
-        setTimeout(() => setOpen(false), 2000)
-      })
+  const handleClose = () => {
+    setOpen(false)
+    setSelectedUser(null)
   }
 
   const columns: GridColDef[] = [
-    { field: 'user_code', headerName: 'User Code', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'first_name', headerName: 'First Name', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'last_name', headerName: 'Last Name', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'email', headerName: 'Email', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'phone', headerName: 'Phone', flex: 1, headerClassName: 'super-app-theme--header' },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-      renderCell: (params) => (
-        <Box display="flex" gap={1}>
-          <IconButton color="primary" onClick={() => handleEditClick(params.row)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton color="secondary" onClick={() => handleDeleteClick(params.row.id)}>
-            <DeleteIcon />
-          </IconButton>
-        </Box>
-      ),
-    },
+    { field: 'firstName', headerName: 'First Name', flex: 1 },
+    { field: 'lastName', headerName: 'Last Name', flex: 1 },
+    { field: 'email', headerName: 'Email', flex: 1 },
+    { field: 'phone', headerName: 'Phone', flex: 1 },
+    { field: 'gender', headerName: 'Gender', flex: 1 },
+    { field: 'role', headerName: 'Role', flex: 1 },
   ]
 
-  return (
-    <Box sx={{ padding: 2 }}>
-      <Container>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h5" color="primary">
-            Users
-          </Typography>
-          <Button variant="contained" onClick={() => navigate('add')}>
-            Add User
-          </Button>
-        </Box>
-        <Box
-          sx={{
-            borderRadius: 2,
-            boxShadow: 3,
-            width: '100%',
-            '& .super-app-theme--header': {
-              backgroundColor: '#005099',
-              color: 'white',
-            },
-          }}
-        >
-          <DataGrid
-            rows={users}
-            columns={columns}
-            //@ts-ignore
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            getRowId={(row) => row.id}
-            autoHeight
-            sx={{
-              [`& .${gridClasses.menuIcon}`]: {
-                visibility: 'visible',
-                width: 'auto',
-              },
-            }}
-          />
-        </Box>
+  const rows = payload.data.map((user) => ({
+    id: user._id,
+    ...user,
+  }))
 
-        {/* Edit User Dialog */}
-        <Dialog open={openDialog} onClose={handleDialogClose}>
-          <DialogTitle>Edit User</DialogTitle>
-          <DialogContent>
-            <TextField
-              fullWidth
-              label="First Name"
-              value={editableUser.first_name || ''}
-              onChange={(e) => handleInputChange('first_name', e.target.value)}
-              margin="dense"
-            />
-            <TextField
-              fullWidth
-              label="Last Name"
-              value={editableUser.last_name || ''}
-              onChange={(e) => handleInputChange('last_name', e.target.value)}
-              margin="dense"
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              value={editableUser.email || ''}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              margin="dense"
-            />
-            <TextField
-              fullWidth
-              label="Phone"
-              value={editableUser.phone || ''}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              margin="dense"
-            />
-            <TextField
-              fullWidth
-              label="Notification Token"
-              value={editableUser.notification_token || ''}
-              onChange={(e) => handleInputChange('notification_token', e.target.value)}
-              margin="dense"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDialogClose} color="secondary">
-              Cancel
-            </Button>
-            <Button onClick={handleSaveClick} color="primary">
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Container>
+  return (
+    <Box
+      p={4}
+      sx={{
+        // height: '100vh',
+        width: '73vw',
+        padding: 2,
+        '& .super-app-theme--header': {
+          backgroundColor: '#005099',
+          color: 'white',
+        },
+        // backgroundColor: theme.palette.primar,
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Users
+      </Typography>
+
+      <Box sx={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          onRowClick={handleRowClick}
+          sx={{
+            '& .MuiDataGrid-row:hover': { backgroundColor: '#f5f5f5' },
+          }}
+        />
+      </Box>
+
+      {/* Modal for User Details */}
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle>{selectedUser && `${selectedUser.firstName} ${selectedUser.lastName}'s Details`}</DialogTitle>
+        <DialogContent>
+          {selectedUser && (
+            <Box>
+              <Typography variant="h6">Personal Details</Typography>
+              <Typography>Gender: {selectedUser.gender}</Typography>
+              <Typography>Email: {selectedUser.email}</Typography>
+              <Typography>Phone: {selectedUser.phone}</Typography>
+              <Typography>Date of Birth: {selectedUser.dateOfBirth}</Typography>
+
+              <Typography variant="h6" mt={2}>
+                Residential Address
+              </Typography>
+              <Typography>
+                {selectedUser.residentialAddress.address1}, {selectedUser.residentialAddress.address2}
+              </Typography>
+              <Typography>
+                {selectedUser.residentialAddress.city}, {selectedUser.residentialAddress.state}, {selectedUser.residentialAddress.country},{' '}
+                {selectedUser.residentialAddress.zipCode}
+              </Typography>
+
+              <Typography variant="h6" mt={2}>
+                Citizenship Details
+              </Typography>
+              <Typography>Citizenship: {selectedUser.citizenshipDetails.citizenship}</Typography>
+              <Typography>Passport No: {selectedUser.citizenshipDetails.passportNo}</Typography>
+
+              <Typography variant="h6" mt={2}>
+                Salary Details
+              </Typography>
+              <Typography>Monthly Salary: {selectedUser.salaryDetails.monthlySalary}</Typography>
+              <Typography>Agreement: {selectedUser.salaryDetails.isSalaryAgree ? 'Yes' : 'No'}</Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
 
-export default UserList
+export default UserPage

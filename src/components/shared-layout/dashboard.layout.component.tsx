@@ -35,6 +35,9 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '@emotion/react'
 import Paper from '@mui/material/Paper'
 import GridViewIcon from '@mui/icons-material/GridView'
+import AccountBoxIcon from '@mui/icons-material/AccountBox'
+import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency'
+
 const RotatingImage = (
   //@ts-ignore
   { src, alt },
@@ -158,6 +161,40 @@ const DashboardLayout = () => {
       ),
       label: 'Transaction',
     },
+
+    {
+      icon: (
+        <ContactEmergencyIcon
+          sx={{
+            color: theme.palette.secondary.light,
+            fontSize: '40px',
+
+            color: theme.palette.primary.light,
+            '&:hover': {
+              color: theme.palette.primary.main, // Change the color to blue on hover
+            },
+          }}
+        />
+      ),
+      label: 'kyc',
+    },
+
+    {
+      icon: (
+        <AccountBoxIcon
+          sx={{
+            color: theme.palette.secondary.light,
+            fontSize: '40px',
+
+            color: theme.palette.primary.light,
+            '&:hover': {
+              color: theme.palette.primary.main, // Change the color to blue on hover
+            },
+          }}
+        />
+      ),
+      label: 'users',
+    },
   ]
 
   // const[alert]
@@ -255,10 +292,11 @@ const DashboardLayout = () => {
     // Add your logout logic here
     console.log('Logout clicked')
     navigate('/login')
+    local_service?.delete_eaccestoke()
   }
   return (
     <ThemeProvider theme={theme}>
-      <CustomSnackbar></CustomSnackbar>
+      {/* <CustomSnackbar></CustomSnackbar> */}
       <LoaderBackdrop openloader={openloader} imageSrc=".." />
       <AppBar position="sticky" sx={{ backgroundColor: theme.palette.primary.main, paddingBottom: 0 }}>
         <Toolbar>

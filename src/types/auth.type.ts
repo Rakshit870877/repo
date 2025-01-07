@@ -35,3 +35,58 @@ export interface User {
   user_id: string
   role: string
 }
+
+export interface CustomerResponse {
+  success: boolean
+  customer: Customer
+}
+
+export interface Customer {
+  residentialAddress: Address
+  postalAddress: Address
+  citizenshipDetails: CitizenshipDetails
+  salaryDetails: SalaryDetails
+  _id: string
+  firstName: string
+  middleName: string
+  lastName: string
+  email: string
+  password: string
+  gender: string
+  enableTwoFactor: boolean
+  currency: string
+  balance: number
+  profileImage: string | null
+  country: string
+  transactions: any[] // Replace `any[]` with a more specific type if known
+  dateOfBirth: string // ISO date string
+  kycVerified: boolean
+  role: string
+  addressVerified: boolean
+  createdAt: string // ISO date string
+  updatedAt: string // ISO date string
+  __v: number
+  phone: string
+  token: string
+}
+
+export interface Address {
+  address1: string
+  address2: string
+  city: string
+  state: string
+  country: string
+  zipCode: string
+}
+
+export interface CitizenshipDetails {
+  birthCountry: string
+  residenceCountry: string
+  citizenship: string
+  passportNo: string
+}
+
+export interface SalaryDetails {
+  monthlySalary: string // Consider parsing this to a number if needed
+  isSalaryAgree: boolean
+}
