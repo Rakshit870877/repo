@@ -36,10 +36,11 @@ import Message from './components/message/index'
 import 'react-toastify/dist/ReactToastify.css'
 import { ThemeProvider } from '@emotion/react'
 import { createTheme } from '@mui/material/styles'
-import TransactionPage from './pages/transaction'
+import NewTransactionPage from './pages/transaction/index'
 import LoaderBackdrop from './components/loader/loader'
 import CustomSnackbar from './components/customsnackbar/snackbar'
 import KYCPage from './pages/kyc'
+import SendMoneyPage from './pages/send-money'
 
 // const { VITE_APP_VAPID_KEY } = import.meta.env
 
@@ -138,7 +139,7 @@ function App() {
           <Routes>
             {currentrole == 'admin' ? (
               <Route path="/" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<DashboardLayout />} />}>
-                <Route path="transaction" element={<TransactionPage />} />
+                {/* <Route path="transaction" element={<TransactionPage />} /> */}
                 <Route path="driver/add" element={<CreateDriver />} />
                 <Route path="driver" element={<DriverList />} />
                 <Route path="users" element={<UserList />} />
@@ -153,7 +154,8 @@ function App() {
             ) : currentrole == 'user' ? (
               <Route path="/" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<DashboardLayout />} />}>
                 {/* <Route path="driver/add" element={<CreateDriver />} /> */}
-                <Route path="transaction" element={<TransactionPage />} />
+                <Route path="transaction" element={<NewTransactionPage />} />
+                <Route path="sendmoney" element={<SendMoneyPage />} />
                 <Route path="kyc" element={<KYCPage />} />
                 <Route path="driver" element={<DriverList />} />
                 <Route path="users" element={<UserList />} />

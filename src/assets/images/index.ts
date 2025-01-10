@@ -3,4 +3,6 @@ import NewLogo from './newlogo.png'
 import Thumbnail from './thumbnail.jpg'
 import LoginBack from './loginback.png'
 import LogoWhite from './logo_white.png'
-export { Logo, Thumbnail, LoginBack, LogoWhite }
+import Passport from './passport.jpg'
+import Chuks from './chuks.jpg'
+export { Logo, Thumbnail, LoginBack, LogoWhite, Passport, Chuks }

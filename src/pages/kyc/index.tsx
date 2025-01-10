@@ -1,7 +1,24 @@
 import React, { useState } from 'react'
-import { Box, Button, Drawer, Grid, TextField, Typography, Select, MenuItem, FormControl, InputLabel, Divider, useTheme, Avatar } from '@mui/material'
+import {
+  Box,
+  Button,
+  Drawer,
+  Grid,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Divider,
+  useTheme,
+  Avatar,
+  Chip,
+} from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import VerifyDocumentModal from '@/components/verify-document'
+import { Chuks } from '@/assets/images'
+import { Customer } from '@/types/customer.type'
 // import { theme } from '@/contants/theme'
 const mockData = [
   {
@@ -150,7 +167,7 @@ const KYCPage = () => {
     verificationStatus: '',
     country: '',
   })
-  const [filteredData, setFilteredData] = useState(mockData)
+  const [filteredData, setFilteredData] = useState<Array<Customer>>(mockData as any)
   const [selectedKYC, setSelectedKYC] = useState(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [selectedVerifcationOpen, setselectedVerifcationOpen] = useState(false)
@@ -344,6 +361,14 @@ const KYCPage = () => {
               headerName: 'Verification Status',
               flex: 1,
               headerClassName: 'super-app-theme--header',
+
+              renderCell: (params: any) => {
+                let color: 'success' | 'warning' | 'error' = 'success'
+                if (params.value === 'Pending') color = 'warning'
+                else if (params.value === 'Rejected') color = 'error'
+
+                return <Chip label={params.value} color={color} variant="outlined" />
+              },
             },
             {
               field: 'action',
@@ -383,6 +408,8 @@ const KYCPage = () => {
                   p: '0.5%',
                   color: 'white',
                   borderRadius: '10px',
+                  paddingLeft: '5%',
+                  paddingRight: '5%',
                 }}
               >
                 KYC ID - KYCIN0012
@@ -458,11 +485,19 @@ const KYCPage = () => {
                 </Grid>
               </Grid>
               <Grid item xs={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-                <Box width={100} height={100} border="2px solid " borderRadius="50%" display="flex" alignItems="center" justifyContent="center">
-                  <Typography>Applicant Picture</Typography>
-                </Box>
+                <Box
+                  width={100}
+                  component="img"
+                  src={Chuks}
+                  height={100}
+                  border="2px solid  green"
+                  borderRadius="50%"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                ></Box>
                 <Typography mt={2} color="green">
-                  Matched with ID Proof
+                  <strong>Matched with ID Proof</strong>
                 </Typography>
               </Grid>
             </Grid>

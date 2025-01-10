@@ -2,7 +2,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { Box, Typography, Avatar, List, ListItem, ListItemText, IconButton, Modal, Button, AppBar, ListItemIcon, Toolbar } from '@mui/material'
 import { styled } from '@mui/system'
-import { Logo, LogoVideo, LogoWhite } from '@/assets/images'
+import { Chuks, Logo, LogoVideo, LogoWhite } from '@/assets/images'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 // import { sidbarSelectionState, studentListState } from "../../states/state";
@@ -23,7 +23,7 @@ import CustomSnackbar from '../customsnackbar/snackbar'
 import { AddBox } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu'
 import Stack from '@mui/material/Stack'
-
+import ReactCountryFlag from 'react-country-flag'
 import HomeIcon from '@mui/icons-material/Home'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -37,6 +37,9 @@ import Paper from '@mui/material/Paper'
 import GridViewIcon from '@mui/icons-material/GridView'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency'
+import FlagSelector from '../flagselector'
+
+import { Us, Sa, Za } from 'react-flags-select'
 
 const RotatingImage = (
   //@ts-ignore
@@ -317,7 +320,7 @@ const DashboardLayout = () => {
               marginBottom: '6px',
             }}
           >
-            <Avatar>SK</Avatar>
+            <Avatar src={Chuks}>SK</Avatar>
 
             <Box ml={1}>
               <Typography
@@ -328,7 +331,7 @@ const DashboardLayout = () => {
                   color: 'white',
                 }}
               >
-                <strong>Welcome Admin </strong>
+                <strong>Chakshu Chopra </strong>
                 {/* {
                   //@ts-ignore
                   local_service.get_user()?.name
@@ -341,16 +344,29 @@ const DashboardLayout = () => {
                 } */}
               </Typography>
 
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  fontFamily: 'sans-serif',
-                  fontSize: '12px',
-                  color: 'white',
-                }}
-              >
-                {local_service.get_role() ? local_service.get_role()?.toLocaleUpperCase().replace(/"/g, '') : 'Siddhant Kaushik'}
-              </Typography>
+              <Stack direction="row">
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontFamily: 'sans-serif',
+                    fontSize: '12px',
+                    color: 'white',
+                  }}
+                >
+                  <strong>UID: 14242</strong>{' '}
+                  {/* {local_service.get_role() ? local_service.get_role()?.toLocaleUpperCase().replace(/"/g, '') : 'Siddhant Kaushik'} */}
+                </Typography>
+
+                <Za
+                  style={{
+                    height: '20px',
+                    width: '25px',
+                    marginLeft: '5%',
+                    // padding: '10px',
+                    borderRadius: '30%',
+                  }}
+                />
+              </Stack>
             </Box>
           </Box>
         </Toolbar>
@@ -405,9 +421,6 @@ const DashboardLayout = () => {
                           textAlign: 'center',
                           justifyContent: 'center',
                           color: selectedApp === item.label ? theme.palette.primary.light : 'inherit', // Change color if selected
-                          '&:hover': {
-                            color: theme.palette.primary.main, // Change the color to blue on hover
-                          },
                         }}
                         onClick={() => {
                           navigate(item.label.toLocaleLowerCase())

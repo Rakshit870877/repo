@@ -1,268 +1,292 @@
 import React, { useState } from 'react'
-import { Box, Button, Typography, Chip, TextField, Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  Typography,
+  Chip,
+  TextField,
+  Drawer,
+  ToggleButton,
+  ToggleButtonGroup,
+  useTheme,
+} from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { useTheme } from '@emotion/react'
-// import { useTheme } from '@emotion/react'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import { Navigate, useNavigate } from 'react-router-dom'
 
-interface Transaction {
-  id: string
-  sourceCountry: string
-  amount: number
-  status: 'Pending' | 'Closed'
-  details: {
-    sender: {
-      country: string
-      currency: string
-      amount: number
-      name: string
-      contact: string
-      reporting: string
-      bopCategory: number
-    }
-    receiver: {
-      country: string
-      currency: string
-      amount: number
-      name: string
-      contact: string
-    }
-  }
-}
-
-// const theme = useTheme()
-const transactionsData: Transaction[] = [
+const sampleInwardsData = [
   {
-    id: 'INSA0023',
-    sourceCountry: 'INDIA',
-    amount: 2000,
-    status: 'Closed',
-    details: {
-      sender: {
-        country: 'INDIA',
-        currency: 'INR',
-        amount: 9482.55,
-        name: 'SHIVANSH MATHUR',
-        contact: '+91 9999888822',
-        reporting: 'REPORTED TO RBI',
-        bopCategory: 417,
-      },
-      receiver: {
-        country: 'SOUTH AFRICA',
-        currency: 'ZAR',
-        amount: 2000,
-        name: 'KYLE',
-        contact: '+91 9999888822',
-      },
-    },
+    id: 'IMP11231',
+    destination: 'USA',
+    value: 1000,
+    currency: 'USD',
+    settlement: '2025-01-01',
+    destinationBank: 'Bank of America',
+    reportedToSARB: 'Yes',
+    date: '2025-01-02',
+    holderName: 'Siddhant kaushik',
+    accountNumber: '23322 23232 2323 343434',
+    bankCode: 'IC2345',
   },
   {
-    id: 'UKSA0089',
-    sourceCountry: 'United Kingdom',
-    amount: 23000,
-    status: 'Pending',
-    details: {
-      sender: {
-        country: 'UK',
-        currency: 'GBP',
-        amount: 23000,
-        name: 'JOHN DOE',
-        contact: '+44 1234567890',
-        reporting: 'REPORTED TO BOE',
-        bopCategory: 419,
-      },
-      receiver: {
-        country: 'SOUTH AFRICA',
-        currency: 'ZAR',
-        amount: 23000,
-        name: 'JANE DOE',
-        contact: '+91 8888888888',
-      },
-    },
+    id: 'IMP11232',
+    destination: 'UK',
+    value: 1500,
+    currency: 'GBP',
+    settlement: '2025-01-02',
+    destinationBank: 'HSBC',
+    reportedToSARB: 'No',
+    date: '2025-01-03',
+    holderName: 'Siddhant kaushik',
+    accountNumber: '23322 23232 2323 343434',
+    bankCode: 'IC2345',
   },
 ]
 
-const TransactionPage: React.FC = () => {
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  let theme = useTheme()
+const sampleOutwardsData = [
+  {
+    id: 'IMP11235',
+    destination: 'India',
+    value: 2000,
+    currency: 'INR',
+    settlement: '2025-01-04',
+    destinationBank: 'ICICI Bank',
+    reportedToSARB: 'Yes',
+    date: '2025-01-05',
+    holderName: 'Siddhant kaushik',
+    accountNumber: '23322 23232 2323 343434',
+    bankCode: 'IC2345',
+  },
+  {
+    id: 'IMP11239',
+    destination: 'Germany',
+    value: 2500,
+    currency: 'EUR',
+    settlement: '2025-01-06',
+    destinationBank: 'Deutsche Bank',
+    reportedToSARB: 'No',
+    date: '2025-01-07',
+    holderName: 'Siddhant kaushik',
+    accountNumber: '23322 23232 2323 343434',
+    bankCode: 'IC2345',
+  },
+]
 
-  // const theme = useTheme()
+const TransactionPage = () => {
   const columns: GridColDef[] = [
+    { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'destination', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'value', headerName: 'Value', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'settlement', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
     {
-      field: 'id',
-      headerName: 'Transaction ID',
-      headerClassName: 'super-app-theme--header',
-      flex: 1,
-    },
-    {
-      field: 'sourceCountry',
-      headerName: 'Source Country',
-      flex: 1,
-
-      headerClassName: 'super-app-theme--header',
-    },
-    {
-      field: 'amount',
-      headerName: 'Amount (ZAR)',
+      field: 'reportedToSARB',
+      headerName: 'Reported to SARB',
       flex: 1,
       headerClassName: 'super-app-theme--header',
+      renderCell: (params) => <Chip label={params.value} color={params.value === 'Yes' ? 'success' : 'error'} variant="outlined" size="small" />,
     },
-    { field: 'status', headerName: 'Status', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'date', headerName: 'Date', flex: 1, headerClassName: 'super-app-theme--header' },
     {
       field: 'action',
       headerName: 'Action',
       flex: 1,
       headerClassName: 'super-app-theme--header',
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          onClick={() => {
-            setSelectedTransaction(transactionsData.find((t) => t.id === params.row.id) || null)
-            setIsModalOpen(true)
-          }}
-        >
+        // <Button variant="contained" color="primary" onClick={() => handleViewMore(params.row)}>
+        //   View More
+        // </Button>
+        <Button variant="contained" color="primary" startIcon={<VisibilityIcon />} onClick={() => handleViewMore(params.row)}>
           View More
         </Button>
       ),
     },
   ]
 
-  const rows = transactionsData.map((transaction) => ({
-    id: transaction.id,
-    sourceCountry: transaction.sourceCountry,
-    amount: transaction.amount,
-    status: transaction.status,
-  }))
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
+  const [transactionData, setTransactionData] = useState(sampleInwardsData)
+  const [transactionDetails, setTransactionDetails] = useState(null)
+  const [transactionType, setTransactionType] = useState('inwards') // Default to 'inwards'
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedTransaction(null)
+  const handleViewMore = (row) => {
+    setTransactionDetails(row)
+    setDrawerOpen(true)
   }
 
+  const handleToggleTransactionType = (event, newType) => {
+    if (newType) {
+      setTransactionType(newType)
+      setTransactionData(newType === 'inwards' ? sampleInwardsData : sampleOutwardsData)
+    }
+  }
+
+  const closeDrawer = () => {
+    setDrawerOpen(false)
+  }
+  const theme = useTheme()
+  const navigate = useNavigate()
+
   return (
-    <Box
-      sx={{
-        // height: '100vh',
-        width: '73vw',
-        padding: 2,
-        '& .super-app-theme--header': {
-          backgroundColor: '#005099',
-          color: 'white',
-        },
-        // backgroundColor: theme.palette.primar,
-      }}
-    >
-      {/* DataGrid Section */}
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        //@ts-ignore
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        disableSelectionOnClick
+    <Box sx={{ width: '100%' }}>
+      <Typography variant="h4" gutterBottom>
+        <strong>Transactions</strong>
+      </Typography>
+      <ToggleButtonGroup value={transactionType} exclusive onChange={handleToggleTransactionType} sx={{ mb: 2 }}>
+        <ToggleButton value="inwards" sx={{ backgroundColor: '#005099', color: 'white' }}>
+          Inwards
+        </ToggleButton>
+        <ToggleButton value="outwards" sx={{ backgroundColor: '#005099', color: 'white' }}>
+          Outwards
+        </ToggleButton>
+      </ToggleButtonGroup>
+
+      <Box
+        marginTop={2}
         sx={{
-          width: '100%', // Make DataGrid fill the entire width
-          '& .MuiDataGrid-root': {
-            border: 'none',
-          },
-          '& .MuiDataGrid-cell': {
-            whiteSpace: 'nowrap', // Prevent text overflow
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          },
-          '@media (max-width: 600px)': {
-            '& .MuiDataGrid-root': {
-              fontSize: '0.8rem', // Adjust font size for small screens
-            },
+          width: '80vw',
+
+          '& .super-app-theme--header': {
+            backgroundColor: '#005099',
+            color: 'white',
           },
         }}
-      />
-
-      {/* Modal for Transaction Details */}
-      <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="sm" fullWidth>
-        <DialogTitle
-          sx={{
-            //@ts-ignore
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-            textAlign: 'center',
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
           }}
         >
-          Transaction Details
-        </DialogTitle>
-        <DialogContent
+          <div
+            style={{
+              alignSelf: 'flex-end',
+            }}
+          >
+            <Button
+              variant="outlined"
+              sx={{
+                marginBottom: '10%',
+              }}
+              onClick={(e) => {
+                // console.log()
+                navigate('/sendmoney')
+              }}
+            >
+              + Transaction
+            </Button>
+          </div>
+        </div>
+
+        <DataGrid
+          rows={transactionData}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          disableSelectionOnClick
           sx={{
-            marginTop: '10px',
+            '& .MuiDataGrid-root': {
+              border: '1 px solid blue',
+            },
+            '& .MuiDataGrid-cell': {
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            },
           }}
-        >
-          {selectedTransaction && (
-            <Box>
-              {/* Transaction ID and Status */}
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Transaction ID: {selectedTransaction.id}</Typography>
-                <Chip label={selectedTransaction.status} color={selectedTransaction.status === 'Pending' ? 'warning' : 'success'} />
-              </Box>
-              <Divider sx={{ my: 2 }} />
+        />
+      </Box>
 
-              {/* Sender Details */}
-              <Typography variant="subtitle1" fontWeight="bold">
-                Sender Details:
-              </Typography>
-              <Typography>Country: {selectedTransaction.details.sender.country}</Typography>
-              <Typography>Name: {selectedTransaction.details.sender.name}</Typography>
-              <Typography>
-                Amount: {selectedTransaction.details.sender.amount} {selectedTransaction.details.sender.currency}
-              </Typography>
-              <Typography>Contact: {selectedTransaction.details.sender.contact}</Typography>
-              <Typography>Reporting: {selectedTransaction.details.sender.reporting}</Typography>
-              <Divider sx={{ my: 2 }} />
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={closeDrawer}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: '60%',
+            padding: 2,
+            backgroundColor: 'white',
+          },
+        }}
+      >
+        {transactionDetails && (
+          <Box>
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{
+                marginBottom: 2,
+                color: 'white',
+                textAlign: 'center',
+                backgroundColor: theme.palette.primary.main,
+                width: '20%',
+                padding: '1%',
+                borderRadius: '3%',
+              }}
+            >
+              TRN ID- {transactionDetails.id}
+            </Typography>
+            <Chip label="Pending" color="warning" sx={{ marginBottom: 2 }} />
+            <Divider sx={{ my: 2 }} />
 
-              {/* Receiver Details */}
-              <Typography variant="subtitle1" fontWeight="bold">
-                Receiver Details:
-              </Typography>
-              <Typography>Country: {selectedTransaction.details.receiver.country}</Typography>
-              <Typography>Name: {selectedTransaction.details.receiver.name}</Typography>
-              <Typography>
-                Amount: {selectedTransaction.details.receiver.amount} {selectedTransaction.details.receiver.currency}
-              </Typography>
-              <Typography>Contact: {selectedTransaction.details.receiver.contact}</Typography>
-              <Divider sx={{ my: 2 }} />
-
-              {/* Confirm BOP Category */}
-              <Typography variant="subtitle1" fontWeight="bold">
-                Confirm BOP Category
-              </Typography>
-              <Grid container spacing={2} alignItems="center" mt={1}>
-                <Grid item xs={6}>
-                  <TextField
-                    label="From Sender"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    defaultValue={selectedTransaction.details.sender.bopCategory}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="From Receiver"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    defaultValue={selectedTransaction.details.sender.bopCategory}
-                  />
-                </Grid>
+            {/* Transaction Details Section */}
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ marginBottom: 2 }}>
+              Transaction Details
+            </Typography>
+            <Grid container spacing={2} mb={2}>
+              <Grid item xs={12} md={6}>
+                <TextField label="Destination" variant="filled" fullWidth defaultValue={transactionDetails.destination} size="small" disabled />
               </Grid>
-              <Divider sx={{ my: 2 }} />
+              <Grid item xs={12} md={6}>
+                <TextField label="Value" variant="filled" fullWidth defaultValue={transactionDetails.value} size="small" disabled />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField label="Currency" variant="filled" fullWidth defaultValue={transactionDetails.currency} size="small" disabled />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField label="Date" variant="filled" fullWidth defaultValue={transactionDetails.date} size="small" disabled />
+              </Grid>
+            </Grid>
 
-              {/* Confirm Button */}
-              <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }} onClick={() => console.log('Confirm clicked')}>
-                Confirm
-              </Button>
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
+            {/* Beneficiary Details Section */}
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ marginBottom: 2 }}>
+              Beneficiary Details
+            </Typography>
+            <Grid container spacing={2} mb={2}>
+              <Grid item xs={12} md={6}>
+                <TextField label="Account Number" variant="filled" fullWidth defaultValue={transactionDetails?.accountNumber} size="small" disabled />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField label="Bank" variant="filled" fullWidth defaultValue={transactionDetails?.destinationBank} size="small" disabled />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField label="Bank Code" variant="filled" fullWidth defaultValue={transactionDetails?.bankCode} size="small" disabled />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Account Holder Name"
+                  variant="filled"
+                  fullWidth
+                  defaultValue={transactionDetails?.holderName}
+                  size="small"
+                  disabled
+                />
+              </Grid>
+            </Grid>
+
+            <Divider sx={{ my: 2 }} />
+            {/* <Button variant="contained" color="primary" onClick={closeDrawer}>
+              Close
+            </Button> */}
+          </Box>
+        )}
+      </Drawer>
     </Box>
   )
 }

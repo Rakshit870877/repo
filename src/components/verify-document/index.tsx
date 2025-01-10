@@ -3,10 +3,11 @@ import { Box, Button, Dialog, DialogTitle, DialogContent, IconButton, TextField,
 import CloseIcon from '@mui/icons-material/Close'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 import { Document, Page } from 'react-pdf'
+import { Passport } from '@/assets/images'
 
 const VerifyDocumentModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
-  const [fileType, setFileType] = useState<'pdf' | 'image'>('pdf') // Example type
-  const [filePath, setFilePath] = useState('/path/to/sample.pdf') // Example file
+  const [fileType, setFileType] = useState<'pdf' | 'image'>('image') // Example type
+  const [filePath, setFilePath] = useState('../../assets/images/passport.jpg') // Example file
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -39,7 +40,7 @@ const VerifyDocumentModal = ({ open, onClose }: { open: boolean; onClose: () => 
                 <Page pageNumber={1} />
               </Document>
             ) : (
-              <img src={filePath} alt="Document" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+              <img src={Passport} alt="Document" style={{ maxWidth: '100%', maxHeight: '100%' }} />
             )}
           </Box>
 
