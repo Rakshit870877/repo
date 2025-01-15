@@ -149,6 +149,7 @@ const mockData = [
 ]
 
 const KYCPage = () => {
+  console.log("sdffsdfas")
   const theme = useTheme()
   const [filterValues, setFilterValues] = useState({
     kycId: '',
@@ -191,6 +192,7 @@ const KYCPage = () => {
     setselectedVerifcationOpen(false)
   }
   return (
+   
     <Box padding={3}>
       <VerifyDocumentModal open={selectedVerifcationOpen} onClose={handleClose} sampledata={selectedDocumentModal}></VerifyDocumentModal>
 
@@ -219,6 +221,7 @@ const KYCPage = () => {
                 fontWeight: 'bold',
               },
             }}
+            //@ts-ignore
             sx={{
               // Label
               '& .MuiInputLabel-standard': {
@@ -368,6 +371,7 @@ const KYCPage = () => {
               ),
             },
           ]}
+           //@ts-ignore 
           pageSize={5}
           rowsPerPageOptions={[5]}
         />
@@ -383,7 +387,8 @@ const KYCPage = () => {
           sx: { width: '70%', height: '100%', padding: 1 },
         }}
       >
-        <Box>
+        <Box
+        >
           <Box p={3}>
             {/* Header */}
             <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
