@@ -69,10 +69,10 @@ const users = [
   },
 ]
 const countries = [
-  { code: 'US', name: 'United States', currency: 'USD', forexRate: '1.0', flag: 'https://flagcdn.com/us.svg' },
-  { code: 'IN', name: 'India', currency: 'INR', forexRate: '74.5', flag: 'https://flagcdn.com/in.svg' },
-  { code: 'GB', name: 'United Kingdom', currency: 'GBP', forexRate: '0.75', flag: 'https://flagcdn.com/gb.svg' },
-  { code: 'ZA', name: 'South Africa', currency: 'ZAR', forexRate: '4.7', flag: 'https://flagcdn.com/za.svg' }, // Added South Africa
+  { code: 'US', name: 'United States', currency: 'USD', forexRate: '0.043', flag: 'https://flagcdn.com/us.svg' },
+  { code: 'IN', name: 'India', currency: 'INR', forexRate: '4.57', flag: 'https://flagcdn.com/in.svg' },
+  { code: 'GB', name: 'United Kingdom', currency: 'GBP', forexRate: '0.053', flag: 'https://flagcdn.com/gb.svg' },
+  // { code: 'ZA', name: 'South Africa', currency: 'ZAR', forexRate: '4.7', flag: 'https://flagcdn.com/za.svg' }, // Added South Africa
 ]
 
 const paymentGateways = [
@@ -102,10 +102,12 @@ const SendMoneyPage = () => {
   const [searchText, setSearchText] = useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
   const [tabValue, setTabValue] = useState('1')
+  const[selectedTime,setSelectedTime]=useState({})
   const [selectedTimeTableRow, setSelectedTimeTableRow] = useState<number | null>(null)
   const[finalamount,setFinalAmount]=useState(0)
   const[sourceCountry,setSourceCountry]=useState('ZAR')
   const[gatewayCharge,  setGatewayCharge]=useState(0)
+  const[selectedBenficary,setSelectedBenificary]=useState({})
 //   const[selected ]
 
 
@@ -123,9 +125,11 @@ const SendMoneyPage = () => {
   const[selectedTransferMethod,setSelectedTransferMethod]=useState("BankTransfer")
   
 useEffect(()=>{
-
+// console.log(se)
 
 },[amount])
+
+
 
   const handleCountryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const countryCode = event.target.value as string
@@ -139,7 +143,8 @@ useEffect(()=>{
     }
   }
   const handleRadioChange = (row: any) => {
-    console.log(row)
+    
+    setSelectedTime(row)
     setSelectedTimeTableRow(row.id)
     setSelectedTimeCharge(row.charges)
   }
@@ -284,6 +289,7 @@ useEffect(()=>{
           <Box>
             <Grid container spacing={2} marginBottom={2}>
               <Grid item xs={12} md={6}>
+
                 <TextField
                   //   label="Select User"
                   variant="filled"
@@ -493,7 +499,13 @@ useEffect(()=>{
         Time Charges: {  selecteTimeChange +" " +sourceCountry }
       </Typography>
       
-      <Button variant="contained" color="primary" onClick={() => setTabValue('2')}>
+      <Button variant="contained" color="primary" onClick={() => {
+        
+        setTabValue('2')
+          
+
+
+      }}>
               Continue
             </Button>
     </Box>
@@ -551,6 +563,7 @@ useEffect(()=>{
               <Grid item xs={12} md={6}>
 
               <Grid item xs={12} md={6}>
+
                 <TextField
                 disabled
                   //   label="Select User"
@@ -608,7 +621,7 @@ useEffect(()=>{
                 <TextField label="IFSC Code" variant="filled" fullWidth placeholder="Enter IFSC Code" />
               </Grid>
             </Grid> */}
-            <BeneficiaryForm></BeneficiaryForm>
+            <BeneficiaryForm selectedBenificary={selectedBenficary} setselectedBenficiary={setSelectedBenificary}></BeneficiaryForm>
 
             <Divider sx={{ marginY: 2 }} />
 
@@ -627,7 +640,32 @@ useEffect(()=>{
               </Grid> */}
             </Grid>
 
-            <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() => setTabValue('3')}>
+            <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() =>{ 
+
+              setTabValue('3')
+
+              console.log({
+               benificary:selectedBenficary,
+               transferMethod:selectedTransferMethod,
+                destinationCountry:selectedCountry,
+                selectedTimeMethod:selectedTime,
+                gateway:selectedGateway,
+                amount:amount,
+               user:selectedUser,
+               forex:forexRate,
+               timecharge:selectedTime?.time,
+               sourceCurrency:'Zar',
+              totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
+  
+
+
+
+              })
+              console.log(selectedUser,selectedCountry,amount,selectedGateway,selectedPaymentMethod,selectedTimeTableRow,selectedCountry,selectedTransferMethod,selectedBenficary)
+   
+
+
+            }}>
               Continue
             </Button>
           </Box>

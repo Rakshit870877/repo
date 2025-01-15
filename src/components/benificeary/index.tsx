@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Grid, TextField, Menu, MenuItem, IconButton, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-const BeneficiaryForm = () => {
+const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [formData, setFormData] = useState({
     accountHolderName: '',
@@ -27,6 +27,13 @@ const BeneficiaryForm = () => {
 
   const handleSelectBeneficiary = (beneficiary: (typeof beneficiaries)[0]) => {
     setFormData({
+      accountHolderName: beneficiary.name,
+      accountNumber: beneficiary.accountNumber,
+      bank: beneficiary.bank,
+      ifscCode: beneficiary.ifscCode,
+    })
+
+    setselectedBenficiary({
       accountHolderName: beneficiary.name,
       accountNumber: beneficiary.accountNumber,
       bank: beneficiary.bank,

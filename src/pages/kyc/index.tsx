@@ -84,79 +84,67 @@ const mockData = [
         failureCause: 'Poor Qulaity Image',
       },
     },
-    dob: '1990-05-20',
-    phone: '+91 1234567890',
-    email: 'chakshu@gmail.com',
+    // dob: '1990-05-20',
+    // phone: '+91 1234567890',
+    // email: 'chakshu@gmail.com',
     kycSubmittedOn: '2024-01-01',
     verifiedOn: 'N/A',
-  },
-  {
-    id: 2,
-    kycId: 'KYCIN0012',
-    customerName: 'Chakshu Chopra',
-    nationality: 'Indian',
-    residentCountry: 'South Africa',
-    idProof: 'Passport',
-    addressProof: 'Utility Bill',
-    verificationStatus: 'Pending',
-    pemanentAddress: {
-      country: 'South Africa',
-      zipCode: '233002',
-      state: 'CapTown',
-      city: 'Labnon',
-    },
-    currentAddress: {
-      country: 'South Africa',
-      zipCode: '233002',
-      state: 'CapTown',
-      city: 'Labnon',
-    },
 
-    kyc: {
-      idProof: {
-        idType: 'Pasport',
-        verificationType: 'Sybrin',
-        documentStatus: 'uploaded/NotUploaded',
-        documentLink: 'www.aws.....***.com',
-        verificationStatus: '',
-        documnentNumber: '23232323232',
-        expiryDate: '12/21/2021',
-        nameAsPerDocument: 'Chakshu Document',
-        issuingAuthoriy: 'SA Republic',
-        additionalComment: '',
-      },
+    //new
+    kycStatus: 'v',
+    kycStartDate: '2025-01-01T10:00:00Z',
+    kycApprovalDate: '2025-01-05T10:00:00Z',
+    kycExpiryDate: '2025-12-31T23:59:59Z',
+    kycCountry: 'IN',
+    dob: '1990-01-01',
+    email: 'john.doe@example.com',
+    applicantName: 'John Doe',
+    permanentAddressCountry: 'India',
+    permanentAddressLine1: '123, Main Street',
+    permanentAddressLine2: 'Apartment 5B',
+    permanentAddressSuburb: 'Suburb A',
+    permanentAddressCity: 'City X',
+    permanentAddressState: 'State Y',
+    permanentAddressZip: '123456',
+    currentAddressLine1: '456, Secondary Street',
+    currentAddressLine2: 'Apartment 10A',
+    currentAddressSuburb: 'Suburb B',
+    currentAddressCity: 'City Z',
+    currentAddressState: 'State W',
+    currentAddressZip: '654321',
+    currentAddressCountry: 'India',
+    kycCustomerImage: 'https://example.com/images/kyc_customer.jpg',
+    applicantId: 'A12345',
+    sanctionPartnerId: 'SP123',
 
-      addressProof: {
-        idType: 'Pasport',
-        verificationType: 'Sybrin',
-        documentStatus: 'uploaded/NotUploaded',
-        documentLink: 'www.aws.....***.com',
-        verificationStatus: '',
-        documnentNumber: '23232323232',
-        expiryDate: '12/21/2021',
-        nameAsPerDocument: 'Chakshu Document',
-        issuingAuthoriy: 'SA Republic',
-        additionalComment: '',
+    documents: [
+      {
+        documentCode: 'DOC123',
+        uploadDate: '2025-01-05T12:00:00Z',
+        verificationStatus: 'va', // Enum: vp=Pending, va=Verified, vm=Manual, vh=Verification Hold
+        documentUrl: 'https://example.com/documents/d1.pdf',
+        verificationStatusComments: 'Verified',
+        documentDetails: {
+          documentName: 'Passport',
+          documentType: 'KYC', // KYC, Transaction, etc.
+          complianceProcess: 'A', // A=Automated, M=Manual, B=Both
+          verificationPartnerId: 'VP123',
+        },
       },
-
-      incomeProof: {
-        idType: 'Pasport',
-        verificationType: 'Sybrin',
-        documentStatus: 'uploaded/NotUploaded',
-        documentLink: 'www.aws.....***.com',
-        verificationStatus: '',
-        documnentNumber: '23232323232',
-        expiryDate: '12/21/2021',
-        nameAsPerDocument: 'Chakshu Document',
-        issuingAuthoriy: 'SA Republic',
-        additionalComment: '',
+      {
+        documentCode: 'DOC124',
+        uploadDate: '2025-01-10T12:00:00Z',
+        verificationStatus: 'vp',
+        documentUrl: 'https://example.com/documents/d2.pdf',
+        verificationStatusComments: 'Pending',
+        documentDetails: {
+          documentName: "Driver's License",
+          documentType: 'KYC',
+          complianceProcess: 'M',
+          verificationPartnerId: 'VP124',
+        },
       },
-    },
-    dob: '1990-05-20',
-    phone: '+91 1234567890',
-    email: 'chakshu@gmail.com',
-    kycSubmittedOn: '2024-01-01',
-    verifiedOn: 'N/A',
+    ],
   },
 ]
 
@@ -170,6 +158,7 @@ const KYCPage = () => {
   const [filteredData, setFilteredData] = useState<Array<Customer>>(mockData as any)
   const [selectedKYC, setSelectedKYC] = useState(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [selectedDocumentModal, setSelectedDocumentModel] = useState({})
   const [selectedVerifcationOpen, setselectedVerifcationOpen] = useState(false)
 
   const handleFilterChange = (key: string, value: string) => {
@@ -203,7 +192,7 @@ const KYCPage = () => {
   }
   return (
     <Box padding={3}>
-      <VerifyDocumentModal open={selectedVerifcationOpen} onClose={handleClose}></VerifyDocumentModal>
+      <VerifyDocumentModal open={selectedVerifcationOpen} onClose={handleClose} sampledata={selectedDocumentModal}></VerifyDocumentModal>
 
       <Typography variant="h4" gutterBottom>
         <strong>Know-Your Customer</strong>
@@ -331,7 +320,6 @@ const KYCPage = () => {
               field: 'id',
               headerName: 'S. No',
               flex: 1,
-
               headerClassName: 'super-app-theme--header',
             },
             {
@@ -341,7 +329,7 @@ const KYCPage = () => {
               headerClassName: 'super-app-theme--header',
             },
             {
-              field: 'customerName',
+              field: 'applicantName',
               headerName: 'Customer Name',
               flex: 1,
               headerClassName: 'super-app-theme--header',
@@ -350,24 +338,22 @@ const KYCPage = () => {
               field: 'nationality',
               headerName: 'Nationality',
               flex: 1,
-
               headerClassName: 'super-app-theme--header',
             },
-            { field: 'residentCountry', headerName: 'Resident Country', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'idProof', headerName: 'ID Proof', flex: 1, headerClassName: 'super-app-theme--header' },
-            { field: 'addressProof', headerName: 'Address Proof', flex: 1, headerClassName: 'super-app-theme--header' },
+            { field: 'permanentAddressCountry', headerName: 'Resident Country', flex: 1, headerClassName: 'super-app-theme--header' },
+            ,
             {
-              field: 'verificationStatus',
+              field: 'kycStatus',
               headerName: 'Verification Status',
               flex: 1,
               headerClassName: 'super-app-theme--header',
 
               renderCell: (params: any) => {
                 let color: 'success' | 'warning' | 'error' = 'success'
-                if (params.value === 'Pending') color = 'warning'
+                if (params.value === '') color = 'warning'
                 else if (params.value === 'Rejected') color = 'error'
 
-                return <Chip label={params.value} color={color} variant="outlined" />
+                return <Chip label={params.value == 'v' ? 'verified' : 'unverified'} color={color} variant="outlined" />
               },
             },
             {
@@ -412,10 +398,10 @@ const KYCPage = () => {
                   paddingRight: '5%',
                 }}
               >
-                KYC ID - KYCIN0012
+                KYC ID - {selectedKYC?.kycId}
               </Typography>
               <Typography variant="subtitle1" style={{ backgroundColor: '#FFEEBA', padding: '4px 8px', borderRadius: '4px' }}>
-                Pending
+                {selectedKYC?.kycStatus == 'v' ? 'verified' : 'unverified'}
               </Typography>
             </Box>
 
@@ -427,31 +413,37 @@ const KYCPage = () => {
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={3}>
-                    <TextField label="Customer Name" variant="filled" defaultValue="Chakshu Chopra" />
+                    <TextField label="Customer Name" variant="filled" defaultValue={selectedKYC?.applicantName} disabled />
                   </Grid>
                   <Grid item xs={3}>
-                    <TextField label="Nationality" variant="filled" defaultValue="Indian" />
+                    <TextField label="Nationality" variant="filled" defaultValue="Indian" defaultValue={selectedKYC?.nationality} disabled />
                   </Grid>
                   <Grid item xs={3}>
-                    <TextField label="Residence Country" variant="filled" defaultValue="South Africa" />
+                    <TextField label="Residence Country" variant="filled" defaultValue={selectedKYC?.permanentAddressCountry} disabled />
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="caption" sx={{ color: 'grey', marginBottom: '1000px' }}>
                       Permanent Address
                     </Typography>
-                    <TextField label="Address" variant="filled" fullWidth defaultValue="Indian" />
+                    <TextField
+                      label="Address"
+                      variant="filled"
+                      fullWidth
+                      defaultValue={selectedKYC?.permanentAddressLine1 + selectedKYC?.permanentAddressLine2}
+                      disabled
+                    />
                     <Grid container spacing={2} mt={1}>
                       <Grid item xs={3}>
-                        <TextField label="City" variant="filled" fullWidth defaultValue="South Africa" />
+                        <TextField label="City" variant="filled" fullWidth defaultValue={selectedKYC?.permanentAddressCity} disabled />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="State" variant="filled" fullWidth defaultValue="South Africa" />
+                        <TextField label="State" variant="filled" fullWidth defaultValue={selectedKYC?.permanentAddressState} disabled />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Zip Code" variant="filled" fullWidth defaultValue="South Africa" />
+                        <TextField label="Zip Code" variant="filled" fullWidth defaultValue={selectedKYC?.permanentAddressZip} disabled />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Country" variant="filled" fullWidth defaultValue="South Africa" />
+                        <TextField label="Country" variant="filled" fullWidth defaultValue={selectedKYC?.permanentAddressCountry} disabled />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -466,19 +458,46 @@ const KYCPage = () => {
                     >
                       Current Address
                     </Typography>
-                    <TextField label="Address" fullWidth defaultValue="Indian" variant="filled" />
+                    <TextField
+                      label="Address"
+                      disabled
+                      fullWidth
+                      defaultValue={selectedKYC?.currentAddressLine1 + selectedKYC?.currentAddressLine2}
+                      variant="filled"
+                    />
                     <Grid container spacing={2} mt={1}>
                       <Grid item xs={3}>
-                        <TextField label="City" fullWidth defaultValue="South Africa" variant="filled" />
+                        <TextField label="City" fullWidth defaultValue={selectedKYC?.currentAddressCity} variant="filled" disabled />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="State" fullWidth defaultValue="South Africa" variant="filled" />
+                        <TextField
+                          label="State"
+                          fullWidth
+                          defaultValue="South Africa"
+                          variant="filled"
+                          disabled
+                          defaultValue={selectedKYC?.currentAddressState}
+                        />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Zip Code" fullWidth defaultValue="South Africa" variant="filled" />
+                        <TextField
+                          label="Zip Code"
+                          fullWidth
+                          defaultValue="South Africa"
+                          variant="filled"
+                          disabled
+                          defaultValue={selectedKYC?.currentAddressZip}
+                        />
                       </Grid>
                       <Grid item xs={3}>
-                        <TextField label="Country" fullWidth defaultValue="South Africa" variant="filled" />
+                        <TextField
+                          label="Country"
+                          fullWidth
+                          defaultValue="South Africa"
+                          variant="filled"
+                          disabled
+                          defaultValue={selectedKYC?.currentAddressCountry}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -507,16 +526,16 @@ const KYCPage = () => {
               <Typography variant="h6">
                 <strong>KYC Status</strong>
               </Typography>
-              {['ID Proof', 'Address Proof', 'Income Proof'].map((proofType) => (
+              {selectedKYC?.documents?.map((proofType) => (
                 <Grid container spacing={2} alignItems="center" mt={1} key={proofType}>
                   <Grid item xs={2}>
-                    <TextField label="ID Type" fullWidth defaultValue="Passport" />
+                    <TextField label="ID Type" fullWidth defaultValue={proofType?.documentDetails?.documentName} disabled />
                   </Grid>
                   <Grid item xs={2}>
-                    <TextField label="Verification Type" fullWidth defaultValue="Auto (Sybrin)" />
+                    <TextField label="Verification Type" fullWidth defaultValue={proofType?.documentDetails?.documentName} disabled />
                   </Grid>
                   <Grid item xs={2}>
-                    <TextField label="Document Status" fullWidth defaultValue="Uploaded" />
+                    <TextField label="Document Status" fullWidth defaultValue="Uploaded" disabled />
                   </Grid>
                   <Grid item xs={2}>
                     <Typography
@@ -528,6 +547,7 @@ const KYCPage = () => {
                       <u
                         onClick={() => {
                           setselectedVerifcationOpen(true)
+                          setSelectedDocumentModel(proofType?.documentDetails)
                         }}
                       >
                         view more
@@ -539,17 +559,17 @@ const KYCPage = () => {
                   <Grid item xs={2}>
                     <Typography
                       style={{
-                        backgroundColor: proofType === 'ID Proof' ? '#C8E6C9' : proofType === 'Address Proof' ? '#FFEEBA' : '#FFCDD2',
+                        backgroundColor: proofType.verificationStatus == 'va' ? '#C8E6C9' : proofType === 'vh' ? '#FFEEBA' : '#FFCDD2',
                         // padding: '4px 8px',
                         borderRadius: '4px',
                         textAlign: 'center',
                       }}
                     >
-                      {proofType === 'ID Proof' ? 'Verified' : proofType === 'Address Proof' ? 'Pending' : 'Failed'}
+                      {proofType.verificationStatus == 'va' ? 'Verified' : proofType?.verification === 'Address Proof' ? 'Pending' : 'Failed'}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
-                    <TextField label="Additional Comments" fullWidth defaultValue="comment" />
+                    <TextField label="Additional Comments" fullWidth defaultValue={proofType?.verificationStatusComments} disabled />
                   </Grid>
                 </Grid>
               ))}
@@ -557,11 +577,11 @@ const KYCPage = () => {
 
             {/* Buttons */}
             <Box mt={4} display="flex" justifyContent="flex-end">
-              <Button variant="contained" color="primary" style={{ marginRight: 8 }} onClick={handleClose}>
+              {/* <Button variant="contained" color="primary" style={{ marginRight: 8 }} onClick={handleClose}>
                 Save
-              </Button>
+              </Button> */}
               <Button variant="contained" color="success" onClick={handleClose}>
-                Save and Verify
+                close
               </Button>
             </Box>
           </Box>

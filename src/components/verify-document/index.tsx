@@ -5,7 +5,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 import { Document, Page } from 'react-pdf'
 import { Passport } from '@/assets/images'
 
-const VerifyDocumentModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+const VerifyDocumentModal = ({ open, onClose, sampledata }: { open: boolean; onClose: () => void }) => {
   const [fileType, setFileType] = useState<'pdf' | 'image'>('image') // Example type
   const [filePath, setFilePath] = useState('../../assets/images/passport.jpg') // Example file
 
@@ -29,8 +29,8 @@ const VerifyDocumentModal = ({ open, onClose }: { open: boolean; onClose: () => 
             marginTop: '2%',
           }}
         >
-          <TextField label="ID Type" value="Passport" sx={{ mb: 2 }} />
-          <TextField label="Verification Type" value="Auto" sx={{ mb: 2 }} />
+          <TextField label="ID Type" value="Passport" sx={{ mb: 2 }} disabled />
+          <TextField label="Verification Type" value="Auto" sx={{ mb: 2 }} disabled />
         </Stack>
         <Box display="flex" gap={2}>
           {/* Left Column */}
@@ -46,23 +46,26 @@ const VerifyDocumentModal = ({ open, onClose }: { open: boolean; onClose: () => 
 
           {/* Right Column */}
           <Box flex={1}>
-            <TextField label="Document Number" fullWidth value="189328392890" sx={{ mb: 2 }} />
-            <TextField label="Expiry Date" fullWidth value="12/04/2026" sx={{ mb: 2 }} />
-            <TextField label="Name as per Document" fullWidth value="Mohit Kumar" sx={{ mb: 2 }} />
-            <TextField label="Issuing Authority" fullWidth value="SA Republic" sx={{ mb: 2 }} />
+            <TextField label="Document Number" fullWidth value="189328392890" sx={{ mb: 2 }} disabled />
+            <TextField label="Expiry Date" fullWidth value="12/04/2026" sx={{ mb: 2 }} disabled />
+            <TextField label="Name as per Document" fullWidth value="Mohit Kumar" sx={{ mb: 2 }} disabled />
+            <TextField label="Issuing Authority" fullWidth value="SA Republic" sx={{ mb: 2 }} disabled />
             <Typography>
-              <CloudDownloadIcon fontSize="small" /> Download Document
+              <CloudDownloadIcon fontSize="small" />{' '}
+              <a href={sampledata.documentUrl} target="_blank" rel="noopener noreferrer">
+                Download Document
+              </a>
             </Typography>
           </Box>
         </Box>
 
         {/* Additional Comments */}
-        <TextField label="Additional Comments" fullWidth multiline rows={3} sx={{ mt: 2 }} defaultValue="comment" />
+        <TextField label="Additional Comments" fullWidth multiline rows={3} sx={{ mt: 2 }} defaultValue="Verified" disabled />
 
         {/* Action Buttons */}
         <Box display="flex" justifyContent="flex-start" gap={2} mt={2}>
-          <Button variant="contained" color="success">
-            Save and Verify
+          <Button variant="contained" color="success" disabled>
+            close
           </Button>
         </Box>
       </DialogContent>

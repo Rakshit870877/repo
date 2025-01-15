@@ -1,25 +1,18 @@
-import React, { useState } from 'react'
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  Typography,
-  Chip,
-  TextField,
-  Drawer,
-  ToggleButton,
-  ToggleButtonGroup,
-  useTheme,
-} from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, Divider, Grid, Typography, Chip, TextField, Drawer, ToggleButton, ToggleButtonGroup, useTheme } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { TransactionService } from '@/services/transaction.service'
+import {
+  TansactionOutwardCalculated,
+  TransactionDetailsResponse,
+  TransactionInward,
+  TransactionInwardCalclulated,
+  TransactionOutward,
+} from '@/types/transaction.type'
 
-const sampleInwardsData = [
+const sampleInwardsData: Array<TransactionInwardCalclulated> = [
   {
     id: 'IMP11231',
     destination: 'USA',
@@ -32,23 +25,42 @@ const sampleInwardsData = [
     holderName: 'Siddhant kaushik',
     accountNumber: '23322 23232 2323 343434',
     bankCode: 'IC2345',
-  },
-  {
-    id: 'IMP11232',
-    destination: 'UK',
-    value: 1500,
-    currency: 'GBP',
-    settlement: '2025-01-02',
-    destinationBank: 'HSBC',
-    reportedToSARB: 'No',
-    date: '2025-01-03',
-    holderName: 'Siddhant kaushik',
-    accountNumber: '23322 23232 2323 343434',
-    bankCode: 'IC2345',
+    ///Transaction
+
+    transactionNumberIw: 'IW001',
+    owTransactionNumber: 'T002',
+    sendingCountry: 'US',
+    receivingCountry: 'GB',
+    settlementCurrency: 'USD',
+    settlementAmount: 1000.5,
+    reportingStatus: 'RS',
+    destinationBankCode: 'BANKCODE01',
+    beneficiaryId: 'B001',
+    residenceCountry: 'USA',
+    nationality: 'American',
+    beneficiaryName: 'Alice Johnson',
+    idType: 'Passport',
+    idNumber: 'P123456789',
+    physicalAddressLine1: '456 Oak St',
+    physicalAddressLine2: 'Apt 7B',
+    physicalAddressLine3: 'Floor 4',
+    suburb: 'Uptown',
+    city: 'New York',
+    postCode: '10002',
+    country: 'USA',
+    bankName: 'XYZ Bank',
+    bankBicCode: 'BIC123XYZ',
+    sortCode: '678901',
+    iban: 'US9876543210',
+    profileStatus: true,
+    sanctionStatus: false,
+    fraudStatus: false,
+    applicant: 'A001',
+    activeStatus: true,
   },
 ]
 
-const sampleOutwardsData = [
+const sampleOutwardsData: Array<TansactionOutwardCalculated> = [
   {
     id: 'IMP11235',
     destination: 'India',
@@ -61,6 +73,47 @@ const sampleOutwardsData = [
     holderName: 'Siddhant kaushik',
     accountNumber: '23322 23232 2323 343434',
     bankCode: 'IC2345',
+
+    //transaction
+
+    transactionNumber: 'T002',
+    sendCountry: 'USA',
+    receiveCountry: 'GBR',
+    applicantId: 'A001',
+    receiverId: 'B001',
+    dealCoverNumber: 'D223456',
+    exchangeRates: 1.3,
+    principalCurrency: 'USD',
+    principalAmount: 15000.0,
+    settlementCurrency: 'GBP',
+    settlementAmount: 19500.0,
+    charges: 150.0,
+    lcharges2: 75.0,
+    destinationBankBicCode: 'BICCODE124',
+    transactionStatus: 'ST',
+    reportingStatus: 'RP',
+    beneficiaryId: 'B001',
+    residenceCountry: 'USA',
+    nationality: 'American',
+    beneficiaryName: 'Alice Johnson',
+    idType: 'Passport',
+    idNumber: 'P123456789',
+    physicalAddressLine1: '456 Oak St',
+    physicalAddressLine2: 'Apt 7B',
+    physicalAddressLine3: 'Floor 4',
+    suburb: 'Uptown',
+    city: 'New York',
+    postCode: '10002',
+    country: 'USA',
+    bankName: 'XYZ Bank',
+    bankBicCode: 'BIC123XYZ',
+    sortCode: '678901',
+    iban: 'US9876543210',
+    profileStatus: true,
+    sanctionStatus: false,
+    fraudStatus: false,
+    applicant: 'A001',
+    activeStatus: true,
   },
   {
     id: 'IMP11239',
@@ -85,14 +138,8 @@ const TransactionPage = () => {
     { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'settlement', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
-    {
-      field: 'reportedToSARB',
-      headerName: 'Reported to SARB',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-      renderCell: (params) => <Chip label={params.value} color={params.value === 'Yes' ? 'success' : 'error'} variant="outlined" size="small" />,
-    },
-    { field: 'date', headerName: 'Date', flex: 1, headerClassName: 'super-app-theme--header' },
+
+    // { field: 'date', headerName: 'Date', flex: 1, headerClassName: 'super-app-theme--header' },
     {
       field: 'action',
       headerName: 'Action',
@@ -110,19 +157,63 @@ const TransactionPage = () => {
   ]
 
   const [isDrawerOpen, setDrawerOpen] = useState(false)
-  const [transactionData, setTransactionData] = useState(sampleInwardsData)
+
   const [transactionDetails, setTransactionDetails] = useState(null)
   const [transactionType, setTransactionType] = useState('inwards') // Default to 'inwards'
+
+  const [inboundTransaction, setInboundTransaction] = useState<Array<TransactionInward>>([])
+  const [outboundTransaction, setOutboundTransaction] = useState<Array<TransactionOutward>>([])
+  const [transactionData, setTransactionData] = useState(inboundTransaction)
 
   const handleViewMore = (row) => {
     setTransactionDetails(row)
     setDrawerOpen(true)
   }
 
+  let transaction_Service = new TransactionService()
+
+  useEffect(() => {
+    transaction_Service
+      .gettransactions()
+      .then((data: TransactionDetailsResponse) => {
+        let inbound: Array<TransactionInwardCalclulated>[] = data?.transactionDetailsList.map((e) => {
+          return {
+            ...e.transactionInward,
+            ...e.beneficiary,
+            id: e?.transactionInward.transactionNumberIw,
+            destination: e?.transactionInward?.receivingCountry,
+            value: e?.transactionInward?.settlementAmount,
+            currency: e?.transactionInward?.settlementCurrency,
+            settlement: e?.transactionInward?.settlementAmount,
+            destinationBank: e?.transactionInward?.destinationBankCode,
+          }
+        })
+
+        let outbound: Array<TansactionOutwardCalculated>[] = data?.transactionDetailsList.map((e) => {
+          return {
+            ...e.transactionOutward,
+            ...e.beneficiary,
+            id: e?.transactionOutward.transactionNumber,
+            destination: e?.transactionOutward?.receiveCountry,
+            value: e?.transactionOutward?.settlementAmount,
+            currency: e?.transactionOutward?.settlementCurrency,
+            settlement: e?.transactionOutward?.settlementAmount,
+            destinationBank: e?.transactionOutward?.destinationBankBicCode,
+          }
+        })
+        setInboundTransaction(inbound)
+        setTransactionData(inbound)
+        setOutboundTransaction(outbound)
+        console.log(inbound)
+        console.log(outbound)
+      })
+      .catch((err) => {})
+  }, [])
+
   const handleToggleTransactionType = (event, newType) => {
     if (newType) {
       setTransactionType(newType)
-      setTransactionData(newType === 'inwards' ? sampleInwardsData : sampleOutwardsData)
+      setTransactionData(newType === 'inwards' ? inboundTransaction : outboundTransaction)
     }
   }
 
@@ -260,20 +351,20 @@ const TransactionPage = () => {
             </Typography>
             <Grid container spacing={2} mb={2}>
               <Grid item xs={12} md={6}>
-                <TextField label="Account Number" variant="filled" fullWidth defaultValue={transactionDetails?.accountNumber} size="small" disabled />
+                <TextField label="Account Number" variant="filled" fullWidth defaultValue={transactionDetails?.iban} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Bank" variant="filled" fullWidth defaultValue={transactionDetails?.destinationBank} size="small" disabled />
+                <TextField label="Bank" variant="filled" fullWidth defaultValue={transactionDetails?.bankName} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Bank Code" variant="filled" fullWidth defaultValue={transactionDetails?.bankCode} size="small" disabled />
+                <TextField label="Bank Code" variant="filled" fullWidth defaultValue={transactionDetails?.bankBicCode} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   label="Account Holder Name"
                   variant="filled"
                   fullWidth
-                  defaultValue={transactionDetails?.holderName}
+                  defaultValue={transactionDetails?.beneficiaryName}
                   size="small"
                   disabled
                 />
