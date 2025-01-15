@@ -41,7 +41,14 @@ import LoaderBackdrop from './components/loader/loader'
 import CustomSnackbar from './components/customsnackbar/snackbar'
 import KYCPage from './pages/kyc'
 import ApplicantPage from './pages/applicant'
-import CustomerDatabase from './pages/customer-database'
+import ApplicantEnquiry from './pages/applicant-enquiry'
+import Beneficiary from './pages/beneficiary-table'
+import AddApplicant from './pages/add-applicant'
+import AboutBeneficiary from './pages/beneficiary-about'
+import AddBeneficiary from './pages/add-beneficiary'
+import BeneficiaryTable from './components/beneficiary-table'
+import BeneficiaryDetailPage from './pages/beneficiary-detail'
+import BeneficiaryEnquiry from './pages/beneficiary-enquiry'
 // import ApplicantPage from './pages/applicant'
 
 // const { VITE_APP_VAPID_KEY } = import.meta.env
@@ -155,15 +162,26 @@ function App() {
               </Route>
             ) : currentrole == 'user' ? (
               <Route path="/" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<DashboardLayout />} />}>
-                {/* <Route path="driver/add" element={<CreateDriver />} /> */}
+              
                 <Route path="transaction" element={<TransactionPage />} />
                 <Route path="kyc" element={<KYCPage />} />
-                <Route path='applicant' element={<ApplicantPage/>}/>
+
+                <Route path='applicant-details/:applicantId' element={<ApplicantPage/>}/>
+                <Route path="applicant" element={<ApplicantEnquiry/>}/>
+                <Route path='add-applicant' element={<AddApplicant/>}/>
+                <Route path='about-beneficiary' element={<AboutBeneficiary/>}/>
+                <Route path='add-beneficiary' element={<AddBeneficiary/>}/>
+                {/* <Route path='beneficiary' element={<BeneficiaryTable/>}/> */}
+                <Route path='beneficiary-details' element={<BeneficiaryDetailPage/>}/>
+                <Route path='beneficiary' element={<BeneficiaryEnquiry/>}/>
+
                 <Route path="driver" element={<DriverList />} />
                 <Route path="users" element={<UserList />} />
                 {/* <Route path="users/add" element={<UserAdd />} /> */}
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="customer" element={<CustomerDatabase/>}/>
+              
+                <Route path="beneficiary" element={<Beneficiary/>}/>
+                {/* <Route path="customer" element={<CustomerDatabase/>}/> */}
                 <Route path="logs" element={<LogsList />} />
                 <Route path="logs/add" element={<NewLog />} />
                 {/* <Route path="schedule" element={<Scheduler />} /> */}

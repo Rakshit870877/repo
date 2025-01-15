@@ -11,7 +11,7 @@ interface AdaptAxiosRequestConfig extends AxiosRequestConfig {
   headers: AxiosRequestHeaders
 }
 
-const BaseUrl = VITE_APP_BACKEND + '/api/v1'
+const BaseUrl = VITE_APP_BACKEND 
 
 const baseUrl = BaseUrl
 

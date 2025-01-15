@@ -14,7 +14,10 @@ import { alertState, alertTextState, alertTypeState, loaderState, role, sidbarSe
 import { useState } from 'react'
 import Fade from '@mui/material/Fade'
 import Backdrop from '@mui/material/Backdrop'
-import LogoutIcon from '@mui/icons-material/Logout'
+import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import CameraFrontIcon from '@mui/icons-material/CameraFront';
+ 
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary'
 // import { snackbarOpenState } from "../../states/state";
 // import { Logo } from "@/assets/images";
@@ -194,6 +197,38 @@ const DashboardLayout = () => {
         />
       ),
       label: 'users',
+    },
+    {
+      icon: (
+        <PeopleOutlineIcon
+          sx={{
+            color: theme.palette.secondary.light,
+            fontSize: '40px',
+
+            color: theme.palette.primary.light,
+            '&:hover': {
+              color: theme.palette.primary.main, // Change the color to blue on hover
+            },
+          }}
+        />
+      ),
+      label: 'applicant',
+    },
+    {
+      icon: (
+        <CameraFrontIcon
+          sx={{
+            color: theme.palette.secondary.light,
+            fontSize: '40px',
+
+            color: theme.palette.primary.light,
+            '&:hover': {
+              color: theme.palette.primary.main, // Change the color to blue on hover
+            },
+          }}
+        />
+      ),
+      label: 'beneficiary',
     },
   ]
 
@@ -463,8 +498,12 @@ const DashboardLayout = () => {
                 </Stack>
               </ListItem>
             </List>
+            
+
+            
 
             {/* Logout icon */}
+            
             <List
               sx={{
                 textAlign: 'center',
@@ -495,6 +534,7 @@ const DashboardLayout = () => {
                 </Stack>
               </ListItem>
             </List>
+            
           </Box>
 
           <Box
