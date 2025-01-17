@@ -1,46 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid, TextField, Typography, Button, Switch, FormControlLabel } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import TransactionTable from '../transaction-table';
+import { BeneficiaryService } from '@/services/beneficiary.service';
 
+const beneficiary_service = new BeneficiaryService();
 
 const BeneficiaryDetailPage = () => {
   const navigate = useNavigate();
-
-  const initialData = {
-    applicantId: 'APSIN0012',
-    beneficiaryName: 'John Doe',
-    nationality: 'American',
-    residentCountry: 'USA',
-    phone: '1234567890',
-    email: 'johndoe@email.com',
-    idType: 'Passport',
-    addressLine1: '123 Main St',
-    addressLine2: 'Apt 4B',
-    addressLine3: 'Building 7',
-    city: 'New York',
-    state: 'NY',
-    zipCode: '10001',
-    country: 'USA',
-    accountHolder: 'John Doe',
-    accountNumber: '1234567890',
-    bankName: 'Bank of America',
-    bankCode: 'BOA12345',
-    transactionId: '',
-    senderTransactionId: '',
-    value: '',
-    transactionDate: '',
-  };
-
-  const [formData, setFormData] = useState(initialData);
+  const {beneficiaryId} = useParams();
+ 
+  
+  const [formData, setFormData] = useState<any>([]);
   const [isEditable, setIsEditable] = useState(false);
-  const [tempData, setTempData] = useState(initialData);
+  const [tempData, setTempData] = useState<any>([]);
   const [isChanged, setIsChanged] = useState(false);
   const [transactionData, setTransactionData] = useState([]);
   const [searchTransactionId, setSearchTransactionId] = useState('');
   const [showTransactionTable, setShowTransactionTable] = useState(false);
 
-  const handleChange = (e) => {
+  useEffect(()=>{
+    const fetchBeneficiaryData = async()=>{
+      if(!beneficiaryId){
+        console.error("Beneficiary Id is missing");
+        return;
+      }
+      try{
+        const data = await beneficiary_service.searchByBeneficiaryId(beneficiaryId);
+        setFormData(data);
+        setTempData(data);
+      }catch(err){
+        console.error("Error fetching data");
+      }
+    } 
+    fetchBeneficiaryData();
+  }, [beneficiaryId]);
+
+
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTempData((prevData) => ({
       ...prevData,
@@ -49,7 +46,7 @@ const BeneficiaryDetailPage = () => {
     setIsChanged(true);
   };
 
-  const handleToggleChange = (event) => {
+  const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       setIsEditable(true);
       setTempData(formData);
@@ -69,20 +66,30 @@ const BeneficiaryDetailPage = () => {
     }
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     if (isChanged) {
       const confirmSave = window.confirm('Are you sure you want to save the changes?');
       if (confirmSave) {
-        setFormData(tempData);
-        setIsChanged(false);
-        setIsEditable(false);
-        console.log(tempData)
+        try {
+          // Call the API to update the beneficiary details
+          const updatedData = { ...tempData }; // Collect the data to be updated
+          console.log("updated Data",updatedData);
+          const response = await beneficiary_service.updateBeneficiaryForm( updatedData);
+          
+          // After successful API response
+          setFormData(updatedData); // Update the local state with new data
+          setIsChanged(false); // Reset the change flag
+          setIsEditable(false); // Disable edit mode
+          alert('Changes saved successfully!');
+        } catch (error) {
+          alert('Failed to save changes. Please try again later.');
+        }
       }
     } else {
       alert('No changes made to save!');
     }
   };
-
+  
   const handleSearchTransaction = () => {
     if (searchTransactionId) {
       // Example logic to fetch transaction data based on transaction ID
@@ -127,7 +134,7 @@ const BeneficiaryDetailPage = () => {
   };
 
   const handleBack = () => {
-    navigate('/beneficiary-list');
+    navigate('/beneficiary');
   };
 
   return (
@@ -151,7 +158,7 @@ const BeneficiaryDetailPage = () => {
               variant="filled"
               name="applicantId"
               fullWidth
-              value={tempData.applicantId}
+              value={tempData.applicant || ''}
               InputProps={{
                 readOnly: !isEditable,
               }}
@@ -167,7 +174,7 @@ const BeneficiaryDetailPage = () => {
               variant="filled"
               name="beneficiaryName"
               fullWidth
-              value={tempData.beneficiaryName}
+              value={tempData.beneficiaryName || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -175,12 +182,13 @@ const BeneficiaryDetailPage = () => {
             />
           </Grid>
           <Grid item xs={12} sm={4}>
+            
             <TextField
               label="Nationality"
               variant="filled"
               name="nationality"
               fullWidth
-              value={tempData.nationality}
+              value={tempData.nationality || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -191,9 +199,9 @@ const BeneficiaryDetailPage = () => {
             <TextField
               label="Resident Country"
               variant="filled"
-              name="residentCountry"
+              name="residenceCountry"
               fullWidth
-              value={tempData.residentCountry}
+              value={tempData.residenceCountry||''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -209,7 +217,7 @@ const BeneficiaryDetailPage = () => {
               variant="filled"
               name="phone"
               fullWidth
-              value={tempData.phone}
+              value={tempData.phone || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -222,7 +230,7 @@ const BeneficiaryDetailPage = () => {
               variant="filled"
               name="email"
               fullWidth
-              value={tempData.email}
+              value={tempData.email || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -235,7 +243,7 @@ const BeneficiaryDetailPage = () => {
               variant="filled"
               name="idType"
               fullWidth
-              value={tempData.idType}
+              value={tempData.idType || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -253,8 +261,8 @@ const BeneficiaryDetailPage = () => {
             <TextField
               fullWidth
               label="Address Line 1"
-              name="addressLine1"
-              value={tempData.addressLine1}
+              name="physicalAddressLine1"
+              value={tempData?.physicalAddressLine1 || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -266,7 +274,7 @@ const BeneficiaryDetailPage = () => {
               fullWidth
               label="Address Line 2"
               name="addressLine2"
-              value={tempData.addressLine2}
+              value={tempData.physicalAddressLine2 || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -280,7 +288,7 @@ const BeneficiaryDetailPage = () => {
               fullWidth
               label="Address Line 3"
               name="addressLine3"
-              value={tempData.addressLine3}
+              value={tempData.physicalAddressLine3 || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -292,7 +300,7 @@ const BeneficiaryDetailPage = () => {
               fullWidth
               label="City"
               name="city"
-              value={tempData.city}
+              value={tempData.city || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -304,7 +312,7 @@ const BeneficiaryDetailPage = () => {
               fullWidth
               label="State"
               name="state"
-              value={tempData.state}
+              value={tempData.state || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -315,8 +323,8 @@ const BeneficiaryDetailPage = () => {
             <TextField
               fullWidth
               label="ZipCode"
-              name="zipCode"
-              value={tempData.zipCode}
+              name="postCode"
+              value={tempData.postCode || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -328,7 +336,7 @@ const BeneficiaryDetailPage = () => {
               fullWidth
               label="Country"
               name="country"
-              value={tempData.country}
+              value={tempData.country || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -345,9 +353,9 @@ const BeneficiaryDetailPage = () => {
           <Grid item xs={12} sm={2}>
             <TextField
               fullWidth
-              label="Account Holder"
-              name="accountHolder"
-              value={tempData.accountHolder}
+              label="Account Holder Name"
+              name="beneficiaryName"
+              value={tempData.beneficiaryName || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -359,7 +367,7 @@ const BeneficiaryDetailPage = () => {
               fullWidth
               label="Account Number"
               name="accountNumber"
-              value={tempData.accountNumber}
+              value={tempData.accountNumber || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -371,7 +379,7 @@ const BeneficiaryDetailPage = () => {
               fullWidth
               label="Bank Name"
               name="bankName"
-              value={tempData.bankName}
+              value={tempData.bankName || ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,
@@ -381,9 +389,9 @@ const BeneficiaryDetailPage = () => {
           <Grid item xs={12} sm={2}>
             <TextField
               fullWidth
-              label="Bank Code"
-              name="bankCode"
-              value={tempData.bankCode}
+              label="BIC Code"
+              name="bankBicCode"
+              value={tempData?.bankBicCode|| ''}
               onChange={handleChange}
               InputProps={{
                 readOnly: !isEditable,

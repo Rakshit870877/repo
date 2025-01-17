@@ -1,37 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 
-const BeneficiaryTable = () => {
+const BeneficiaryTable = ({ beneficiary }) => {
   const navigate = useNavigate();
-  
-  const [beneficiaries, setBeneficiaries] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchBeneficiaryData = async (beneficiaryId: string) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`https://your-api-url.com/beneficiary/${beneficiaryId}`);
-      const data = await response.json();
-      setBeneficiaries([data]); // Assuming the API returns a single beneficiary object
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching beneficiary data:', error);
-      setLoading(false);
-    }
+  const handleBeneficiaryIdClick = (beneficiaryId) => {
+    navigate(`/beneficiary-details/${beneficiaryId}`);
   };
 
-  useEffect(() => {
-    const beneficiaryId = '12345'; // Example beneficiary ID
-    fetchBeneficiaryData(beneficiaryId);
-  }, []);
-
-  // Function to view beneficiary details
-  const viewBeneficiaryDetails = (beneficiaryId: string) => {
-    navigate(`/beneficiary-details`);
-  };
-
-  // Columns definition
   const columns = [
     {
       field: 'id',
@@ -40,53 +17,54 @@ const BeneficiaryTable = () => {
       headerClassName: 'super-app-theme--header',
     },
     {
+      field: 'beneficiaryId',
+      headerName: 'Beneficiary ID',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params) => (
+        <span
+          style={{
+            textDecoration: 'underline',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleBeneficiaryIdClick(params.row.beneficiaryId)}
+        >
+          {params.row.beneficiaryId}
+        </span>
+      ),
+    },
+    {
       field: 'beneficiaryName',
       headerName: 'Beneficiary Name',
       flex: 1,
       headerClassName: 'super-app-theme--header',
     },
+    
     {
-      field: 'accountNumber',
-      headerName: 'Account Number',
+      field: 'bankName',
+      headerName: 'Bank Name',
       flex: 1,
       headerClassName: 'super-app-theme--header',
     },
     {
-      field: 'bank',
-      headerName: 'Bank',
+      field: 'bankBicCode',
+      headerName: 'BIC Code',
       flex: 1,
       headerClassName: 'super-app-theme--header',
     },
     {
-      field: 'bankCode',
-      headerName: 'Bank Code',
+      field: 'idType',
+      headerName: 'ID Type',
       flex: 1,
       headerClassName: 'super-app-theme--header',
-    },
-    {
-      field: 'lastTransaction',
-      headerName: 'Last Transaction',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-    },
-    {
-      field: 'action',
-      headerName: 'Action',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-      renderCell: (params) => (
-        <button onClick={() => viewBeneficiaryDetails(params.row.id)}>
-          View
-        </button>
-      ),
     },
   ];
 
+  const rows = Array.isArray(beneficiary) ? beneficiary : [];
+
   return (
     <>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
+      {rows.length > 0 ? (
         <DataGrid
           sx={{
             width: '70vw',
@@ -113,10 +91,12 @@ const BeneficiaryTable = () => {
             },
           }}
           columns={columns}
-          rows={beneficiaries}
+          rows={beneficiary}
           pageSize={5}
           rowsPerPageOptions={[5]}
         />
+      ) : (
+        <p>No beneficiaries found</p> // Handle case where no data is available
       )}
     </>
   );

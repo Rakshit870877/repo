@@ -42,15 +42,14 @@ import CustomSnackbar from './components/customsnackbar/snackbar'
 import KYCPage from './pages/kyc'
 import ApplicantPage from './pages/applicant'
 import ApplicantEnquiry from './pages/applicant-enquiry'
-import Beneficiary from './pages/beneficiary-table'
 import AddApplicant from './pages/add-applicant'
 import AboutBeneficiary from './pages/beneficiary-about'
 import AddBeneficiary from './pages/add-beneficiary'
-import BeneficiaryTable from './components/beneficiary-table'
 import BeneficiaryDetailPage from './pages/beneficiary-detail'
 import BeneficiaryEnquiry from './pages/beneficiary-enquiry'
 // import ApplicantPage from './pages/applicant'
 import SendMoneyPage from './pages/send-money'
+import BeneficiaryTable from './components/beneficiary-table'
 
 // const { VITE_APP_VAPID_KEY } = import.meta.env
 
@@ -172,8 +171,8 @@ function App() {
                 <Route path="add-applicant" element={<AddApplicant />} />
                 <Route path="about-beneficiary" element={<AboutBeneficiary />} />
                 <Route path="add-beneficiary" element={<AddBeneficiary />} />
-                {/* <Route path='beneficiary' element={<BeneficiaryTable/>}/> */}
-                <Route path="beneficiary-details" element={<BeneficiaryDetailPage />} />
+              
+                <Route path="beneficiary-details/:beneficiaryId" element={<BeneficiaryDetailPage />} />
                 <Route path="beneficiary" element={<BeneficiaryEnquiry />} />
 
                 <Route path="driver" element={<DriverList />} />
@@ -181,7 +180,6 @@ function App() {
                 {/* <Route path="users/add" element={<UserAdd />} /> */}
                 <Route path="dashboard" element={<Dashboard />} />
 
-                <Route path="beneficiary" element={<Beneficiary />} />
                 {/* <Route path="customer" element={<CustomerDatabase/>}/> */}
                 <Route path="logs" element={<LogsList />} />
                 <Route path="logs/add" element={<NewLog />} />
