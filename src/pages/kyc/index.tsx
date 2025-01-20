@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -19,155 +19,160 @@ import { DataGrid } from '@mui/x-data-grid'
 import VerifyDocumentModal from '@/components/verify-document'
 import { Chuks } from '@/assets/images'
 import { Customer } from '@/types/customer.type'
+import { ApplicantService } from '@/services/applicant.service'
 // import { theme } from '@/contants/theme'
-const mockData = [
-  {
-    id: 1,
-    kycId: 'KYCIN0012',
-    customerName: 'Chakshu Chopra',
-    nationality: 'Indian',
-    residentCountry: 'South Africa',
-    idProof: 'Passport',
-    addressProof: 'Utility Bill',
-    verificationStatus: 'Pending',
-    pemanentAddress: {
-      country: 'South Africa',
-      zipCode: '233002',
-      state: 'CapTown',
-      city: 'Labnon',
-    },
-    currentAddress: {
-      country: 'South Africa',
-      zipCode: '233002',
-      state: 'CapTown',
-      city: 'Labnon',
-    },
+// const mockData = [
+//   {
+//     id: 1,
+//     kycId: 'KYCIN0012',
+//     customerName: 'Chakshu Chopra',
+//     nationality: 'Indian',
+//     residentCountry: 'South Africa',
+//     idProof: 'Passport',
+//     addressProof: 'Utility Bill',
+//     verificationStatus: 'Pending',
+//     pemanentAddress: {
+//       country: 'South Africa',
+//       zipCode: '233002',
+//       state: 'CapTown',
+//       city: 'Labnon',
+//     },
+//     currentAddress: {
+//       country: 'South Africa',
+//       zipCode: '233002',
+//       state: 'CapTown',
+//       city: 'Labnon',
+//     },
 
-    kyc: {
-      idProof: {
-        idType: 'Pasport',
-        verificationType: 'Sybrin',
-        documentStatus: 'uploaded/NotUploaded',
-        documentLink: 'www.aws.....***.com',
-        verificationStatus: '',
-        documnentNumber: '23232323232',
-        expiryDate: '12/21/2021',
-        nameAsPerDocument: 'Chakshu Document',
-        issuingAuthoriy: 'SA Republic',
-        additionalComment: '',
-      },
+//     kyc: {
+//       idProof: {
+//         idType: 'Pasport',
+//         verificationType: 'Sybrin',
+//         documentStatus: 'uploaded/NotUploaded',
+//         documentLink: 'www.aws.....***.com',
+//         verificationStatus: '',
+//         documnentNumber: '23232323232',
+//         expiryDate: '12/21/2021',
+//         nameAsPerDocument: 'Chakshu Document',
+//         issuingAuthoriy: 'SA Republic',
+//         additionalComment: '',
+//       },
 
-      addressProof: {
-        idType: 'Pasport',
-        verificationType: 'Sybrin',
-        documentStatus: 'uploaded/NotUploaded',
-        documentLink: 'www.aws.....***.com',
-        verificationStatus: '',
-        documnentNumber: '23232323232',
-        expiryDate: '12/21/2021',
-        nameAsPerDocument: 'Chakshu Document',
-        issuingAuthoriy: 'SA Republic',
-        additionalComment: '',
-      },
+//       addressProof: {
+//         idType: 'Pasport',
+//         verificationType: 'Sybrin',
+//         documentStatus: 'uploaded/NotUploaded',
+//         documentLink: 'www.aws.....***.com',
+//         verificationStatus: '',
+//         documnentNumber: '23232323232',
+//         expiryDate: '12/21/2021',
+//         nameAsPerDocument: 'Chakshu Document',
+//         issuingAuthoriy: 'SA Republic',
+//         additionalComment: '',
+//       },
 
-      incomeProof: {
-        idType: 'Passport',
-        verificationType: 'Sybrin',
-        documentStatus: 'uploaded/NotUploaded',
-        documentLink: 'www.aws.....***.com',
-        verificationStatus: '',
-        documnentNumber: '23232323232',
-        expiryDate: '12/21/2021',
-        nameAsPerDocument: 'Chakshu Document',
-        issuingAuthoriy: 'SA Republic',
-        additionalComment: '',
-        failureCause: 'Poor Qulaity Image',
-      },
-    },
-    // dob: '1990-05-20',
-    // phone: '+91 1234567890',
-    // email: 'chakshu@gmail.com',
-    kycSubmittedOn: '2024-01-01',
-    verifiedOn: 'N/A',
+//       incomeProof: {
+//         idType: 'Passport',
+//         verificationType: 'Sybrin',
+//         documentStatus: 'uploaded/NotUploaded',
+//         documentLink: 'www.aws.....***.com',
+//         verificationStatus: '',
+//         documnentNumber: '23232323232',
+//         expiryDate: '12/21/2021',
+//         nameAsPerDocument: 'Chakshu Document',
+//         issuingAuthoriy: 'SA Republic',
+//         additionalComment: '',
+//         failureCause: 'Poor Qulaity Image',
+//       },
+//     },
+//     // dob: '1990-05-20',
+//     // phone: '+91 1234567890',
+//     // email: 'chakshu@gmail.com',
+//     kycSubmittedOn: '2024-01-01',
+//     verifiedOn: 'N/A',
 
-    //new
-    kycStatus: 'v',
-    kycStartDate: '2025-01-01T10:00:00Z',
-    kycApprovalDate: '2025-01-05T10:00:00Z',
-    kycExpiryDate: '2025-12-31T23:59:59Z',
-    kycCountry: 'IN',
-    dob: '1990-01-01',
-    email: 'john.doe@example.com',
-    applicantName: 'John Doe',
-    permanentAddressCountry: 'India',
-    permanentAddressLine1: '123, Main Street',
-    permanentAddressLine2: 'Apartment 5B',
-    permanentAddressSuburb: 'Suburb A',
-    permanentAddressCity: 'City X',
-    permanentAddressState: 'State Y',
-    permanentAddressZip: '123456',
-    currentAddressLine1: '456, Secondary Street',
-    currentAddressLine2: 'Apartment 10A',
-    currentAddressSuburb: 'Suburb B',
-    currentAddressCity: 'City Z',
-    currentAddressState: 'State W',
-    currentAddressZip: '654321',
-    currentAddressCountry: 'India',
-    kycCustomerImage: 'https://example.com/images/kyc_customer.jpg',
-    applicantId: 'A12345',
-    sanctionPartnerId: 'SP123',
+//     //new
+//     kycStatus: 'v',
+//     kycStartDate: '2025-01-01T10:00:00Z',
+//     kycApprovalDate: '2025-01-05T10:00:00Z',
+//     kycExpiryDate: '2025-12-31T23:59:59Z',
+//     kycCountry: 'IN',
+//     dob: '1990-01-01',
+//     email: 'john.doe@example.com',
+//     applicantName: 'John Doe',
+//     permanentAddressCountry: 'India',
+//     permanentAddressLine1: '123, Main Street',
+//     permanentAddressLine2: 'Apartment 5B',
+//     permanentAddressSuburb: 'Suburb A',
+//     permanentAddressCity: 'City X',
+//     permanentAddressState: 'State Y',
+//     permanentAddressZip: '123456',
+//     currentAddressLine1: '456, Secondary Street',
+//     currentAddressLine2: 'Apartment 10A',
+//     currentAddressSuburb: 'Suburb B',
+//     currentAddressCity: 'City Z',
+//     currentAddressState: 'State W',
+//     currentAddressZip: '654321',
+//     currentAddressCountry: 'India',
+//     kycCustomerImage: 'https://example.com/images/kyc_customer.jpg',
+//     applicantId: 'A12345',
+//     sanctionPartnerId: 'SP123',
 
-    documents: [
-      {
-        documentCode: 'DOC123',
-        uploadDate: '2025-01-05T12:00:00Z',
-        verificationStatus: 'va', // Enum: vp=Pending, va=Verified, vm=Manual, vh=Verification Hold
-        documentUrl: 'https://example.com/documents/d1.pdf',
-        verificationStatusComments: 'Verified',
-        documentDetails: {
-          documentName: 'Passport',
-          documentType: 'KYC', // KYC, Transaction, etc.
-          complianceProcess: 'A', // A=Automated, M=Manual, B=Both
-          verificationPartnerId: 'VP123',
-        },
-      },
-      {
-        documentCode: 'DOC124',
-        uploadDate: '2025-01-10T12:00:00Z',
-        verificationStatus: 'vp',
-        documentUrl: 'https://example.com/documents/d2.pdf',
-        verificationStatusComments: 'Pending',
-        documentDetails: {
-          documentName: "Driver's License",
-          documentType: 'KYC',
-          complianceProcess: 'M',
-          verificationPartnerId: 'VP124',
-        },
-      },
-    ],
-  },
-]
+//     documents: [
+//       {
+//         //new
+
+//         kycId: 'KYC12345678',
+//         documentCode: 'DOC123',
+//         uploadDate: '2025-01-05T06:30:00.000+00:00',
+//         verificationStatus: 'va',
+//         documentUrl: 'https://example.com/documents/passport.pdf',
+//         verificationStatusComments: 'Verified',
+//       },
+//       {
+//         documentCode: 'DOC124',
+//         uploadDate: '2025-01-10T12:00:00Z',
+//         verificationStatus: 'vp',
+//         documentUrl: 'https://example.com/documents/d2.pdf',
+//         verificationStatusComments: 'Pending',
+//       },
+//     ],
+//   },
+// ]
 
 const KYCPage = () => {
-  console.log("sdffsdfas")
+  console.log('sdffsdfas')
   const theme = useTheme()
   const [filterValues, setFilterValues] = useState({
     kycId: '',
     verificationStatus: '',
     country: '',
   })
-  const [filteredData, setFilteredData] = useState<Array<Customer>>(mockData as any)
+  const [filteredData, setFilteredData] = useState<Array<Customer>>([])
   const [selectedKYC, setSelectedKYC] = useState(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [selectedDocumentModal, setSelectedDocumentModel] = useState({})
   const [selectedVerifcationOpen, setselectedVerifcationOpen] = useState(false)
+  const [mockdata, setMockData] = useState<Array<any>>([])
 
   const handleFilterChange = (key: string, value: string) => {
     setFilterValues((prev) => ({ ...prev, [key]: value }))
   }
 
+  let applicant_service = new ApplicantService()
+
+  useEffect(() => {
+    applicant_service.getApplicantKyc().then((data) => {
+      // console.log(data)
+
+      console.log('data is here', data)
+      setMockData(data)
+      setFilteredData(data)
+    })
+  }, [])
+
   const applyFilters = () => {
-    const filtered = mockData.filter((item) => {
+    const filtered = mockdata?.filter((item) => {
       return (
         (filterValues.kycId === '' || item.kycId.includes(filterValues.kycId)) &&
         (filterValues.verificationStatus === '' || item.verificationStatus === filterValues.verificationStatus) &&
@@ -189,10 +194,10 @@ const KYCPage = () => {
 
   const handleClose = () => {
     console.log('thi is the data')
+    setIsDrawerOpen(false)
     setselectedVerifcationOpen(false)
   }
   return (
-   
     <Box padding={3}>
       <VerifyDocumentModal open={selectedVerifcationOpen} onClose={handleClose} sampledata={selectedDocumentModal}></VerifyDocumentModal>
 
@@ -318,13 +323,14 @@ const KYCPage = () => {
             width: '100%',
           }}
           rows={filteredData}
+          getRowId={(row) => row.kycId}
           columns={[
-            {
-              field: 'id',
-              headerName: 'S. No',
-              flex: 1,
-              headerClassName: 'super-app-theme--header',
-            },
+            // {
+            //   field: 'id',
+            //   headerName: 'S. No',
+            //   flex: 1,
+            //   headerClassName: 'super-app-theme--header',
+            // },
             {
               field: 'kycId',
               headerName: 'KYC ID',
@@ -371,7 +377,7 @@ const KYCPage = () => {
               ),
             },
           ]}
-           //@ts-ignore 
+          //@ts-ignore
           pageSize={5}
           rowsPerPageOptions={[5]}
         />
@@ -387,8 +393,7 @@ const KYCPage = () => {
           sx: { width: '70%', height: '100%', padding: 1 },
         }}
       >
-        <Box
-        >
+        <Box>
           <Box p={3}>
             {/* Header */}
             <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
@@ -534,10 +539,10 @@ const KYCPage = () => {
               {selectedKYC?.documents?.map((proofType) => (
                 <Grid container spacing={2} alignItems="center" mt={1} key={proofType}>
                   <Grid item xs={2}>
-                    <TextField label="ID Type" fullWidth defaultValue={proofType?.documentDetails?.documentName} disabled />
+                    <TextField label="Document Code" fullWidth defaultValue={proofType?.documentCode} disabled />
                   </Grid>
                   <Grid item xs={2}>
-                    <TextField label="Verification Type" fullWidth defaultValue={proofType?.documentDetails?.documentName} disabled />
+                    <TextField label="Verification Type" fullWidth defaultValue="Auto" disabled />
                   </Grid>
                   <Grid item xs={2}>
                     <TextField label="Document Status" fullWidth defaultValue="Uploaded" disabled />
@@ -551,11 +556,15 @@ const KYCPage = () => {
                     >
                       <u
                         onClick={() => {
-                          setselectedVerifcationOpen(true)
-                          setSelectedDocumentModel(proofType?.documentDetails)
+                          // setselectedVerifcationOpen(true)
+                          // setSelectedDocumentModel(proofType?.documentDetails)
                         }}
                       >
-                        view more
+                        {/* <a href={proofType?.documentUrl}>View More</a> */}
+                        <a href={proofType?.documentUrl} target="_blank" rel="noopener noreferrer">
+                          View More
+                        </a>
+                        {/* view more */}
                       </u>
                     </Typography>
                     {/* <Button variant="outlined">Uploaded</Button> */}

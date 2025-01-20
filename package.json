@@ -17,7 +17,7 @@
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.16.13",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
-    "@mui/x-charts": "^7.23.2",
+    "@mui/x-charts": "^7.23.6",
     "@mui/x-data-grid": "^7.7.0",
     "@mui/x-date-pickers": "^7.22.2",
     "@mui/x-date-pickers-pro": "^7.22.2",

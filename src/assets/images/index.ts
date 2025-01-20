@@ -5,4 +5,5 @@ import LoginBack from './loginback.png'
 import LogoWhite from './logo_white.png'
 import Passport from './passport.jpg'
 import Chuks from './chuks.jpg'
-export { Logo, Thumbnail, LoginBack, LogoWhite, Passport, Chuks }
+import Success from './success.gif'
+export { Logo, Thumbnail, LoginBack, LogoWhite, Passport, Chuks, Success }

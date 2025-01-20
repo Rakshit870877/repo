@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Grid, TextField, Menu, MenuItem, IconButton, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary }) => {
+const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary, beneficiaries }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [formData, setFormData] = useState({
     accountHolderName: '',
@@ -12,10 +12,6 @@ const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary }) => {
   })
 
   // Dummy beneficiary data
-  const beneficiaries = [
-    { name: 'John Doe', accountNumber: '123456789', bank: 'ABC Bank', ifscCode: 'ABC1234' },
-    { name: 'Jane Smith', accountNumber: '987654321', bank: 'XYZ Bank', ifscCode: 'XYZ5678' },
-  ]
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -38,6 +34,7 @@ const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary }) => {
       accountNumber: beneficiary.accountNumber,
       bank: beneficiary.bank,
       ifscCode: beneficiary.ifscCode,
+      benificaryId: beneficiary?.benificaryId,
     })
     setAnchorEl(null)
   }
@@ -60,7 +57,7 @@ const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary }) => {
           }}
         />
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-          {beneficiaries.map((beneficiary, index) => (
+          {beneficiaries?.map((beneficiary, index) => (
             <MenuItem key={index} onClick={() => handleSelectBeneficiary(beneficiary)}>
               <ListItemIcon>
                 <Avatar>{beneficiary.name.charAt(0)}</Avatar>

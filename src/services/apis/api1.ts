@@ -5,7 +5,7 @@ import { LocalStorageService } from '../../helpers/local-storage-service'
 import { BaseError } from '../../types/error.type'
 import { logger } from '../../helpers/logger'
 
-const { VITE_APP_BACKEND, VITE_APP_URL } = import.meta.env
+const { VITE_APP_BACKEND, VITE_APP_URL, VITE_APP_APPLICANT } = import.meta.env
 
 interface AdaptAxiosRequestConfig extends AxiosRequestConfig {
   headers: AxiosRequestHeaders

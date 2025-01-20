@@ -35,6 +35,10 @@ import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp } from '@mui/x
 import VerifiedIcon from '@mui/icons-material/Verified'
 import PaymentMethodsTable from '@/components/paymentmethod'
 import BeneficiaryForm from '@/components/benificeary'
+import { ApplicantService } from '@/services/applicant.service'
+import { Beneficiary } from '@/types/transaction.type'
+import { TransactionService } from '@/services/transaction.service'
+import GifModal from '@/components/successModal'
 
 const users = [
   {
@@ -98,6 +102,7 @@ const paymentGateways = [
   },
 ]
 
+
 const SendMoneyPage = () => {
   const [searchText, setSearchText] = useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
@@ -108,6 +113,9 @@ const SendMoneyPage = () => {
   const[sourceCountry,setSourceCountry]=useState('ZAR')
   const[gatewayCharge,  setGatewayCharge]=useState(0)
   const[selectedBenficary,setSelectedBenificary]=useState({})
+  const[userlist,setUserList]=useState([])
+  const[benficiary,setbenificiary]=useState<Array<any>>([])
+  const[gifsuccess,setGifSuccess]=useState(false)
 //   const[selected ]
 
 
@@ -123,11 +131,53 @@ const SendMoneyPage = () => {
   const [forexRate, setForexRate] = useState<string>('')
   const [amount, setAmount] = useState<number>(0)
   const[selectedTransferMethod,setSelectedTransferMethod]=useState("BankTransfer")
+
+
+
+let applicant_service=new ApplicantService()
+let transaction_service=new TransactionService()
+
+
   
 useEffect(()=>{
+  applicant_service.getApplicantDetalis().then(data=>{
+    let users=data.map((e)=>{
+  let benificiary_list=e.beneficiaryList.map((b)=>{
+
+    return(
+
+
+
+      { "benificaryId": b.beneficiaryId,
+        "name": b.beneficiaryName,
+        "accountHolderName":b.beneficiaryName,
+         "accountNumber": b.bankBicCode, 
+         "bank": b.bankName, 
+         "ifscCode": b.bankBicCode })
+    
+    
+    })
+
+  return ({
+     "applicantId": e.applicant.applicantId,
+id:e.applicant.applicantId,
+name:e.applicant.applicantName,
+accountNumber: '**********789',
+profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
+benificary:benificiary_list
+
+  })
+})
+
+
+setUserList(users as any)
+
+
+})
+  
 // console.log(se)
 
-},[amount])
+},[])
 
 
 
@@ -219,11 +269,12 @@ useEffect(()=>{
     if (value.trim() === '') {
       setFilteredUsers([])
     } else {
-      const filtered = users.filter((user) => user.name.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value))
+      const filtered = userlist.filter((user) => user.name.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value))
       setFilteredUsers(filtered)
     }
   }
   const handleUserSelect = (user: { name: string; accountNumber: string }) => {
+    console.log(user)
     setSelectedUser(user)
     setSearchText(user.name) // Set selected user's name in TextField
     setFilteredUsers([]) // Clear th
@@ -310,6 +361,7 @@ useEffect(()=>{
                   <Paper elevation={3} style={{ marginTop: '10px' }}>
                     <List>
                       {filteredUsers.map((user) => (
+                        // {user}
                         <ListItem key={user.id} divider button onClick={() => handleUserSelect(user)}>
                           <ListItemAvatar>
                             <Avatar src={user.profilePhoto} alt={user.name}>
@@ -502,7 +554,9 @@ useEffect(()=>{
       <Button variant="contained" color="primary" onClick={() => {
         
         setTabValue('2')
-          
+
+
+      
 
 
       }}>
@@ -621,7 +675,7 @@ useEffect(()=>{
                 <TextField label="IFSC Code" variant="filled" fullWidth placeholder="Enter IFSC Code" />
               </Grid>
             </Grid> */}
-            <BeneficiaryForm selectedBenificary={selectedBenficary} setselectedBenficiary={setSelectedBenificary}></BeneficiaryForm>
+            <BeneficiaryForm selectedBenificary={selectedBenficary} setselectedBenficiary={setSelectedBenificary}  beneficiaries={selectedUser?.benificary} ></BeneficiaryForm>
 
             <Divider sx={{ marginY: 2 }} />
 
@@ -651,10 +705,14 @@ useEffect(()=>{
                 selectedTimeMethod:selectedTime,
                 gateway:selectedGateway,
                 amount:amount,
-               user:selectedUser,
+               applicant:selectedUser,
                forex:forexRate,
                timecharge:selectedTime?.time,
                sourceCurrency:'Zar',
+               sourceCountry:"SA",
+               destinationCurrency:curre,
+
+
               totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
   
 
@@ -743,13 +801,51 @@ useEffect(()=>{
               </Table>
             </TableContainer>
 
-            <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() => alert('Transaction Confirmed!')}>
+            <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() => {
+
+let payload={
+  benificary:selectedBenficary,
+  transferMethod:selectedTransferMethod,
+   destinationCountry:selectedCountry,
+   selectedTimeMethod:selectedTime,
+   gateway:selectedGateway,
+   amount:amount,
+  applicant:selectedUser,
+  forex:forexRate,
+  timecharge:selectedTime?.time,
+  sourceCurrency:'Zar',
+  sourceCountry:"SA",
+  destinationCurrency:currency,
+ totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
+
+ }
+
+ 
+ transaction_service.createTransaction(payload).then(data=>{
+
+  console.log(data)
+ })
+
+
+ setGifSuccess(true)
+
+
+  
+
+            }}>
               Confirm & Pay
             </Button>
           </Box>
         </TabPanel>
       </TabContext>
+
+      <GifModal open={gifsuccess} setOpen={setGifSuccess}></GifModal>
+    
+
+
+    
     </Box>
+
   )
 }
 
