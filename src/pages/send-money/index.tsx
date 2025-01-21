@@ -385,7 +385,7 @@ setUserList(users as any)
                     />
                     {selectedUser.name} (Account: {selectedUser.accountNumber})
 
-                }
+                
                   </Typography>
                 )}
               </Grid>
