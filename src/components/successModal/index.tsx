@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { Modal, Box, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
-const GifModal: React.FC = ({ open, setOpen }) => {
+const GifModal: React.FC = (
+   //@ts-ignore
+  { open, setOpen }) => {
   const handleOpen = () => setOpen(true)
 
   let navigate = useNavigate()

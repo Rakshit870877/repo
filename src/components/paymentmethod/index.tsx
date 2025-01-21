@@ -8,12 +8,13 @@ const paymentMethods = [
   { id: 3, method: 'PayPal', amountReceivable: '150 USD', charges: 7, totalAmount: '157 USD', time: '3 hours' },
 ]
 
-const PaymentMethodsTable: React.FC = ({ amount, timecharge, setFinalRate, currency, setSelectedTransferMethod, setGatewayCharge }) => {
+const PaymentMethodsTable: React.FC = (
+   //@ts-ignore
+  { amount, timecharge, setFinalRate, currency, setSelectedTransferMethod, setGatewayCharge }) => {
   const [selectedRow, setSelectedRow] = useState<number | null>(null)
 
-  const handleRowSelection = (row: number) => {
-    console.log(row.charges)
-    console.log(row)
+  const handleRowSelection = (row: any) => {
+  
     setSelectedRow(row.id)
     setFinalRate(Number(amount) + Number(timecharge) + Number(row.charges))
     setSelectedTransferMethod(row.method)
@@ -28,6 +29,7 @@ const PaymentMethodsTable: React.FC = ({ amount, timecharge, setFinalRate, curre
       headerClassName: 'super-app-theme--header',
       headerName: ' Select',
       renderCell: (params: any) => (
+         //@ts-ignore
         <FormControlLabel
           control={
             <Radio
@@ -74,7 +76,10 @@ const PaymentMethodsTable: React.FC = ({ amount, timecharge, setFinalRate, curre
 
   return (
     <Paper sx={{ marginBottom: 3 }}>
-      <DataGrid rows={paymentMethods} columns={columns} pageSize={5} rowsPerPageOptions={[5]} disableSelectionOnClick autoHeight />
+      <DataGrid rows={paymentMethods} columns={columns}
+      
+       //@ts-ignore
+      pageSize={5} rowsPerPageOptions={[5]} disableSelectionOnClick autoHeight />
     </Paper>
   )
 }

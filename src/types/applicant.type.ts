@@ -1,24 +1,24 @@
-export interface ApplicantFormData {
-  applicantId: string
-  applicantName: string
-  nationality: string
-  residenceCountry: string
-  phone: string
-  email: string
-  country: string
-  residenceAddress: string
-  residenceCity: string
-  residenceState: string
-  residencePostalCode: string
-  currentPostalCode: string
-  currentCountry: string
-  currentAddress: string
-  currentCity: string
-  currentState: string
-  documentType: string
-  documentPreview: File | null
-  __v: 0
+interface ApplicantFormData {
+  applicantName: string;
+  city: string;
+  country: string;
+  email: string;
+  nationality: string;
+  phone: string;
+  physicalAddressLine1: string;
+  physicalAddressLine2: string;
+  physicalAddressLine3: string;
+  postalAddressLine1: string;
+  postalAddressLine2: string;
+  postalAddressLine3: string;
+  postalCode: string;
+  residenceCity: string;
+  residenceCountry: string;
+  residencePostalCode: string;
+  residenceState: string;
+  state: string;
 }
+
 export interface ApplicantResponse {
   success: boolean
   message: string

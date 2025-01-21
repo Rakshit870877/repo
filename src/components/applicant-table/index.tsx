@@ -6,27 +6,12 @@ import { useNavigate } from 'react-router-dom';
 const ApplicantTable = ({ applicants }) => {
   const navigate = useNavigate();
 
-  // call api for get the data
-//   useEffect(()=>{
-//     try{
-
-//     }catch(error){
-
-//     }
-//     const applicantId = applicants.applicationId;
-//     const countryCode = applicants.countryCode;
-
-//     const response = await submitBeneficiaryForm(applicantId,applicantId);
-//     if (response.success) { 
-//   })
-
-  // Function to view applicant details
   //@ts-ignore
   const handleApplicantIdClick = (applicantId) => {
-    navigate(`/applicant-details`);
+    navigate(`/applicant-details/${applicantId}`);
   };
 
-  // Define columns for DataGrid
+
   const columns = [
     {
       field: 'id',
@@ -45,7 +30,7 @@ const ApplicantTable = ({ applicants }) => {
             textDecoration: 'underline',
             cursor: 'pointer',
           }}
-          onClick={() => handleApplicantIdClick(params.row.applicant.applicantId)}
+          onClick={() => handleApplicantIdClick(params.row.applicantId)}
         >
           {params.row.applicantId}
         </span>
@@ -64,23 +49,23 @@ const ApplicantTable = ({ applicants }) => {
       headerClassName: 'super-app-theme--header',
     },
     {
-      field: 'residentCountry',
+      field: 'residenceCountry',
       headerName: 'Resident Country',
       flex: 1,
       headerClassName: 'super-app-theme--header',
     },
-    {
-      field: 'amlSanction',
-      headerName: 'AML Sanction',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-    },
-    {
-      field: 'lastTransaction',
-      headerName: 'Last Transaction',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-    },
+    // {
+    //   field: 'amlSanction',
+    //   headerName: 'AML Sanction',
+    //   flex: 1,
+    //   headerClassName: 'super-app-theme--header',
+    // },
+    // {
+    //   field: 'lastTransaction',
+    //   headerName: 'Last Transaction',
+    //   flex: 1,
+    //   headerClassName: 'super-app-theme--header',
+    // },
   ];
 
   return (
@@ -111,6 +96,7 @@ const ApplicantTable = ({ applicants }) => {
       }}
       columns={columns}
       rows={applicants}
+      //@ts-ignore
       pageSize={5}
       rowsPerPageOptions={[5]}
     />

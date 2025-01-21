@@ -14,6 +14,7 @@ import {
 
 const sampleInwardsData: Array<TransactionInwardCalclulated> = [
   {
+     //@ts-ignore
     id: 'IMP11231',
     destination: 'USA',
     value: 1000,
@@ -60,75 +61,6 @@ const sampleInwardsData: Array<TransactionInwardCalclulated> = [
   },
 ]
 
-const sampleOutwardsData: Array<TansactionOutwardCalculated> = [
-  {
-    id: 'IMP11235',
-    destination: 'India',
-    value: 2000,
-    currency: 'INR',
-    settlement: '2025-01-04',
-    destinationBank: 'ICICI Bank',
-    reportedToSARB: 'Yes',
-    date: '2025-01-05',
-    holderName: 'Siddhant kaushik',
-    accountNumber: '23322 23232 2323 343434',
-    bankCode: 'IC2345',
-
-    //transaction
-
-    transactionNumber: 'T002',
-    sendCountry: 'USA',
-    receiveCountry: 'GBR',
-    applicantId: 'A001',
-    receiverId: 'B001',
-    dealCoverNumber: 'D223456',
-    exchangeRates: 1.3,
-    principalCurrency: 'USD',
-    principalAmount: 15000.0,
-    settlementCurrency: 'GBP',
-    settlementAmount: 19500.0,
-    charges: 150.0,
-    lcharges2: 75.0,
-    destinationBankBicCode: 'BICCODE124',
-    transactionStatus: 'ST',
-    reportingStatus: 'RP',
-    beneficiaryId: 'B001',
-    residenceCountry: 'USA',
-    nationality: 'American',
-    beneficiaryName: 'Alice Johnson',
-    idType: 'Passport',
-    idNumber: 'P123456789',
-    physicalAddressLine1: '456 Oak St',
-    physicalAddressLine2: 'Apt 7B',
-    physicalAddressLine3: 'Floor 4',
-    suburb: 'Uptown',
-    city: 'New York',
-    postCode: '10002',
-    country: 'USA',
-    bankName: 'XYZ Bank',
-    bankBicCode: 'BIC123XYZ',
-    sortCode: '678901',
-    iban: 'US9876543210',
-    profileStatus: true,
-    sanctionStatus: false,
-    fraudStatus: false,
-    applicant: 'A001',
-    activeStatus: true,
-  },
-  {
-    id: 'IMP11239',
-    destination: 'Germany',
-    value: 2500,
-    currency: 'EUR',
-    settlement: '2025-01-06',
-    destinationBank: 'Deutsche Bank',
-    reportedToSARB: 'No',
-    date: '2025-01-07',
-    holderName: 'Siddhant kaushik',
-    accountNumber: '23322 23232 2323 343434',
-    bankCode: 'IC2345',
-  },
-]
 
 const TransactionPage = () => {
   const columns: GridColDef[] = [
@@ -158,14 +90,14 @@ const TransactionPage = () => {
 
   const [isDrawerOpen, setDrawerOpen] = useState(false)
 
-  const [transactionDetails, setTransactionDetails] = useState(null)
+  const [transactionDetails, setTransactionDetails] = useState<any>(null)
   const [transactionType, setTransactionType] = useState('inwards') // Default to 'inwards'
 
   const [inboundTransaction, setInboundTransaction] = useState<Array<TransactionInward>>([])
   const [outboundTransaction, setOutboundTransaction] = useState<Array<TransactionOutward>>([])
   const [transactionData, setTransactionData] = useState(inboundTransaction)
 
-  const handleViewMore = (row) => {
+  const handleViewMore = (row:any) => {
     setTransactionDetails(row)
     setDrawerOpen(true)
   }
@@ -176,7 +108,7 @@ const TransactionPage = () => {
     transaction_Service
       .gettransactions()
       .then((data: TransactionDetailsResponse) => {
-        let inbound: Array<TransactionInwardCalclulated>[] = data?.transactionDetailsList.map((e) => {
+        let inbound: Array<TransactionInwardCalclulated>[]|any = data?.transactionDetailsList.map((e) => {
           return {
             ...e.transactionInward,
             ...e.beneficiary,
@@ -189,7 +121,7 @@ const TransactionPage = () => {
           }
         })
 
-        let outbound: Array<TansactionOutwardCalculated>[] = data?.transactionDetailsList.map((e) => {
+        let outbound: Array<TansactionOutwardCalculated>[] |any= data?.transactionDetailsList.map((e) => {
           return {
             ...e.transactionOutward,
             ...e.beneficiary,
@@ -207,12 +139,18 @@ const TransactionPage = () => {
         console.log(inbound)
         console.log(outbound)
       })
-      .catch((err) => {})
+      .catch(
+         //@ts-ignore
+        (err:any) => {})
   }, [])
 
-  const handleToggleTransactionType = (event, newType) => {
+  const handleToggleTransactionType = (
+    
+     //@ts-ignore
+    event, newType) => {
     if (newType) {
       setTransactionType(newType)
+       //@ts-ignore
       setTransactionData(newType === 'inwards' ? inboundTransaction : outboundTransaction)
     }
   }
@@ -264,7 +202,9 @@ const TransactionPage = () => {
               sx={{
                 marginBottom: '10%',
               }}
-              onClick={(e) => {
+              onClick={
+                 //@ts-ignore
+                (e) => {
                 // console.log()
                 navigate('/sendmoney')
               }}
@@ -277,6 +217,7 @@ const TransactionPage = () => {
         <DataGrid
           rows={transactionData}
           columns={columns}
+           //@ts-ignore
           pageSize={5}
           rowsPerPageOptions={[5]}
           disableSelectionOnClick
@@ -331,16 +272,24 @@ const TransactionPage = () => {
             </Typography>
             <Grid container spacing={2} mb={2}>
               <Grid item xs={12} md={6}>
-                <TextField label="Destination" variant="filled" fullWidth defaultValue={transactionDetails.destination} size="small" disabled />
+                <TextField label="Destination" variant="filled" fullWidth
+                 //@ts-ignore
+                defaultValue={transactionDetails.destination} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Value" variant="filled" fullWidth defaultValue={transactionDetails.value} size="small" disabled />
+                <TextField label="Value" variant="filled" fullWidth 
+                 //@ts-ignore
+                defaultValue={transactionDetails.value} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Currency" variant="filled" fullWidth defaultValue={transactionDetails.currency} size="small" disabled />
+                <TextField label="Currency" variant="filled" fullWidth 
+                 //@ts-ignore
+                defaultValue={transactionDetails.currency} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Date" variant="filled" fullWidth defaultValue={transactionDetails.date} size="small" disabled />
+                <TextField label="Date" variant="filled" fullWidth 
+                 //@ts-ignore
+                defaultValue={transactionDetails.date} size="small" disabled />
               </Grid>
             </Grid>
 

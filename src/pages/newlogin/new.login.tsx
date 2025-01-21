@@ -26,7 +26,9 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const theme = useTheme()
 
-  const handleClose = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+  const handleClose = (
+     //@ts-ignore
+    event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return
     }

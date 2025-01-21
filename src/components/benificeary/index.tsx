@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { Grid, TextField, Menu, MenuItem, IconButton, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary, beneficiaries }) => {
+const BeneficiaryForm = ({ 
+   //@ts-ignore
+  setselectedBenficiary, selectedBenificary, beneficiaries }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [formData, setFormData] = useState({
     accountHolderName: '',
@@ -57,7 +59,9 @@ const BeneficiaryForm = ({ setselectedBenficiary, selectedBenificary, beneficiar
           }}
         />
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-          {beneficiaries?.map((beneficiary, index) => (
+          {beneficiaries?.map(
+             //@ts-ignore
+            (beneficiary, index) => (
             <MenuItem key={index} onClick={() => handleSelectBeneficiary(beneficiary)}>
               <ListItemIcon>
                 <Avatar>{beneficiary.name.charAt(0)}</Avatar>

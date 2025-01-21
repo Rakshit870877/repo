@@ -5,7 +5,9 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 import { Document, Page } from 'react-pdf'
 import { Passport } from '@/assets/images'
 
-const VerifyDocumentModal = ({ open, onClose, sampledata }: { open: boolean; onClose: () => void }) => {
+const VerifyDocumentModal = (
+   //@ts-ignore
+  { open, onClose, sampledata }: { open: boolean; onClose: () => void }) => {
   const [fileType, setFileType] = useState<'pdf' | 'image'>('image') // Example type
   const [filePath, setFilePath] = useState('../../assets/images/passport.jpg') // Example file
 

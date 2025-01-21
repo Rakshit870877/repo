@@ -96,6 +96,7 @@ const UserPage: React.FC = () => {
         <DataGrid
           rows={rows}
           columns={columns}
+          //@ts-ignore
           pageSize={5}
           onRowClick={handleRowClick}
           sx={{

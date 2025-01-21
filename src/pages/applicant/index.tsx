@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Box, Grid, TextField, Typography, Button, Switch, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Tabs, Tab } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import TransactionTable from '../transaction-table';
-import BeneficiaryTable from '../beneficiary-table';
 import DocumentComponent from '../document-tab';
 import { ApplicantService } from '@/services/applicant.service';
+import BeneficiaryTable from '@/components/beneficiary-table';
 
 const applicant_service = new ApplicantService();
 
 const ApplicantPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Extract applicantId from the URL params
-
+  
   const [formData, setFormData] = useState<any>({});
   const [tempData, setTempData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
@@ -20,7 +19,6 @@ const ApplicantPage = () => {
   const [openSaveDialog, setOpenSaveDialog] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
 
-  // Fetch applicant data on component mount
   const {applicantId} = useParams();
   useEffect(() => {
     const fetchApplicantData = async () => {
@@ -94,12 +92,14 @@ const ApplicantPage = () => {
     setOpenConfirmationDialog(false);
   };
 
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleTabChange = (
+     //@ts-ignore
+    event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
   };
 
   const handleBack = () => {
-    navigate('/applicant-list');
+    navigate('/applicant');
   };
 
   return (
@@ -121,9 +121,9 @@ const ApplicantPage = () => {
           <TextField
               label="Applicant Name"
               variant="filled"
-              name="applicantName"
+              name="firstName"
               fullWidth
-              value={tempData?.applicant?.applicantName || ''}
+              value={tempData?.data?.applicant?.firstName || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -134,7 +134,7 @@ const ApplicantPage = () => {
               variant="filled"
               name="nationality"
               fullWidth
-              value={tempData?.applicant?.nationality || ''}
+              value={tempData?.data?.applicant?.nationality || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -145,7 +145,7 @@ const ApplicantPage = () => {
               variant="filled"
               name="residenceCountry"
               fullWidth
-              value={tempData?.applicant?.residenceCountry || ''}
+              value={tempData?.data?.applicant?.residenceCountry || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -160,7 +160,7 @@ const ApplicantPage = () => {
               variant="filled"
               name="applicantContactDetails.contactDetails"
               fullWidth
-              value={tempData?.applicant?.applicantContactDetails?.contactDetails || ''}
+              value={tempData?.data?.applicantContactDetails?.[0]?.contactDetails || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -171,7 +171,7 @@ const ApplicantPage = () => {
               variant="filled"
               name="applicantContactDetails.contactDetails"
               fullWidth
-              value={tempData?.applicantContactDetails?.contactDetails || ''}
+              value={tempData?.data?.applicantContactDetails?.[1]?.contactDetails || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -187,7 +187,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Address Line 1"
               name="postalAddressLine1"
-              value={tempData?.applicant?.postalAddressLine1 || ''}
+              value={tempData?.data?.applicant?.postalAddressLine1 || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -197,7 +197,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Address Line 2"
               name="postalAddressLine2"
-              value={tempData?.applicant?.postalAddressLine2 || ''}
+              value={tempData?.data?.applicant?.postalAddressLine2 || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -210,7 +210,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Address Line 3"
               name="postalAddressLine3"
-              value={tempData?.applicant?.postalAddressLine3 || ''}
+              value={tempData?.data?.applicant?.postalAddressLine3 || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -220,7 +220,7 @@ const ApplicantPage = () => {
               fullWidth
               label="City"
               name="city"
-              value={tempData?.applicant?.city || ''}
+              value={tempData?.data?.applicant?.city || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -230,7 +230,7 @@ const ApplicantPage = () => {
               fullWidth
               label="State"
               name="state"
-              value={tempData?.applicant?.state || ''}
+              value={tempData?.data?.applicant?.state || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -240,7 +240,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Postal Code"
               name="postalCode"
-              value={tempData?.applicant?.postalCode || ''}
+              value={tempData?.data?.applicant?.postalCode || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -250,7 +250,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Country"
               name="country"
-              value={tempData?.applicant?.country || ''}
+              value={tempData?.data?.applicant?.country || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -264,7 +264,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Address Line 1"
               name="physicalAddressLine1"
-              value={tempData?.applicant?.physicalAddressLine1 || ''}
+              value={tempData?.data?.applicant?.physicalAddressLine1 || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -274,7 +274,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Address Line 2"
               name="physicalAddressLine2"
-              value={tempData?.applicant?.physicalAddressLine2 || ''}
+              value={tempData?.data?.applicant?.physicalAddressLine2 || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -287,7 +287,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Address Line 3"
               name="physicalAddressLine3"
-              value={tempData?.applicant?.physicalAddressLine3 || ''}
+              value={tempData?.data?.applicant?.physicalAddressLine3 || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -297,7 +297,7 @@ const ApplicantPage = () => {
               fullWidth
               label="City"
               name="residenceCity"
-              value={tempData?.applicant?.residenceCity || ''}
+              value={tempData?.data?.applicant?.residenceCity || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -307,7 +307,7 @@ const ApplicantPage = () => {
               fullWidth
               label="State"
               name="residenceState"
-              value={tempData?.applicant?.residenceState || ''}
+              value={tempData?.data?.applicant?.residenceState || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
              
@@ -318,7 +318,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Zip Code"
               name="residencePostalCode"
-              value={tempData?.applicant?.residencePostalCode || ''}
+              value={tempData?.data?.applicant?.residencePostalCode || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -328,7 +328,7 @@ const ApplicantPage = () => {
               fullWidth
               label="Country"
               name="residenceCountry"
-              value={tempData?.applicant?.residenceCountry || ''}
+              value={tempData?.data?.applicant?.residenceCountry || ''}
               onChange={handleChange}
               InputProps={{ readOnly: !isEditable }}
             />
@@ -337,7 +337,7 @@ const ApplicantPage = () => {
       
 
       {/* Tab Component */}
-      <Tabs sx={{ marginBottom: '10px' }} value={selectedTab} onChange={handleTabChange} aria-label="Customer data tabs" sx={{ marginTop: 4 }}>
+      <Tabs sx={{ marginBottom: '10px' }} value={selectedTab} onChange={handleTabChange} aria-label="Customer data tabs" >
         <Tab label="Documents" sx={{ marginRight: '2px' }} />
         <Tab label="Beneficiaries" sx={{ marginRight: '2px' }} />
         <Tab label="Transactions" sx={{ marginRight: '2px' }} />
@@ -345,7 +345,10 @@ const ApplicantPage = () => {
 
       {/* Tab Content */}
       {selectedTab === 0 && <DocumentComponent />}
-      {selectedTab === 1 && <BeneficiaryTable />}
+      
+      {selectedTab === 1 &&
+       //@ts-ignore
+      <BeneficiaryTable />}
       {selectedTab === 2 && <TransactionTable />}
 
       {/* Action Buttons */}

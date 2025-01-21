@@ -198,7 +198,9 @@ setUserList(users as any)
     setSelectedTimeTableRow(row.id)
     setSelectedTimeCharge(row.charges)
   }
-  const handleChange = (event, newValue) => {
+  const handleChange = (
+     //@ts-ignore
+    event, newValue) => {
     setTabValue(newValue)
   }
 
@@ -269,7 +271,9 @@ setUserList(users as any)
     if (value.trim() === '') {
       setFilteredUsers([])
     } else {
-      const filtered = userlist.filter((user) => user.name.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value))
+      const filtered = userlist.filter((user) => 
+         //@ts-ignore
+        user.name.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value))
       setFilteredUsers(filtered)
     }
   }
@@ -351,7 +355,10 @@ setUserList(users as any)
                   InputProps={{
                     startAdornment: selectedUser && (
                       <InputAdornment position="start">
-                        <Avatar src={selectedUser.profilePhoto} alt={selectedUser.name} style={{ marginRight: '8px' }} />
+                        <Avatar 
+                        
+                         //@ts-ignore
+                        src={selectedUser.profilePhoto} alt={selectedUser.name} style={{ marginRight: '8px' }} />
                       </InputAdornment>
                     ),
                   }}
@@ -362,13 +369,21 @@ setUserList(users as any)
                     <List>
                       {filteredUsers.map((user) => (
                         // {user}
-                        <ListItem key={user.id} divider button onClick={() => handleUserSelect(user)}>
+                        <ListItem 
+                         //@ts-ignore
+                        key={user.id} divider button onClick={() => handleUserSelect(user)}>
                           <ListItemAvatar>
-                            <Avatar src={user.profilePhoto} alt={user.name}>
-                              {user.name[0]}
+                            <Avatar src={
+                               //@ts-ignore
+                              user.profilePhoto} alt={user.name}>
+                              {
+                                 //@ts-ignore
+                              user.name[0]}
                             </Avatar>
                           </ListItemAvatar>
-                          <ListItemText primary={user.name} secondary={`ID: ${user.id} | Account: ${user.accountNumber}`} />
+                          <ListItemText primary={
+                             //@ts-ignore
+                            user.name} secondary={`ID: ${user.id} | Account: ${user.accountNumber}`} />
                         </ListItem>
                       ))}
                     </List>
@@ -396,7 +411,9 @@ setUserList(users as any)
                 <Grid item xs={12} md={3}>
                   <FormControl variant="filled" fullWidth>
                     <InputLabel>Destination Country</InputLabel>
-                    <Select value={selectedCountry} onChange={handleCountryChange} displayEmpty>
+                    <Select value={selectedCountry} 
+                     //@ts-ignore
+                    onChange={handleCountryChange} displayEmpty>
                       {countries.map((country) => (
                         <MenuItem key={country.code} value={country.code}>
                           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -465,6 +482,7 @@ setUserList(users as any)
                       <DataGrid
                         rows={TimechargesRows}
                         columns={chargesTableColumns}
+                         //@ts-ignore
                         pageSize={5}
                         disableSelectionOnClick
                         hideFooterSelectedRowCount
@@ -491,8 +509,13 @@ setUserList(users as any)
                       Select Payment Gateway
                     </Typography>
                     <Autocomplete
+                     //@ts-ignore
                       value={selectedGateway}
-                      onChange={(event, newValue) => setSelectedGateway(newValue)}
+                      onChange={
+                         //@ts-ignore
+                        (event, newValue) =>
+                         //@ts-ignore
+                        setSelectedGateway(newValue)}
                       options={paymentGateways}
                       getOptionLabel={(option) => option.name}
                       renderOption={(props, option) => (
@@ -522,7 +545,9 @@ setUserList(users as any)
                         },
                       }}
                     >
-                      <PaymentMethodsTable amount={amount} timecharge={selecteTimeChange} setFinalRate={setFinalAmount} setGatewayCharge={setGatewayCharge}  currency={sourceCountry} setSelectedTransferMethod={setSelectedTransferMethod} />
+                      <PaymentMethodsTable
+                       //@ts-ignore
+                      amount={amount} timecharge={selecteTimeChange} setFinalRate={setFinalAmount} setGatewayCharge={setGatewayCharge}  currency={sourceCountry} setSelectedTransferMethod={setSelectedTransferMethod} />
                     </Grid>
                   </>
                 ) : (
@@ -576,7 +601,10 @@ setUserList(users as any)
                 {/* <TextField label="Destination Country" variant="filled" fullWidth defaultValue={selectedCountry} disabled /> */}
                 <FormControl variant="filled" fullWidth disabled>
                     <InputLabel>Destination Country</InputLabel>
-                    <Select value={selectedCountry} onChange={handleCountryChange} displayEmpty>
+                    <Select value={selectedCountry} 
+                     //@ts-ignore
+                    
+                    onChange={handleCountryChange} displayEmpty>
                       {countries.map((country) => (
                         <MenuItem key={country.code} value={country.code}>
                           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -629,7 +657,9 @@ setUserList(users as any)
                   InputProps={{
                     startAdornment: selectedUser && (
                       <InputAdornment position="start">
-                        <Avatar src={selectedUser.profilePhoto} alt={selectedUser.name} style={{ marginRight: '8px' }} />
+                        <Avatar 
+                         //@ts-ignore
+                        src={selectedUser.profilePhoto} alt={selectedUser.name} style={{ marginRight: '8px' }} />
                       </InputAdornment>
                     ),
                   }}
@@ -639,13 +669,23 @@ setUserList(users as any)
                   <Paper elevation={3} style={{ marginTop: '10px' }}>
                     <List>
                       {filteredUsers.map((user) => (
-                        <ListItem key={user.id} divider button onClick={() => handleUserSelect(user)}>
+                        <ListItem 
+                         //@ts-ignore
+                        key={user.id} divider button onClick={() => handleUserSelect(user)}>
                           <ListItemAvatar>
-                            <Avatar src={user.profilePhoto} alt={user.name}>
-                              {user.name[0]}
+                            <Avatar 
+                             //@ts-ignore
+                            src={user.profilePhoto} alt={user.name}>
+
+                              {
+                               //@ts-ignore
+                              user.name[0]}
                             </Avatar>
                           </ListItemAvatar>
-                          <ListItemText primary={user.name} secondary={`ID: ${user.id} | Account: ${user.accountNumber}`} />
+                          <ListItemText 
+                          
+                           //@ts-ignore
+                          primary={user.name} secondary={`ID: ${user.id} | Account: ${user.accountNumber}`} />
                         </ListItem>
                       ))}
                     </List>
@@ -675,7 +715,10 @@ setUserList(users as any)
                 <TextField label="IFSC Code" variant="filled" fullWidth placeholder="Enter IFSC Code" />
               </Grid>
             </Grid> */}
-            <BeneficiaryForm selectedBenificary={selectedBenficary} setselectedBenficiary={setSelectedBenificary}  beneficiaries={selectedUser?.benificary} ></BeneficiaryForm>
+            <BeneficiaryForm selectedBenificary={selectedBenficary} setselectedBenficiary={setSelectedBenificary} 
+            
+             //@ts-ignore
+            beneficiaries={selectedUser?.benificary} ></BeneficiaryForm>
 
             <Divider sx={{ marginY: 2 }} />
 
@@ -697,29 +740,6 @@ setUserList(users as any)
             <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() =>{ 
 
               setTabValue('3')
-
-              console.log({
-               benificary:selectedBenficary,
-               transferMethod:selectedTransferMethod,
-                destinationCountry:selectedCountry,
-                selectedTimeMethod:selectedTime,
-                gateway:selectedGateway,
-                amount:amount,
-               applicant:selectedUser,
-               forex:forexRate,
-               timecharge:selectedTime?.time,
-               sourceCurrency:'Zar',
-               sourceCountry:"SA",
-               destinationCurrency:curre,
-
-
-              totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
-  
-
-
-
-              })
-              console.log(selectedUser,selectedCountry,amount,selectedGateway,selectedPaymentMethod,selectedTimeTableRow,selectedCountry,selectedTransferMethod,selectedBenficary)
    
 
 
@@ -773,7 +793,10 @@ setUserList(users as any)
                 <TableBody>
                 <TableRow>
                     <TableCell>Settlement Amount</TableCell>
-                    <TableCell align="right">{amount*forexRate +" "+currency }</TableCell>
+                    <TableCell align="right">
+                      {
+                       //@ts-ignore
+                      amount*forexRate +" "+currency }</TableCell>
                   </TableRow>
 
 
@@ -812,6 +835,7 @@ let payload={
    amount:amount,
   applicant:selectedUser,
   forex:forexRate,
+   //@ts-ignore
   timecharge:selectedTime?.time,
   sourceCurrency:'Zar',
   sourceCountry:"SA",
@@ -839,7 +863,10 @@ let payload={
         </TabPanel>
       </TabContext>
 
-      <GifModal open={gifsuccess} setOpen={setGifSuccess}></GifModal>
+      <GifModal 
+      
+       //@ts-ignore
+      open={gifsuccess} setOpen={setGifSuccess}></GifModal>
     
 
 

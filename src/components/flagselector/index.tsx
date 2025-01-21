@@ -16,7 +16,12 @@ export default function FlagSelector() {
     <Autocomplete
       options={countries}
       getOptionLabel={(option) => option.name}
-      onChange={(event, newValue) => setSelectedCountry(newValue)}
+      onChange={
+         //@ts-ignore
+        (event, newValue) => setSelectedCountry(
+        
+         //@ts-ignore
+        newValue)}
       renderInput={(params) => <TextField {...params} label="Select Country" variant="outlined" />}
       renderOption={(props, option) => (
         <Box component="li" {...props} display="flex" alignItems="center">

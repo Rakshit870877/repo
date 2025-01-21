@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Box, Grid, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { ApplicantService } from '@/services/applicant.service';
+import {  useNavigate } from 'react-router-dom';
 
 const applicant_service = new ApplicantService();
 
 const AddApplicant = () => {
   // Defining form data state directly in the component
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     applicantName: '',
     nationality: '',
@@ -15,18 +18,16 @@ const AddApplicant = () => {
     physicalAddressLine1: '',
     physicalAddressLine2: '',
     physicalAddressLine3: '',
-    physicalCity: '',
-    physicalState: '',
-    physicalPostalCode: '',
-    physicalCountry: '',
+    city: '',
+    state: '',
+    country:'',
+    postalCode: '',
     postalAddressLine1: '',
     postalAddressLine2: '',
     postalAddressLine3: '',
-    postalCity: '',
-    postalState: '',
-    postalPostalCode: '',
-    postalCountry: '',
-    documents: [], 
+    residenceCity:'',
+    residencePostalCode:'',
+    residenceState:'',
   });
 
   const [documentFields, setDocumentFields] = useState<any[]>([{ documentType: '', documentPreview: null, showUpload: false }]);
@@ -43,7 +44,7 @@ const AddApplicant = () => {
     // Update formData state to reflect changes in documents array
     setFormData((prevData:any) => ({
       ...prevData,
-      documents: updatedFields,
+      // documents: updatedFields,p
     }));
   };
 
@@ -94,16 +95,18 @@ const AddApplicant = () => {
   const handleSubmit = async () => {
     const isValid = validateForm();
     if (!isValid) return;
+    console.log("Dattttaaa",formData);
 
     try {
       const response = await applicant_service.submitApplicantForm(formData);
-      // console.log("stringify-----",JSON.stringify(response:any));
       //@ts-ignore
       if (response.status == 200) {
-        console.log("200");
+        console.log("200", formData);
         setText('Applicant Successfully Added');
         setType('success');
         setOpen(true);
+        alert("Applicant created successfully!");
+        navigate('/applicant');
       } else {
         console.log("errorororororo");
         setText('Unable to Submit Applicant');
@@ -228,95 +231,8 @@ const AddApplicant = () => {
       <Box sx={{width:"80vw"}}>
     
       <Grid item xs={12}>
-      <Typography variant="subtitle1" sx={{ color: 'grey', marginBottom: 1 }}><strong>Physical Address</strong></Typography>
-        <Grid container spacing={2}>
-        <Grid item xs={6} >
-        <TextField
-          label="Address Line 1"
-          fullWidth
-          name="physicalAddressLine1"
-          value={formData.physicalAddressLine1}
-          onChange={handleChange}
-          error={Boolean(errors.physicalAddressLine1)}
-          helperText={errors.physicalAddressLine1}
-        />
-        </Grid>
-        <Grid item xs={6}>
-        <TextField
-          label="Address Line 2"
-          fullWidth
-          name="physicalAddressLine2"
-          value={formData.physicalAddressLine2}
-          onChange={handleChange}
-          error={Boolean(errors.physicalAddressLine2)}
-          helperText={errors.physicalAddressLine2}
-        />
-        </Grid>
-        </Grid>
-        <Grid container spacing={2} mt={0.5}>
-        <Grid item xs={6}>
-        <TextField
-          label="Address Line 3"
-          fullWidth
-          name="physicalAddressLine3"
-          value={formData.physicalAddressLine3}
-          onChange={handleChange}
-          error={Boolean(errors.physicalAddressLine3)}
-          helperText={errors.physicalAddressLine3}
-        />
-        </Grid>
-          <Grid item xs={1.5}>
-            <TextField
-              label="City"
-              fullWidth
-              name="physicalCity"
-              value={formData.physicalCity}
-              onChange={handleChange}
-              error={Boolean(errors.physicalCity)}
-              helperText={errors.physicalCity}
-            />
-          </Grid>
-          <Grid item xs={1.5}>
-            <TextField
-              label="State"
-              fullWidth
-              name="physicalState"
-              value={formData.physicalState}
-              onChange={handleChange}
-              error={Boolean(errors.physicalState)}
-              helperText={errors.physicalState}
-            />
-          </Grid>
-          <Grid item xs={1.5}>
-            <TextField
-              label="Zip Code"
-              fullWidth
-              name="physicalPostalCode"
-              value={formData.physicalPostalCode}
-              onChange={handleChange}
-              error={Boolean(errors.physicalPostalCode)}
-              helperText={errors.physicalPostalCode}
-            />
-          </Grid>
-          <Grid item xs={1.5}>
-            <TextField
-              label="Country"
-              fullWidth
-              name="physicalCountry"
-              value={formData.physicalCountry}
-              onChange={handleChange}
-              error={Boolean(errors.physicalCountry)}
-              helperText={errors.physicalCountry}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Box sx={{ width: '20%', background: 'linear-gradient(to right, #3b82f6 40%, #60a5fa 50%, #ffffff 100%)', height: '3px', marginY: 2 }} />        
-   
-      <Grid item xs={12}>
       <Typography variant="subtitle1" sx={{ color: 'grey', marginBottom: 1 }}><strong>Postal Address</strong></Typography>
-        <Grid container spacing={2}>
+      <Grid container spacing={2}>
         <Grid item xs={6} >
         <TextField
           label="Address Line 1"
@@ -356,8 +272,99 @@ const AddApplicant = () => {
             <TextField
               label="City"
               fullWidth
-              name="postalCity"
-              value={formData.postalCity}
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              error={Boolean(errors.city)}
+              helperText={errors.physicalCity}
+            />
+          </Grid>
+          <Grid item xs={1.5}>
+            <TextField
+              label="State"
+              fullWidth
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              error={Boolean(errors.physicalState)}
+              helperText={errors.physicalState}
+            />
+          </Grid>
+          <Grid item xs={1.5}>
+            <TextField
+              label="Zip Code"
+              fullWidth
+              name="postalCode"
+              value={formData.postalCode}
+              onChange={handleChange}
+              error={Boolean(errors.physicalPostalCode)}
+              helperText={errors.physicalPostalCode}
+            />
+          </Grid>
+          <Grid item xs={1.5}>
+            <TextField
+              label="Country"
+              fullWidth
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              error={Boolean(errors.physicalCountry)}
+              helperText={errors.physicalCountry}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Box sx={{ width: '20%', background: 'linear-gradient(to right, #3b82f6 40%, #60a5fa 50%, #ffffff 100%)', height: '3px', marginY: 2 }} />        
+   
+      <Grid item xs={12}>
+      <Typography variant="subtitle1" sx={{ color: 'grey', marginBottom: 1 }}><strong>Physical Address</strong></Typography>
+       
+
+
+        <Grid container spacing={2}>
+        <Grid item xs={6} >
+        <TextField
+          label="Address Line 1"
+          fullWidth
+          name="physicalAddressLine1"
+          value={formData.physicalAddressLine1}
+          onChange={handleChange}
+          error={Boolean(errors.physicalAddressLine1)}
+          helperText={errors.physicalAddressLine1}
+        />
+        </Grid>
+        <Grid item xs={6}>
+        <TextField
+          label="Address Line 2"
+          fullWidth
+          name="physicalAddressLine2"
+          value={formData.physicalAddressLine2}
+          onChange={handleChange}
+          error={Boolean(errors.physicalAddressLine2)}
+          helperText={errors.physicalAddressLine2}
+        />
+        </Grid>
+        </Grid>
+
+        <Grid container spacing={2} mt={0.5}>
+        <Grid item xs={6}>
+        <TextField
+          label="Address Line 3"
+          fullWidth
+          name="physicalAddressLine3"
+          value={formData.physicalAddressLine3}
+          onChange={handleChange}
+          error={Boolean(errors.physicalAddressLine3)}
+          helperText={errors.physicalAddressLine3}
+        />
+        </Grid>
+          <Grid item xs={1.5}>
+            <TextField
+              label="City"
+              fullWidth
+              name="residenceCity"
+              value={formData.residenceCity}
               onChange={handleChange}
               error={Boolean(errors.postalCity)}
               helperText={errors.postalCity}
@@ -367,22 +374,22 @@ const AddApplicant = () => {
             <TextField
               label="State"
               fullWidth
-              name="postalState"
-              value={formData.postalState}
+              name="residenceState"
+              value={formData.residenceState}
               onChange={handleChange}
-              error={Boolean(errors.postalState)}
-              helperText={errors.postalState}
+              error={Boolean(errors.residenceState)}
+              helperText={errors.residenceState}
             />
           </Grid>
           <Grid item xs={1.5}>
             <TextField
               label="Zip Code"
               fullWidth
-              name="postalPostalCode"
-              value={formData.postalPostalCode}
+              name="residencePostalCode"
+              value={formData.residencePostalCode}
               onChange={handleChange}
-              error={Boolean(errors.postalPostalCode)}
-              helperText={errors.postalPostalCode}
+              error={Boolean(errors.residencePostalCode)}
+              helperText={errors.residencePostalCode}
             />
           </Grid>
           <Grid item xs={1.5}>
@@ -390,10 +397,10 @@ const AddApplicant = () => {
               label="Country"
               fullWidth
               name="postalCountry"
-              value={formData.postalCountry}
+              value={formData.residenceCountry}
               onChange={handleChange}
-              error={Boolean(errors.postalCountry)}
-              helperText={errors.postalCountry}
+              error={Boolean(errors.residenceCountry)}
+              helperText={errors.residenceCountry}
             />
           </Grid>
         </Grid>

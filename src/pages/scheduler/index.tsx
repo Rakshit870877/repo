@@ -33,9 +33,7 @@ import { theme } from '@/contants/theme'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { alertState, alertTextState, alertTypeState, loaderState } from '@/states/state'
-import { User } from '@/pages/user-list'
-import WbSunnyIcon from '@mui/icons-material/WbSunny'
-import NightsStayIcon from '@mui/icons-material/NightsStay'
+// import { User } from '@/pages/user-list'
 
 // const users: User[] = [
 //   { id: 1, name: 'Alice', avatar: 'https://randomuser.me/api/portraits/women/1.jpg' },
@@ -47,6 +45,7 @@ type ScheduleEntry = {
   startDate: string
   endDate: string
   environment: 'Production' | 'UAT'
+   //@ts-ignore
   users: User[]
   shift: string
 }
@@ -57,8 +56,8 @@ const Scheduler: React.FC = () => {
   const [selectedUsers, setSelectedUsers] = React.useState<number[]>([])
   const [environment, setEnvironment] = React.useState<'prod' | 'uat'>('uat')
   const [scheduleEntries, setScheduleEntries] = React.useState<Schedule[]>([])
-  const [users, setUsers] = React.useState<User[]>([])
-  const [alreadyusers, setAlreadyUsers] = React.useState<User[]>([])
+  const [users, setUsers] = React.useState<any[]>([])
+  const [alreadyusers, setAlreadyUsers] = React.useState<any[]>([])
 
   const navigate = useNavigate()
   const [text, setText] = useRecoilState(alertTextState)

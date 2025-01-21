@@ -15,24 +15,24 @@ const AddBeneficiary = () => {
 
   // Initial state for form data and errors
   const [formData, setFormData] = useState<BeneficiaryFormData>({
-    applicantId: '',
     beneficiaryName: '',
     nationality: '',
     residentCountry: '',
     phone: '',
     email: '',
     idType: '',
-    addressLine1: '',
-    addressLine2: '',
-    addressLine3: '',
+    physicalAddressLine1: '',
+    physicalAddressLine2: '',
+    physicalAddressLine3: '',
     city: '',
     state: '',
     zipCode: '',
     country: '',
-    accountHolder: '',
+    accountHolderName: '',
     accountNumber: '',
     bankName: '',
-    bankCode: '',
+    bankBicCode: '',
+    applicant:'',
   
   });
 
@@ -53,22 +53,22 @@ const AddBeneficiary = () => {
   // Form validation
   const validateForm = () => {
     const errors: BeneficiaryFormErrors = {};
-    if (!formData.applicantId) errors.applicantId = 'Applicant ID is required';
+    if (!formData.applicant) errors.applicant = 'Applicant ID is required';
     if (!formData.beneficiaryName) errors.beneficiaryName = 'Beneficiary Name is required';
     if (!formData.nationality) errors.nationality = 'Nationality  is required';
     if (!formData.country) errors.residentCountry = 'Country is required';
     if (!formData.phone) errors.phone = 'Phone number is required';
     if (!formData.email) errors.email = 'Email is required';
     if (!formData.idType) errors.idType = 'ID Type is required';
-    if (!formData.addressLine1) errors.addressLine1 = 'Address Line 1 is required';
+    if (!formData.physicalAddressLine1) errors.physicalAddressLine1 = 'Address Line 1 is required';
     if (!formData.city) errors.city = 'City is required';
     if (!formData.state) errors.state = 'State is required';
     if (!formData.zipCode) errors.zipCode = 'ZipCode is required';
     if (!formData.country) errors.country = 'Country is required';
-    if (!formData.accountHolder) errors.accountHolder = 'Account Holder is required';
+    if (!formData.accountHolderName) errors.accountHolderName = 'Account Holder is required';
     if (!formData.accountNumber) errors.accountNumber = 'Account Number is required';
     if (!formData.bankName) errors.bankName = 'Bank Name is required';
-    if (!formData.bankCode) errors.bankCode = 'Bank Code is required';
+    if (!formData.bankBicCode) errors.bankBicCode = 'Bank Code is required';
     
     return errors;
   };
@@ -91,12 +91,14 @@ const AddBeneficiary = () => {
 
     try {
         //@ts-ignore
+        console.log(formData);
       const response = await beneficiary_service.submitBeneficiaryForm(formData);
-      debugger;
-      if (response.success) {
+      //@ts-ignore
+      if (response.status == 200) {
         setText('Beneficiary Successfully Added');
         setType('success');
         setOpen(true);
+        alert("Beneficiary created successfully");
         navigate('/beneficiary');
       } else {
         setText('Unable to Submit Beneficiary');
@@ -140,12 +142,12 @@ const AddBeneficiary = () => {
             <TextField
               label="Applicant ID"
               variant="filled"
-              name="applicantId"
+              name="applicant"
               fullWidth
-              value={formData.applicantId}
+              value={formData.applicant}
               onChange={handleChange}
-              error={!!formErrors.applicantId}
-              helperText={formErrors.applicantId}
+              error={!!formErrors.applicant}
+              helperText={formErrors.applicant}
             />
           </Grid>
         </Grid>
@@ -237,19 +239,19 @@ const AddBeneficiary = () => {
             <TextField
               fullWidth
               label="Address Line 1"
-              name="addressLine1"
-              value={formData.addressLine1}
+              name="physicalAddressLine1"
+              value={formData.physicalAddressLine1}
               onChange={handleChange}
-              error={!!formErrors.addressLine1}
-              helperText={formErrors.addressLine1}
+              error={!!formErrors.physicalAddressLine1}
+              helperText={formErrors.physicalAddressLine1}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               label="Address Line 2 (Optional)"
-              name="addressLine2"
-              value={formData.addressLine2}
+              name="physicalAddressLine2"
+              value={formData.physicalAddressLine2}
               onChange={handleChange}
             />
           </Grid>
@@ -259,8 +261,8 @@ const AddBeneficiary = () => {
             <TextField
               fullWidth
               label="Address Line 3 (Optional)"
-              name="addressLine3"
-              value={formData.addressLine3}
+              name="physicalAddressLine3"
+              value={formData.physicalAddressLine3}
               onChange={handleChange}
             />
           </Grid>
@@ -319,12 +321,12 @@ const AddBeneficiary = () => {
           <Grid item xs={12} sm={2}>
             <TextField
               fullWidth
-              label="Account Holder"
-              name="accountHolder"
-              value={formData.accountHolder}
+              label="Account Holder Name"
+              name="accountHolderName"
+              value={formData.accountHolderName}
               onChange={handleChange}
-              error={!!formErrors.accountHolder}
-              helperText={formErrors.accountHolder}
+              error={!!formErrors.accountHolderName}
+              helperText={formErrors.accountHolderName}
             />
           </Grid>
           <Grid item xs={12} sm={2}>
@@ -352,12 +354,12 @@ const AddBeneficiary = () => {
           <Grid item xs={12} sm={2}>
             <TextField
               fullWidth
-              label="Bank Code"
-              name="bankCode"
-              value={formData.bankCode}
+              label="Bic Code"
+              name="bankBicCode"
+              value={formData.bankBicCode}
               onChange={handleChange}
-              error={!!formErrors.bankCode}
-              helperText={formErrors.bankCode}
+              error={!!formErrors.bankBicCode}
+              helperText={formErrors.bankBicCode}
             />
           </Grid>
         </Grid>

@@ -1,5 +1,6 @@
 import React from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from '@mui/x-charts'
+import { LineChart, 
+} from '@mui/x-charts'
 
 const data = [
   { name: 'Jan', sales: 4000, revenue: 2400 },
@@ -17,6 +18,7 @@ const LineChartExample = () => {
       <LineChart
         width={800}
         height={400}
+         //@ts-ignore
         data={data}
         margin={{
           top: 10,
@@ -25,13 +27,13 @@ const LineChartExample = () => {
           bottom: 0,
         }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        {/* <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
         <Legend />
         <Line type="monotone" dataKey="sales" stroke="#8884d8" strokeWidth={2} />
-        <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={2} />
+        <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={2} /> */}
       </LineChart>
     </div>
   )

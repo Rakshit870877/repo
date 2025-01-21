@@ -113,7 +113,12 @@ const get = async (url: string) => {
 
 const post = async (url: string, object: any) => {
   try {
-    const data = await instance.post(url, object)
+    const data = await instance.post(url, object,{
+      headers: {
+        'Content-Type': 'application/json',
+      },
+        })
+
     return data
   } catch (error) {
     throw error

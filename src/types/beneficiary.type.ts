@@ -1,44 +1,45 @@
 export interface BeneficiaryFormData {
-    applicantId: string;
+    applicant:string,
+    // beneficiaryId: string;
     beneficiaryName: string;
     nationality: string;
     residentCountry: string;
     phone: string;
     email: string;
     idType: string;
-    addressLine1: string;
-    addressLine2: string;
-    addressLine3: string;
+    physicalAddressLine1: string;
+    physicalAddressLine2: string;
+    physicalAddressLine3: string;
     city: string;
     state: string;
     zipCode: string;
     country: string;
-    accountHolder: string;
+    accountHolderName: string;
     accountNumber: string;
     bankName: string;
-    bankCode: string;
+    bankBicCode: string;
    
   }
   
   export interface BeneficiaryFormErrors {
-    applicantId?: string;
+    applicant?: string;
     beneficiaryName?: string;
     nationality?: string;
     residentCountry?: string;
     phone?: string;
     email?: string;
     idType?: string;
-    addressLine1?: string;
-    addressLine2?: string;
-    addressLine3?: string;
+    physicalAddressLine1?: string;
+    physicalAddressLine2?: string;
+    physicalAddressLine3?: string;
     city?: string;
     state?: string;
     zipCode?: string;
     country?: string;
-    accountHolder?: string;
+    accountHolderName?: string;
     accountNumber?: string;
     bankName?: string;
-    bankCode?: string;
+    bankBicCode?: string;
     
   }
   
