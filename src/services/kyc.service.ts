@@ -44,7 +44,7 @@ let url=`${VITE_APP_KYC}/api/comments`
 
 async getCharges(souceCountry,destinationCountry,amount,segment){
 
-  let url=`${VITE_APP_STATIC}/charges/filter?sendingCountry=${souceCountry}&receivingCountry=${destinationCountry}&amount=${amount}&marketSegment=${segment}`
+  let url=`${VITE_APP_STATIC}/charges/filter?sendingCountry=US&receivingCountry=${destinationCountry}&amount=${amount}&marketSegment=${segment}`
     try{
 let data=await axios.get(url)
 return (data)
