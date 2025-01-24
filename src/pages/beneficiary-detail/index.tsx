@@ -435,7 +435,10 @@ const BeneficiaryDetailPage = () => {
      {showTransactionTable && transactions.length > 0 && (
         <Box mb={3}>
           <Typography variant="h6" sx={{ marginBottom: 1 }}><strong>Transactions</strong></Typography>
-          <TransactionTable transaction={transactions} />
+          
+          <TransactionTable 
+          //@ts-ignore
+          transaction={transactions} />
         </Box>
       )}
 
