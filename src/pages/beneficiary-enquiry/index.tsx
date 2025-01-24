@@ -58,9 +58,6 @@ const BeneficiaryEnquiry = () => {
       setFilteredBeneficiary(formattedData);
       }
 
-     
-      
-
       setShowTable(true);
     } catch (error) {
       console.error('Error fetching data', error);
