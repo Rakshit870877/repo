@@ -14,12 +14,22 @@ import {
   useTheme,
   Avatar,
   Chip,
+  IconButton,
+  CircularProgress,
+  Modal,
+  ListItem,
+  List,
+  ListItemText,
 } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import VerifyDocumentModal from '@/components/verify-document'
 import { Chuks } from '@/assets/images'
 import { Customer } from '@/types/customer.type'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { ApplicantService } from '@/services/applicant.service'
+import { KycService } from '@/services/kyc.service'
+import { Comment, Coronavirus } from '@mui/icons-material'
+import axios from 'axios'
 // import { theme } from '@/contants/theme'
 // const mockData = [
 //   {
@@ -142,6 +152,7 @@ import { ApplicantService } from '@/services/applicant.service'
 
 const KYCPage = () => {
   console.log('sdffsdfas')
+  const [open, setOpen] = useState(false);
   const theme = useTheme()
   const [filterValues, setFilterValues] = useState({
     kycId: '',
@@ -155,10 +166,81 @@ const KYCPage = () => {
   const [selectedVerifcationOpen, setselectedVerifcationOpen] = useState(false)
   const [mockdata, setMockData] = useState<Array<any>>([])
 
+
+  const [comments, setComments] = useState([
+    {
+      commentId: "CMT1",
+      commentText: "Document verification in progress.",
+      commentDate: "2025-01-06T10:00:00Z",
+      user: "admin",
+    },
+    {
+      commentId: "CMT2",
+      commentText: "Document uploaded for verification.",
+      commentDate: "2025-01-05T12:30:00Z",
+      user: "user1",
+    },
+  ]);
+  const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(false);
+
+ 
+
+  const handleAddComment = async () => {
+    if (newComment.trim() === "") return;
+
+    const payload = {
+      commentText: newComment,
+      commentDate: new Date().toISOString(),
+      user: selectedKYC?.applicantName, // Replace with the actual user info
+    };
+
+    setLoading(true);
+
+    try {
+      // API Call
+    
+      const response = await kycservice.createComment(payload);
+
+      if (response.status === 200) {
+        // Update the comments list with the new comment
+        setComments((prevComments) => [
+          ...prevComments,
+          { ...payload, commentId: `CMT${comments.length + 1}` },
+        ]);
+        setNewComment(""); // Clear the input field
+      } else {
+        console.error("Failed to add comment:", response.data);
+      }
+    } catch (error) {
+      console.error("Error while adding comment:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleFilterChange = (key: string, value: string) => {
     setFilterValues((prev) => ({ ...prev, [key]: value }))
   }
 
+  let kycservice=new KycService()
+  const verifyProofType = async (proofType) => {
+    try {
+      // Your API call logic here
+      console.log(selectedKYC);
+      console.log(proofType.kycId,proofType.documentCode)
+      kycservice.verifyDocument(proofType.documentCode,proofType.kycId).then(data=>{
+
+        console.log(data)
+      }).catch(err=>{
+
+        console.log(err)
+      })
+      // kycservice.verifyDocument(pro)
+    } catch (error) {
+      console.error("Error calling API:", error);
+    }
+  };
   let applicant_service = new ApplicantService()
 
   useEffect(() => {
@@ -368,7 +450,7 @@ const KYCPage = () => {
                 if (params.value === '') color = 'warning'
                 else if (params.value === 'Rejected') color = 'error'
 
-                return <Chip label={params.value == 'v' ? 'verified' : 'unverified'} color={color} variant="outlined" />
+                return <Chip label={params.value == 'v' ? 'verified' : 'unverified'} color={params.value == 'v' ? 'success' : 'warning'} variant="outlined" />
               },
             },
             {
@@ -587,25 +669,68 @@ const KYCPage = () => {
                   </Grid>
 
                   <Grid item xs={2}>
+              
+
                     <Typography
-                      style={{
-                        backgroundColor: proofType.verificationStatus == 'va' ? '#C8E6C9' : proofType === 'vh' ? '#FFEEBA' : '#FFCDD2',
-                        // padding: '4px 8px',
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {proofType.verificationStatus == 'va' ? 'Verified' : proofType?.verification === 'Address Proof' ? 'Pending' : 'Failed'}
-                    </Typography>
+      style={{
+        backgroundColor:
+          proofType.verificationStatus === 'va' ? '#C8E6C9' : '#FFCDD2',
+        borderRadius: '4px',
+        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '4px 8px',
+      }}
+    >
+      {proofType.verificationStatus === 'va' ? (
+        'Verified'
+      ) : (
+        <>
+          Failed
+          <IconButton
+            onClick={async () => {
+            
+              await verifyProofType(proofType); // API call
+            
+            }}
+            disabled={proofType.verificationStatus === 'va' }
+          >
+            <CheckCircleOutlineIcon />
+          </IconButton>
+        </>
+      )}
+    </Typography>
+
+                 
+
+
+    
+
                   </Grid>
                   <Grid item xs={2}>
-                    <TextField label="Additional Comments" fullWidth defaultValue={proofType?.verificationStatusComments} disabled />
+                    {/* <TextField label="Additional Comments" fullWidth defaultValue={proofType?.verificationStatusComments} disabled /> */}
+                    <IconButton onClick={() => {setOpen(true)
+                    console.log(selectedKYC?.comments)
+setComments(selectedKYC?.comments)
+
+
+
+                    }}>
+        <Comment />
+      </IconButton>
+
+              
                   </Grid>
                 </Grid>
               ))}
             </Box>
 
             {/* Buttons */}
+
+
+
+
             <Box mt={4} display="flex" justifyContent="flex-end">
               {/* <Button variant="contained" color="primary" style={{ marginRight: 8 }} onClick={handleClose}>
                 Save
@@ -617,6 +742,87 @@ const KYCPage = () => {
           </Box>
         </Box>
       </Drawer>
+
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            borderRadius: 2,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Comments
+          </Typography>
+
+          {/* Comments List */}
+          <List>
+            {comments.map((comment) => (
+              <React.Fragment key={comment.commentId}>
+                <ListItem alignItems="flex-start">
+                  <ListItemText
+                    primary={comment.commentText}
+                    secondary={
+                      <>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          {comment.user}
+                        </Typography>
+                        {` — ${new Date(
+                          comment.commentDate
+                        ).toLocaleString()}`}
+                      </>
+                    }
+                  />
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))}
+          </List>
+
+          {/* Add Comment Section */}
+          <Box
+            component="form"
+            sx={{
+              mt: 2,
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+            }}
+          >
+            <TextField
+              label="Add a comment"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={2}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddComment}
+              disabled={!newComment.trim() || loading}
+              startIcon={loading && <CircularProgress size={20} />}
+            >
+              {loading ? "Submitting..." : "Submit"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+
+
     </Box>
   )
 }

@@ -29,9 +29,11 @@ class ApplicantService extends BaseService {
     let url = `${VITE_APP_APPLICANT}/applicant-all-details`
     try {
       let { data } = await axios.get(url)
+     
       // let response = await api1.post(url, payload)
       //@ts-ignore
-      return data
+      console.log(data.data)
+      return data.data
     } catch (err) {
       console.log('error in service file', err)
       throw new Error('Unable to submit applicant form. Please try again.')

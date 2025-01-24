@@ -108,18 +108,32 @@ const TransactionPage = () => {
     transaction_Service
       .gettransactions()
       .then((data: TransactionDetailsResponse) => {
+        console.log("data-----------------------",data);
+        
         let inbound: Array<TransactionInwardCalclulated>[]|any = data?.transactionDetailsList.map((e) => {
-          return {
-            ...e.transactionInward,
+          console.log({
+            ...e.transactionInwardList,
             ...e.beneficiary,
-            id: e?.transactionInward.transactionNumberIw,
-            destination: e?.transactionInward?.receivingCountry,
-            value: e?.transactionInward?.settlementAmount,
-            currency: e?.transactionInward?.settlementCurrency,
-            settlement: e?.transactionInward?.settlementAmount,
-            destinationBank: e?.transactionInward?.destinationBankCode,
-          }
+            id: e?.transactionInwardList?.transactionNumberIw,
+            destination: e?.transactionInwardList?.receivingCountry,
+            value: e?.transactionInwardList?.settlementAmount,
+            currency: e?.transactionInwardList?.settlementCurrency,
+            settlement: e?.transactionInwardList?.settlementAmount,
+            destinationBank: e?.transactionInwardList?.destinationBankCode,
+          })
+          return ({
+            ...e.transactionInwardList,
+            ...e.beneficiary,
+            id: e?.transactionInwardList?.transactionNumberIw,
+            destination: e?.transactionInwardList?.receivingCountry,
+            value: e?.transactionInwardList?.settlementAmount,
+            currency: e?.transactionInwardList?.settlementCurrency,
+            settlement: e?.transactionInwardList?.settlementAmount,
+            destinationBank: e?.transactionInwardList?.destinationBankCode,
+          })
         })
+       
+        console.log("pankaj")
 
         let outbound: Array<TansactionOutwardCalculated>[] |any= data?.transactionDetailsList.map((e) => {
           return {
@@ -133,15 +147,20 @@ const TransactionPage = () => {
             destinationBank: e?.transactionOutward?.destinationBankBicCode,
           }
         })
+        
+        console.log("inbound"+ inbound)
+        console.log("outbound"+outbound)
         setInboundTransaction(inbound)
         setTransactionData(inbound)
         setOutboundTransaction(outbound)
-        console.log(inbound)
-        console.log(outbound)
+        
       })
       .catch(
          //@ts-ignore
-        (err:any) => {})
+        (err:any) => {
+
+          console.log("err",err)
+        })
   }, [])
 
   const handleToggleTransactionType = (
@@ -217,6 +236,7 @@ const TransactionPage = () => {
         <DataGrid
           rows={transactionData}
           columns={columns}
+          getRowId={(row) => row.id} 
            //@ts-ignore
           pageSize={5}
           rowsPerPageOptions={[5]}
