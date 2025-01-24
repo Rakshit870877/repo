@@ -39,6 +39,7 @@ import { ApplicantService } from '@/services/applicant.service'
 import { Beneficiary } from '@/types/transaction.type'
 import { TransactionService } from '@/services/transaction.service'
 import GifModal from '@/components/successModal'
+import { KycService } from '@/services/kyc.service'
 
 const users = [
   {
@@ -141,6 +142,10 @@ let transaction_service=new TransactionService()
   
 useEffect(()=>{
   applicant_service.getApplicantDetalis().then(data=>{
+
+
+    console.log(data)
+    
     let users=data.map((e)=>{
   let benificiary_list=e.beneficiaryList.map((b)=>{
 
@@ -161,7 +166,7 @@ useEffect(()=>{
   return ({
      "applicantId": e.applicant.applicantId,
 id:e.applicant.applicantId,
-name:e.applicant.applicantName,
+name:e.applicant?.firstName,
 accountNumber: '**********789',
 profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
 benificary:benificiary_list
@@ -179,6 +184,7 @@ setUserList(users as any)
 
 },[])
 
+let kyc_service=new KycService()
 
 
   const handleCountryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -217,7 +223,15 @@ setUserList(users as any)
       renderCell: (params: GridRenderCellParams) => (
         <Radio
           checked={selectedTimeTableRow === params.row.id}
-          onChange={() => handleRadioChange(params.row)}
+          onChange={() => {handleRadioChange(params.row)
+
+
+           let data= kyc_service.getCharges(sourceCountry,currency,amount,"01").then(data=>{
+
+
+            console.log(data)
+           })
+          }}
           value={params.row.id}
           inputProps={{ 'aria-label': `Select row ${params.row.id}` }}
         />
@@ -233,6 +247,11 @@ setUserList(users as any)
 
 
       renderCell: (params: any) => <span>{params.row.charges + ' ' + sourceCountry}</span>,
+
+    
+
+
+
 
      },
     {
@@ -273,7 +292,7 @@ setUserList(users as any)
     } else {
       const filtered = userlist.filter((user) => 
          //@ts-ignore
-        user.name.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value))
+        user?.name?.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value))
       setFilteredUsers(filtered)
     }
   }
