@@ -89,6 +89,9 @@ const ApplicantEnquiry = () => {
             }}
           />
         </Grid>
+        <Grid marginInline={4}>
+          <strong>OR</strong>
+        </Grid>
 
         <Grid item xs={3}> {/* Both fields have equal width */}
           <TextField
@@ -113,11 +116,11 @@ const ApplicantEnquiry = () => {
               Search
             </Button>
           </Grid>
-          <Grid item xs={4}>
-            <Button variant="contained" fullWidth sx={{ marginLeft: '50px', padding: '4px 20px' }} onClick={handleAddApplicantDetails}>
+          {/* <Grid item xs={4}>
+            <Button variant="contained" fullWidth sx={{ marginLeft: '50px', padding: '4px 20px' }} onClick={handleAddApplicantDetails} >
               Add
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
 

@@ -4,15 +4,13 @@ import Passport from '../../assets/images/Passport_card.jpg';
 
 const DocumentComponent = () => {
   return (
-    <Box >
+    <Box sx={{ width: "80vw" }}>
       <Grid container spacing={4}>
         {/* Box 1: Image and ID Proof Information */}
-        <Grid item xs={12} sm={4} marginTop={2}>
+        <Grid item xs={12} sm={4} marginTop={1}>
           <Paper sx={{ padding: 2, border: '2px dotted #0061B1', marginBottom: 4, display: 'flex', flexDirection: 'column' }}>
            <Paper sx={{display:'flex'}}>
-            {/* <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 1 , marginRight:2}}>
-            
-            </Typography> */}
+  
             <Typography variant="body1" sx={{  marginInline:1 }}>
               <strong>ID Type:</strong>
             </Typography>
@@ -20,15 +18,13 @@ const DocumentComponent = () => {
               Passport
             </Typography>
             </Paper>
-            
-            {/* Passport Image */}
+      
             <img
-              src={Passport} // Replace with actual image URL
+              src={Passport} 
               alt="ID Proof"
               style={{ maxWidth: '100%', height: 'auto', marginBottom: 2 }}
             />
 
-            {/* Passport Info Grid */}
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
@@ -48,7 +44,6 @@ const DocumentComponent = () => {
               </Grid>
             </Grid>
 
-            {/* Issuing Authority */}
             <Grid container sx={{ marginTop: 1 }}>
               <Grid item xs={12}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
@@ -63,28 +58,24 @@ const DocumentComponent = () => {
         </Grid>
 
         {/* Box 2: Image and ID Proof Information */}
-        <Grid item xs={12} sm={4} marginTop={2}>
+        <Grid item xs={12} sm={4} marginTop={1}>
           <Paper sx={{ padding: 2, border: '2px dotted #0061B1', marginBottom: 4, display: 'flex', flexDirection: 'column' }}>
            <Paper sx={{display:'flex'}}>
-            {/* <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 1 , marginRight:2}}>
-              
-            </Typography> */}
+  
             <Typography variant="body1" sx={{  marginInline:1 }}>
-            <strong>ID Type:</strong>
+              <strong>ID Type:</strong>
             </Typography>
-            <Typography variant="body1" sx={{color:'blue', marginBottom: 2 }}>
+            <Typography variant="body1" sx={{ color:'blue',marginBottom: 2 }}>
               Passport
             </Typography>
             </Paper>
-            
-            {/* Passport Image */}
+      
             <img
-              src={Passport} // Replace with actual image URL
+              src={Passport} 
               alt="ID Proof"
-              style={{ maxWidth: '100%', height: 'auto', marginBottom: 1}}
+              style={{ maxWidth: '100%', height: 'auto', marginBottom: 2 }}
             />
 
-            {/* Passport Info Grid */}
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
@@ -104,8 +95,7 @@ const DocumentComponent = () => {
               </Grid>
             </Grid>
 
-            {/* Issuing Authority */}
-            <Grid container sx={{ marginTop: 2 }}>
+            <Grid container sx={{ marginTop: 1 }}>
               <Grid item xs={12}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                   Issuing Authority:
@@ -117,6 +107,7 @@ const DocumentComponent = () => {
             </Grid>
           </Paper>
         </Grid>
+
       </Grid>
     </Box>
   );

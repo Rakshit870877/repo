@@ -3,7 +3,7 @@ import api1 from "./apis/api1";
 import { BaseService } from "./base.service";
 import axios from "axios";
 
-const { VITE_APP_BENIFICIARY } = import.meta.env
+const { VITE_APP_BENIFICIARY,VITE_APP_TRANSACTION } = import.meta.env
 
 class BeneficiaryService extends BaseService {
         async submitBeneficiaryForm(payload: BeneficiaryFormData): Promise<BeneficiaryResponse> {
@@ -29,6 +29,17 @@ class BeneficiaryService extends BaseService {
             }
           }
 
+          async getTransactionsByBeneficiaryId(beneficiaryId: string): Promise<BeneficiaryFormData> {
+            let url = VITE_APP_TRANSACTION+`/transaction-details/beneficiary/${beneficiaryId}`;  
+            try {
+              const {data} = await axios.get(url); 
+              console.log("responseeee", data)
+              return data;  
+            } catch (err) {
+              console.error('Error fetching  data:', err);
+              throw new Error('Unable to fetch applicant data. Please try again.');
+            }
+          }
 
           async searchByApplicantId(applicantId: string): Promise<BeneficiaryResponse> {
             let url = VITE_APP_BENIFICIARY+`/beneficiary/applicant/${applicantId}`;  

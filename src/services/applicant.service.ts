@@ -5,17 +5,15 @@ import api1 from './apis/api1'
 import { BaseService } from './base.service'
 import axios from 'axios'
 // const { VITE_APP_BACKEND, VITE_APP_URL } = import.meta.env
-const { VITE_APP_BACKEND, VITE_APP_URL, VITE_APP_APPLICANT, VITE_APP_KYC } = import.meta.env
+const { VITE_APP_BACKEND, VITE_APP_URL, VITE_APP_APPLICANT, VITE_APP_KYC, VITE_APP_TRANSACTION } = import.meta.env
 
 class ApplicantService extends BaseService {
   async submitApplicantForm(
-    
      //@ts-ignore
     payload: ApplicantFormData): Promise<ApplicantResponse> {
-    let url = VITE_APP_APPLICANT+'/applicant/create'
+    let url = VITE_APP_KYC+'/api/kyc'
     try {
       let { data } = await axios.get(url)
-
       // let response = await api1.post(url, payload)
       //@ts-ignore
       return data
@@ -32,6 +30,19 @@ class ApplicantService extends BaseService {
       // let response = await api1.post(url, payload)
       //@ts-ignore
       return data
+    } catch (err) {
+      console.log('error in service file', err)
+      throw new Error('Unable to submit applicant form. Please try again.')
+    }
+  }
+
+  async getTransactionsByApplicantId(applicantId: string): Promise<Array<ApplicantData>> {
+    let url = `${VITE_APP_TRANSACTION}/transaction-details/applicant/${applicantId}`
+    try {
+      let { data } = await axios.get(url)
+      // let response = await api1.post(url, payload)
+      //@ts-ignore
+      return data.transactionDetailsList;
     } catch (err) {
       console.log('error in service file', err)
       throw new Error('Unable to submit applicant form. Please try again.')

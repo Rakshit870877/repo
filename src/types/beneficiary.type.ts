@@ -10,6 +10,7 @@ export interface BeneficiaryFormData {
     physicalAddressLine1: string;
     physicalAddressLine2: string;
     physicalAddressLine3: string;
+    suburb: string;
     city: string;
     state: string;
     zipCode: string;
@@ -18,6 +19,8 @@ export interface BeneficiaryFormData {
     accountNumber: string;
     bankName: string;
     bankBicCode: string;
+    bankLocation: string;
+    ifscCode: string
    
   }
   
@@ -32,6 +35,7 @@ export interface BeneficiaryFormData {
     physicalAddressLine1?: string;
     physicalAddressLine2?: string;
     physicalAddressLine3?: string;
+    suburb:string;
     city?: string;
     state?: string;
     zipCode?: string;
@@ -40,6 +44,8 @@ export interface BeneficiaryFormData {
     accountNumber?: string;
     bankName?: string;
     bankBicCode?: string;
+    bankLocation?: string;
+    ifscCode?: string
     
   }
   

@@ -1,34 +1,50 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
+import { BeneficiaryService } from '@/services/beneficiary.service';
 
+const beneficiary_service= new BeneficiaryService();
 const BeneficiaryTable = ({ 
-   //@ts-ignore
-  beneficiary }) => {
+  //@ts-ignore
+  beneficiary,deleteBeneficiary 
+}) => {
   const navigate = useNavigate();
 
   const handleBeneficiaryIdClick = (
-     //@ts-ignore
-    beneficiaryId) => {
+    //@ts-ignore
+    beneficiaryId
+  ) => {
     navigate(`/beneficiary-details/${beneficiaryId}`);
+  };
+
+  const handleDelete = async(beneficiaryId: string) => {
+    try {
+      //@ts-ignore
+      await beneficiary_service.deleteBeneficiaryById(beneficiaryId);
+      deleteBeneficiary(beneficiaryId); 
+    } catch (error) {
+      console.error('Error deleting beneficiary:', error);
+    }
   };
 
   const columns = [
     {
       field: 'id',
       headerName: 'SNo',
-      flex: 1,
+      flex: 0.5,
       headerClassName: 'super-app-theme--header',
     },
     {
       field: 'beneficiaryId',
       headerName: 'Beneficiary ID',
-      flex: 1,
+      flex: 1.3,
       headerClassName: 'super-app-theme--header',
       renderCell: (
-        
-         //@ts-ignore
-        params) => (
+        //@ts-ignore
+        params
+      ) => (
         <span
           style={{
             textDecoration: 'underline',
@@ -46,7 +62,6 @@ const BeneficiaryTable = ({
       flex: 1,
       headerClassName: 'super-app-theme--header',
     },
-    
     {
       field: 'bankName',
       headerName: 'Bank Name',
@@ -64,6 +79,20 @@ const BeneficiaryTable = ({
       headerName: 'ID Type',
       flex: 1,
       headerClassName: 'super-app-theme--header',
+    },
+    {
+      field: 'action',
+      headerName: 'Actions',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params:any) => (
+        <IconButton
+          onClick={() => handleDelete(params.row.beneficiaryId)}
+          color="error"
+        >
+          <DeleteIcon />
+        </IconButton>
+      ),
     },
   ];
 
@@ -99,12 +128,12 @@ const BeneficiaryTable = ({
           }}
           columns={columns}
           rows={beneficiary}
-           //@ts-ignore
+          //@ts-ignore
           pageSize={5}
           rowsPerPageOptions={[5]}
         />
       ) : (
-        <p>No beneficiaries found</p> // Handle case where no data is available
+        <p>No beneficiaries found</p>
       )}
     </>
   );

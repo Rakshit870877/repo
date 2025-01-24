@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Grid, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Grid, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material';
 import { ApplicantService } from '@/services/applicant.service';
 import {  useNavigate } from 'react-router-dom';
+import { GridCloseIcon } from '@mui/x-data-grid';
 
 const applicant_service = new ApplicantService();
 
@@ -36,6 +37,8 @@ const AddApplicant = () => {
   const [type, setType] = useState('');
   const [open, setOpen] = useState(false);
 
+  const [image, setImage] = useState(null);
+
   const handleDocumentTypeChange = (index: number, value: string) => {
     const updatedFields = [...documentFields];
     updatedFields[index] = { ...updatedFields[index], documentType: value, showUpload: true };
@@ -46,6 +49,21 @@ const AddApplicant = () => {
       ...prevData,
       // documents: updatedFields,p
     }));
+  };
+  const handleImageChange = (e:any) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        //@ts-ignore
+        setImage(reader.result);  // Store the image as a data URL
+      };
+      reader.readAsDataURL(file);  // Convert image file to data URL
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);  // Reset the image state
   };
 
   const handleFileChange = (index: number, file: File | null) => {
@@ -143,21 +161,64 @@ const AddApplicant = () => {
         </Typography>
       </Box>
 
-      <Grid container alignItems="flex-start" spacing={2} mb={4}>
-        <Grid item xs={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-          <Typography mt={2}>Applicant Picture</Typography>
-          <Box
-            width={90}
-            height={90}
-            border="2px solid #000"
-            borderRadius="50%"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography></Typography>
-          </Box>
-        </Grid>
+      <Grid container alignItems="flex-start" spacing={2} mb={2}>
+      <Grid item xs={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+      <Typography >Applicant Picture</Typography>
+      
+      {/* Circle Container */}
+      <Box
+        position="relative"
+        width={110}
+        height={110}
+        border="2px solid #000"
+        borderRadius="50%"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        overflow="hidden"
+        sx={{ cursor: 'pointer' }}
+      >
+        {/* Display the image if available */}
+        {image ? (
+          <img
+            src={image}
+            alt="Profile"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        ) : (
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              opacity: 0,  // Make file input invisible
+              cursor: 'pointer',
+            }}
+          />
+        )}
+      </Box>
+
+      {/* Remove Image Button (Cross Icon) */}
+      {image && (
+         <IconButton
+         onClick={handleRemoveImage}
+         sx={{
+           position: 'absolute',
+           left: 'calc(25% + 40px)', // Positioning to the right of the circle (adjust accordingly)
+           top: '20%',
+           transform: 'translateY(-20%)', // Vertically center the icon
+           backgroundColor: 'white',
+           borderRadius: '50%',
+           padding: 0.5,
+         }}
+       >
+          <GridCloseIcon />
+        </IconButton>
+      )}
+    </Grid>
         <Grid item xs>
           <Grid container spacing={3} direction="column">
             <Grid container spacing={2}>
@@ -227,8 +288,8 @@ const AddApplicant = () => {
           </Grid>
         </Grid>
       </Grid>
-      </Box>
-      <Box sx={{width:"80vw"}}>
+    </Box>
+    <Box sx={{width:"80vw"}}>
     
       <Grid item xs={12}>
       <Typography variant="subtitle1" sx={{ color: 'grey', marginBottom: 1 }}><strong>Postal Address</strong></Typography>

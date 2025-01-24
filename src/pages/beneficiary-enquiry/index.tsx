@@ -91,13 +91,16 @@ const BeneficiaryEnquiry = () => {
         <Grid item xs={3}>
           <TextField
             variant="standard"
-            fullWidth
+            fullWidth 
             label="Beneficiary ID"
             value={beneficiaryId}
             onChange={handleBeneficiaryIdChange}
             inputProps={{ maxLength: 100 }}
           />
         </Grid>
+        <Grid marginInline={4} marginTop={4}>
+                  <strong>OR</strong>
+          </Grid>
 
         <Grid item xs={3}>
           <TextField
@@ -126,7 +129,7 @@ const BeneficiaryEnquiry = () => {
 
       {/* Conditionally render the table if there is data in filteredBeneficiary */}
       {showTable && (
-        <BeneficiaryTable beneficiary={filteredBeneficiary} />
+        <BeneficiaryTable beneficiary={filteredBeneficiary} deleteBeneficiary={filteredBeneficiary} />
       )}
     </Box>
   );

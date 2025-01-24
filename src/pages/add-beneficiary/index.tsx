@@ -24,6 +24,7 @@ const AddBeneficiary = () => {
     physicalAddressLine1: '',
     physicalAddressLine2: '',
     physicalAddressLine3: '',
+    suburb:'',
     city: '',
     state: '',
     zipCode: '',
@@ -33,9 +34,10 @@ const AddBeneficiary = () => {
     bankName: '',
     bankBicCode: '',
     applicant:'',
-  
+    bankLocation:'',
+    ifscCode:''
   });
-
+//@ts-ignore
   const [formErrors, setFormErrors] = useState<BeneficiaryFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
@@ -52,6 +54,7 @@ const AddBeneficiary = () => {
 
   // Form validation
   const validateForm = () => {
+    //@ts-ignore
     const errors: BeneficiaryFormErrors = {};
     if (!formData.applicant) errors.applicant = 'Applicant ID is required';
     if (!formData.beneficiaryName) errors.beneficiaryName = 'Beneficiary Name is required';
@@ -61,6 +64,7 @@ const AddBeneficiary = () => {
     if (!formData.email) errors.email = 'Email is required';
     if (!formData.idType) errors.idType = 'ID Type is required';
     if (!formData.physicalAddressLine1) errors.physicalAddressLine1 = 'Address Line 1 is required';
+    if (!formData.suburb) errors.physicalAddressLine1 = 'Suburb is required';
     if (!formData.city) errors.city = 'City is required';
     if (!formData.state) errors.state = 'State is required';
     if (!formData.zipCode) errors.zipCode = 'ZipCode is required';
@@ -69,6 +73,8 @@ const AddBeneficiary = () => {
     if (!formData.accountNumber) errors.accountNumber = 'Account Number is required';
     if (!formData.bankName) errors.bankName = 'Bank Name is required';
     if (!formData.bankBicCode) errors.bankBicCode = 'Bank Code is required';
+    if (!formData.bankLocation) errors.bankLocation = 'Bank Location is required';
+    if (!formData.ifscCode) errors.ifscCode = 'IFSC Code is required';
     
     return errors;
   };
@@ -257,12 +263,21 @@ const AddBeneficiary = () => {
           </Grid>
         </Grid>
         <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={4.5}>
             <TextField
               fullWidth
               label="Address Line 3 (Optional)"
               name="physicalAddressLine3"
               value={formData.physicalAddressLine3}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={1.5}>
+            <TextField
+              fullWidth
+              label="Suburb"
+              name="suburb"
+              value={formData.suburb}
               onChange={handleChange}
             />
           </Grid>
@@ -280,7 +295,7 @@ const AddBeneficiary = () => {
           <Grid item xs={12} sm={1.5}>
             <TextField
               fullWidth
-              label="State"
+              label="State/Province"
               name="state"
               value={formData.state}
               onChange={handleChange}
@@ -363,6 +378,30 @@ const AddBeneficiary = () => {
             />
           </Grid>
         </Grid>
+        <Grid container spacing={2} marginBottom={2}>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                      fullWidth
+                      label="Bank Location"
+                      name="bankLocation"
+                      value={formData?.bankLocation|| ''}
+                      onChange={handleChange}
+                      error={!!formErrors.bankLocation}
+                      helperText={formErrors.bankLocation}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      fullWidth
+                      label="IFSC Code"
+                      name="ifscCode"
+                      value={formData?.ifscCode|| ''}
+                      onChange={handleChange}
+                      error={!!formErrors.ifscCode}
+                       helperText={formErrors.ifscCode}
+                    />
+                  </Grid>
+                </Grid>
       </Box>
 
       {/* Transaction Section */}
