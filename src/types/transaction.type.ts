@@ -7,7 +7,42 @@ export interface TransactionDetail {
   transactionOutward: TransactionOutward
   transactionInward: TransactionInward
   beneficiary: Beneficiary
+  applicant:Applicant
 }
+
+export interface  Applicant {
+  applicantId: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  residenceCountry: string;
+  nationality: string;
+  physicalAddressLine1: string;
+  physicalAddressLine2: string;
+  physicalAddressLine3: string;
+  residenceSuburb: string;
+  residenceCity: string;
+  residencePostalCode: string;
+  postalAddressLine1: string;
+  postalAddressLine2: string;
+  postalAddressLine3: string;
+  suburb: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  reference: boolean;
+  marketSegment: string;
+  activeStatus: boolean;
+  stopDebit: boolean;
+  stopCredit: boolean;
+  reportFraud: boolean;
+  disabledStatus: boolean;
+  applicantState: string;
+  residenceState: string;
+  applicantCreatedDate: string; // ISO date string
+  applicantModifiedDate: string; // ISO date string
+}
+
 
 export interface TransactionOutward {
   transactionNumber: string
@@ -26,6 +61,9 @@ export interface TransactionOutward {
   destinationBankBicCode: string
   transactionStatus: string
   reportingStatus: string
+  owCreatedDate:string
+  owModifiedDate:String
+  reconId:string
 }
 
 export interface TransactionInward {

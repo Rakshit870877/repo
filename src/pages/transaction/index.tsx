@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Divider, Grid, Typography, Chip, TextField, Drawer, ToggleButton, ToggleButtonGroup, useTheme } from '@mui/material'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { Box, Button, Divider, Grid, Typography, Chip, TextField, Drawer, ToggleButton, ToggleButtonGroup, useTheme, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
+import { DataGrid, GridColDef, GridFilterAltIcon } from '@mui/x-data-grid'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useNavigate } from 'react-router-dom'
 import { TransactionService } from '@/services/transaction.service'
 import {
+  Applicant,
   TansactionOutwardCalculated,
   TransactionDetailsResponse,
   TransactionInward,
   TransactionInwardCalclulated,
   TransactionOutward,
 } from '@/types/transaction.type'
+import { Filter1Outlined, SettingsAccessibilityRounded, Sync } from '@mui/icons-material'
+import { useRecoilState } from 'recoil'
+import { loaderState, loaderStateNew } from '@/states/state'
+import { ApplicantService } from '@/services/applicant.service'
+import CompliancTool from '@/components/compliance-tool'
 
 const sampleInwardsData: Array<TransactionInwardCalclulated> = [
   {
@@ -69,6 +75,57 @@ const TransactionPage = () => {
     { field: 'value', headerName: 'Value', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'settlement', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
+
+
+    {
+      field: "stpError",
+      headerName: "STP Error",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params.value ? (
+          <Tooltip title={params.value.errorCause || "Unknown Error"} arrow>
+            <Chip label="Error" color="error" />
+          </Tooltip>
+        ) : (
+          <Chip label="No Error" color="success" />
+        ),
+    },
+
+    {
+      field: "reporting",
+      headerName: "Reporting Status",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params.value ? (
+          <Tooltip title={params.value.reporting || "Unknown Error"} arrow>
+            <Chip label="Error" color="error" />
+          </Tooltip>
+        ) : (
+          <Chip label="No Error" color="success" />
+        ),
+    },
+    {
+      field: "status",
+      headerName: "Trx Status",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params.value ? (
+          <Tooltip title={params.value.errorCause || "Unknown Error"} arrow>
+            <Chip label="Error" color="error" />
+          </Tooltip>
+        ) : (
+          <Chip label="No Error" color="success" />
+        ),
+    },
+
+   
+
+
+
+
     { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
 
     // { field: 'date', headerName: 'Date', flex: 1, headerClassName: 'super-app-theme--header' },
@@ -81,12 +138,171 @@ const TransactionPage = () => {
         // <Button variant="contained" color="primary" onClick={() => handleViewMore(params.row)}>
         //   View More
         // </Button>
-        <Button variant="contained" color="primary" startIcon={<VisibilityIcon />} onClick={() => handleViewMore(params.row)}>
-          View More
-        </Button>
+       
+  <IconButton onClick={()=>{
+
+      handleViewMore(params.row)
+     }}>
+     <VisibilityIcon />
+     </IconButton>
+     
       ),
     },
+
+
+  
   ]
+
+  const columns_inwards: GridColDef[] = [
+    { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'sendingCountry', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'receivingCountry', headerName: 'Source', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'final_amount', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
+    {
+      field: "stpError",
+      headerName: "STP Error",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params.value ? (
+          <Tooltip title={params.value.errorCause || "Unknown Error"} arrow>
+            <Chip label="Error" color="error" />
+          </Tooltip>
+        ) : (
+          <Chip label="No Error" color="success" />
+        ),
+    },
+    { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
+  
+    // status:e?.transactionOutward?.transactionStatus=="CR"?"Pending":"Done",
+
+
+    {
+      field: "reporting",
+      headerName: "Reporting Status",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params?.value?.reporting=="Reported" ? (
+          <Tooltip title={params?.value?.reporting || "Unknown Error"} arrow>
+            <Chip label="Reported" color="success" />
+          </Tooltip>
+        ) : (
+          <Chip label="Pending" color="error" />
+        ),
+    },
+
+
+  
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params?.value?.status=='Pending' ? (
+          <Tooltip title={params.value.status || "Unknown Error"} arrow>
+            <Chip label="Pending" color="error" />
+          </Tooltip>
+        ) : (
+          <Chip label="Done" color="success" />
+        ),
+    },
+
+ 
+  
+  ]
+
+  // reporting:e?.transactionOutward?.reportingStatus=="ACK"?"Reported":"Pending",
+  //           status:e?.transactionOutward?.transactionStatus=="CR"?"Pending":"Done",
+
+  const columns_outward: GridColDef[] = [
+    { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'destination', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'value', headerName: 'Value', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'final_amount', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
+    {
+      field: "stpError",
+      headerName: "STP Error",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params.value ? (
+          <Tooltip title={params.value.errorCause || "Unknown Error"} arrow>
+            <Chip label="Error" color="error" />
+          </Tooltip>
+        ) : (
+          <Chip label="No Error" color="success" />
+        ),
+    },
+    { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
+
+    {
+      field: 'action',
+      headerName: 'Action',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params) => (
+        // <Button variant="contained" color="primary" onClick={() => handleViewMore(params.row)}>
+        //   View More
+        // </Button>
+        // <Button variant="contained" color="primary" startIcon={<VisibilityIcon />} onClick={() => handleViewMore(params.row)}>
+         
+         
+        //   View More
+        // </Button>
+
+        <IconButton onClick={()=>{
+
+          handleViewMore(params.row)
+         }}>
+         <VisibilityIcon />
+         </IconButton>
+
+      ),
+    },
+
+   
+    {
+      field: "reporting",
+      headerName: "Reporting Status",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params?.value?.reporting=="Reported" ? (
+          <Tooltip title={params?.value?.reporting || "Unknown Error"} arrow>
+            <Chip label="Reported" color="success" />
+          </Tooltip>
+        ) : (
+          <Chip label="Pending" color="error" />
+        ),
+    },
+
+
+  
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) =>
+        params.value.status=='Pending' ? (
+          <Tooltip title={params.value.status || "Unknown Error"} arrow>
+            <Chip label="Pending" color="error" />
+          </Tooltip>
+        ) : (
+          <Chip label="Done" color="success" />
+        ),
+    },
+
+
+
+
+  
+  ]
+
 
   const [isDrawerOpen, setDrawerOpen] = useState(false)
 
@@ -95,7 +311,64 @@ const TransactionPage = () => {
 
   const [inboundTransaction, setInboundTransaction] = useState<Array<TransactionInward>>([])
   const [outboundTransaction, setOutboundTransaction] = useState<Array<TransactionOutward>>([])
+  const [ toolopen,setToolOpen]=useState(false)
+
+  const[applicant,setApplicant]=useState<Applicant> (null)
+  
   const [transactionData, setTransactionData] = useState(inboundTransaction)
+    const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
+
+    const[userList,setUserList]=useState([])
+
+    let applicant_service=new ApplicantService()
+
+
+
+   
+  useEffect(()=>{
+    setcommonloader(true)
+    applicant_service.getApplicantDetalis().then(data=>{
+  
+  
+      console.log(data)
+      
+      let users=data.map((e)=>{
+    let benificiary_list=e.beneficiaryList.map((b)=>{
+  
+      return(
+  
+  
+  
+        { "benificaryId": b.beneficiaryId,
+          "name": b.beneficiaryName,
+          "accountHolderName":b.beneficiaryName,
+           "accountNumber": b.bankBicCode, 
+           "bank": b.bankName, 
+           "ifscCode": b.bankBicCode })
+      
+      
+      })
+  
+    return ({
+       "applicantId": e.applicant.applicantId,
+  id:e.applicant.applicantId,
+  name:e.applicant?.firstName,
+  accountNumber: '**********789',
+  profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
+  benificary:benificiary_list
+  
+    })
+  })
+  
+  
+  setUserList(users as any)
+  setcommonloader(false)
+  
+  })
+    
+  // console.log(se)
+  
+  },[])  
 
   const handleViewMore = (row:any) => {
     setTransactionDetails(row)
@@ -104,23 +377,19 @@ const TransactionPage = () => {
 
   let transaction_Service = new TransactionService()
 
+
+  const trnx=[]
   useEffect(() => {
+
+    setcommonloader(true)
+    
     transaction_Service
       .gettransactions()
       .then((data: TransactionDetailsResponse) => {
         console.log("data-----------------------",data);
         
         let inbound: Array<TransactionInwardCalclulated>[]|any = data?.transactionDetailsList.map((e) => {
-          console.log({
-            ...e.transactionInwardList,
-            ...e.beneficiary,
-            id: e?.transactionInwardList?.transactionNumberIw,
-            destination: e?.transactionInwardList?.receivingCountry,
-            value: e?.transactionInwardList?.settlementAmount,
-            currency: e?.transactionInwardList?.settlementCurrency,
-            settlement: e?.transactionInwardList?.settlementAmount,
-            destinationBank: e?.transactionInwardList?.destinationBankCode,
-          })
+       
           return ({
             ...e.transactionInwardList,
             ...e.beneficiary,
@@ -130,10 +399,14 @@ const TransactionPage = () => {
             currency: e?.transactionInwardList?.settlementCurrency,
             settlement: e?.transactionInwardList?.settlementAmount,
             destinationBank: e?.transactionInwardList?.destinationBankCode,
+            errorCause:" ",
+            forex:e?.transactionOutward?.exchangeRates,
+            date:e?.transactionOutward?.owCreatedDate,
+            final_amount:e?.transactionOutward?.exchangeRates*e?.transactionOutward?.principalAmount,
+            applicant:e?.applicant
           })
         })
-       
-        console.log("pankaj")
+
 
         let outbound: Array<TansactionOutwardCalculated>[] |any= data?.transactionDetailsList.map((e) => {
           return {
@@ -145,14 +418,31 @@ const TransactionPage = () => {
             currency: e?.transactionOutward?.settlementCurrency,
             settlement: e?.transactionOutward?.settlementAmount,
             destinationBank: e?.transactionOutward?.destinationBankBicCode,
+            forex:e?.transactionOutward?.exchangeRates,
+            date:e?.transactionOutward?.owCreatedDate,
+            
+         
+
+            reporting:e?.transactionOutward?.reportingStatus=="ACK"?"Reported":"Pending",
+            status:e?.transactionOutward?.transactionStatus=="CR"?"Pending":"Done",
+            final_amount:e?.transactionOutward?.exchangeRates*e?.transactionOutward.principalAmount,
+            applicant:e?.applicant
           }
         })
         
-        console.log("inbound"+ inbound)
-        console.log("outbound"+outbound)
+
+        let user:Array<Applicant>[]|any=data?.transactionDetailsList.map((e) => {
+          return {
+           ...e.applicant
+            
+          }
+        })
+       
         setInboundTransaction(inbound)
         setTransactionData(inbound)
         setOutboundTransaction(outbound)
+        setcommonloader(false)
+   
         
       })
       .catch(
@@ -180,8 +470,32 @@ const TransactionPage = () => {
   const theme = useTheme()
   const navigate = useNavigate()
 
+  const [open, setOpen] = useState(false);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+
+  // Open the dialog
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  // Close the dialog
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // Handle applying filters
+  const handleApply = () => {
+    console.log('Start Date:', startDate);
+    console.log('End Date:', endDate);
+    setOpen(false);
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
+
+
+      
       <Typography variant="h4" gutterBottom>
         <strong>Transactions</strong>
       </Typography>
@@ -198,6 +512,7 @@ const TransactionPage = () => {
         marginTop={2}
         sx={{
           width: '80vw',
+          height:'80vh',
 
           '& .super-app-theme--header': {
             backgroundColor: '#005099',
@@ -216,6 +531,24 @@ const TransactionPage = () => {
               alignSelf: 'flex-end',
             }}
           >
+
+
+
+
+<IconButton onClick={() => setToolOpen(true)}>
+        <SettingsAccessibilityRounded />
+      </IconButton>
+
+ <IconButton onClick={()=>{
+
+navigate('/recon')
+
+ }} color="primary">
+        <Sync sx={{
+          marginBottom:"10%"
+        }}/>
+      </IconButton>
+
             <Button
               variant="outlined"
               sx={{
@@ -233,9 +566,34 @@ const TransactionPage = () => {
           </div>
         </div>
 
-        <DataGrid
-          rows={transactionData}
-          columns={columns}
+
+
+
+
+{
+
+
+transactionType=='inwards'?(  <DataGrid
+  rows={inboundTransaction}
+  columns={columns_inwards}
+  getRowId={(row) => row.id} 
+   //@ts-ignore
+  pageSize={5}
+  rowsPerPageOptions={[5]}
+  disableSelectionOnClick
+  sx={{
+    '& .MuiDataGrid-root': {
+      border: '1 px solid blue',
+    },
+    '& .MuiDataGrid-cell': {
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
+  }}
+/>):( <DataGrid
+          rows={outboundTransaction}
+          columns={columns_outward}
           getRowId={(row) => row.id} 
            //@ts-ignore
           pageSize={5}
@@ -251,7 +609,9 @@ const TransactionPage = () => {
               textOverflow: 'ellipsis',
             },
           }}
-        />
+        />)
+}
+       
       </Box>
 
       <Drawer
@@ -276,7 +636,7 @@ const TransactionPage = () => {
                 color: 'white',
                 textAlign: 'center',
                 backgroundColor: theme.palette.primary.main,
-                width: '20%',
+                width: '40%',
                 padding: '1%',
                 borderRadius: '3%',
               }}
@@ -346,7 +706,47 @@ const TransactionPage = () => {
             </Button> */}
           </Box>
         )}
+
       </Drawer>
+
+
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+        <DialogTitle>Select Date Range</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+            {/* Start Date */}
+            <TextField
+              label="Start Date"
+              type="date"
+              value={startDate || ''}
+              onChange={(e) => setStartDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+
+            {/* End Date */}
+            <TextField
+              label="End Date"
+              type="date"
+              value={endDate || ''}
+              onChange={(e) => setEndDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleApply} variant="contained" color="primary">
+            Apply
+          </Button>
+        </DialogActions>
+      </Dialog>
+<CompliancTool open={toolopen} setOpen={setToolOpen} userList={userList} ></CompliancTool>
     </Box>
   )
 }

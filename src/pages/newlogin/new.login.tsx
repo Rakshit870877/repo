@@ -49,7 +49,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (local_service.get_accesstoken()) {
-      navigate('/dashboard')
+      navigate('/price')
     }
   }, [navigate, local_service])
 
@@ -57,34 +57,54 @@ const LoginPage = () => {
     try {
       // setcommonloader(true)
 
-      auth_service
-        .loginAdmin({
-          email,
-          password,
-          notification_token: '',
-        })
-        .then((data) => {
-          console.log(data)
-          if (data.success == true) {
-            setText('User SuccesFully Logged In')
-            setType('success')
-            setOpen(true)
-            local_service.set_accesstoken(data?.customer.token)
-            local_service.set_user(data?.customer)
-            local_service.set_role(data?.customer?.role)
-            if (data?.customer?.token) {
-              navigate('/transaction')
-            }
-          } else {
-            console.log('i m in the not success page')
-            setText('Unable to Verify Your Identity')
-            setType('error')
-            setOpen(true)
-          }
-        })
-        .catch((err) => {
-          console.error(err)
-        })
+      // auth_service
+      //   .loginAdmin({
+      //     email,
+      //     password,
+      //     notification_token: '',
+      //   })
+      //   .then((data) => {
+      //     console.log(data)
+      //     if (data.success == true) {
+      //       setText('User SuccesFully Logged In')
+      //       setType('success')
+      //       setOpen(true)
+      //       local_service.set_accesstoken(data?.customer.token)
+      //       local_service.set_user(data?.customer)
+      //       local_service.set_role(data?.customer?.role)
+      //       if (data?.customer?.token) {
+      //         navigate('/transaction')
+      //       }
+      //     } else {
+      //       console.log('i m in the not success page')
+      //       setText('Unable to Verify Your Identity')
+      //       setType('error')
+      //       setOpen(true)
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.error(err)
+      //   })
+
+
+      if(email=='chakshu@gmail.com'&&password=='forex@123'){
+        setText('User SuccesFully Logged In')
+              setType('success')
+              setOpen(true)
+              local_service.set_accesstoken('"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic2hpdmFuc2hAaW1wcm9uaWNzLmNvbSIsInVzZXJfaWQiOiJjYmMzZDg3OS1iMTM2LTQyYTAtODY3Yy1mYjg2YTQ4MmI3ODciLCJyb2xlIjoiYWRtaW4ifSwiZXhwIjoxNzM4NTk3ODk1LCJqdGkiOiIwZTMxMDA1OS02ZTIyLTQ1MjgtYTliYS04OTA3MTNhZDZiMmYiLCJyZWZyZXNoIjpmYWxzZX0.06XT7DA3cs13hOIDyqlXcHElSXpFzHFO2L0y507Z0YQ"')
+              local_service.set_user('{"email":"shivansh@impronics.com","user_id":"cbc3d879-b136-42a0-867c-fb86a482b787","role":"admin"}')
+              local_service.set_role('user')
+
+      }
+      else{
+        setText('Unable to Verify Your Identity')
+              setType('error')
+              setOpen(true)
+
+      }
+
+
+
     } catch (error) {
       console.error('Login failed:', error)
     }

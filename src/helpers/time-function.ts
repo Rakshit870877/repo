@@ -14,7 +14,7 @@ export function CustomFormatTime(seconds: number) {
 }
 
 // export const formatTime = (seconds: number) => {
-//   return moment.utc(seconds * 1000).format('HH:mm:ss');
+//   return moment.utc(seconds * t).format('HH:mm:ss');
 // };
 
 export const formatTime = (seconds: number) => {

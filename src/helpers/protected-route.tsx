@@ -19,8 +19,8 @@ function ProtectedRoute({
   if (isAuthenticated) {
     return outlet
   } else {
-    // return <Navigate to={{ pathname: authenticationPath }} />
-    return outlet
+    return <Navigate to={{ pathname: authenticationPath }} />
+    // return outlet
   }
 }
 

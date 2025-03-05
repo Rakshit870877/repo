@@ -1,6 +1,6 @@
-// @ts-nocheck
+
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { Box, Typography, Avatar, List, ListItem, ListItemText, IconButton, Modal, Button, AppBar, ListItemIcon, Toolbar } from '@mui/material'
+import { Box, Typography, Avatar, List, ListItem, ListItemText, IconButton, Modal, Button, AppBar, ListItemIcon, Toolbar, Menu, MenuItem } from '@mui/material'
 import { styled } from '@mui/system'
 import { Chuks, Logo, LogoVideo, LogoWhite } from '@/assets/images'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -10,7 +10,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 // import { studentService } from "@/services/student.service";
 import { LocalStorageService } from '@/helpers/local-storage-service'
 import Sidebar from '../sidebar/index'
-import { alertState, alertTextState, alertTypeState, loaderState, role, sidbarSelectionState, selectedAppState } from '@/states/state'
+import { alertState, alertTextState, alertTypeState, loaderState, role, sidbarSelectionState, selectedAppState, loaderStateNew } from '@/states/state'
 import { useState } from 'react'
 import Fade from '@mui/material/Fade'
 import Backdrop from '@mui/material/Backdrop'
@@ -23,7 +23,7 @@ import LocalLibraryIcon from '@mui/icons-material/LocalLibrary'
 // import { Logo } from "@/assets/images";
 import { useEffect } from 'react'
 import CustomSnackbar from '../customsnackbar/snackbar'
-import { AddBox } from '@mui/icons-material'
+import { AddBox, ArrowDropDown, ErrorOutlineRounded } from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu'
 import Stack from '@mui/material/Stack'
 import ReactCountryFlag from 'react-country-flag'
@@ -41,6 +41,10 @@ import GridViewIcon from '@mui/icons-material/GridView'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency'
 import FlagSelector from '../flagselector'
+import {Tooltip} from '@mui/material'
+import SourceIcon from '@mui/icons-material/Source';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+// import { IconButton } from '@mui/material';
 
 import { Us, Sa, Za } from 'react-flags-select'
 
@@ -114,10 +118,23 @@ const Header = styled(Box)({
 const DashboardLayout = () => {
   let navigate = useNavigate()
   const theme = useTheme()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const opendropdown = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handledropClose = (option?: string) => {
+    setAnchorEl(null);
+    if (option) {
+      console.log(`Selected: ${option}`);
+      // Add logic for each option
+    }
+  };
 
   // const [studentList, setstudentList] = useRecoilState(studentListState);
   const [selectedApp, setSelectedApp] = useRecoilState(selectedAppState)
-
   //@ts-ignore
   const [selectedrole, setselectedrole] = useRecoilState(role)
 
@@ -127,7 +144,10 @@ const DashboardLayout = () => {
   const [selectedTab, setSelectedTab] = useRecoilState(sidbarSelectionState)
 
   const [droppopopen, setdropopoOpen] = useState(false)
-  const [openloader, setopenloader] = useRecoilState(loaderState)
+
+
+  const [openloader, setopenloader] = useRecoilState(loaderStateNew)
+
   const [isDrawerOpen, setDrawerOpen] = useState(false)
 
   const toggleDrawer = () => {
@@ -137,10 +157,10 @@ const DashboardLayout = () => {
   const menuItems = [
     {
       icon: (
-        <GridViewIcon
+        <ShowChartIcon
           sx={{
             color: theme.palette.secondary.light,
-            fontSize: '40px',
+            fontSize: '30px',
 
             color: theme.palette.primary.light,
             '&:hover': {
@@ -149,14 +169,14 @@ const DashboardLayout = () => {
           }}
         />
       ),
-      label: 'Dashboard',
+      label: 'Price',
     },
     {
       icon: (
         <CompareArrowsIcon
           sx={{
             color: theme.palette.secondary.light,
-            fontSize: '40px',
+            fontSize: '30px',
 
             color: theme.palette.primary.light,
             '&:hover': {
@@ -173,7 +193,7 @@ const DashboardLayout = () => {
         <ContactEmergencyIcon
           sx={{
             color: theme.palette.secondary.light,
-            fontSize: '40px',
+            fontSize: '30px',
 
             color: theme.palette.primary.light,
             '&:hover': {
@@ -185,28 +205,28 @@ const DashboardLayout = () => {
       label: 'kyc',
     },
 
-    {
-      icon: (
-        <AccountBoxIcon
-          sx={{
-            color: theme.palette.secondary.light,
-            fontSize: '40px',
+    // {
+    //   icon: (
+    //     <AccountBoxIcon
+    //       sx={{
+    //         color: theme.palette.secondary.light,
+    //         fontSize: '40px',
 
-            color: theme.palette.primary.light,
-            '&:hover': {
-              color: theme.palette.primary.main, // Change the color to blue on hover
-            },
-          }}
-        />
-      ),
-      label: 'users',
-    },
+    //         color: theme.palette.primary.light,
+    //         '&:hover': {
+    //           color: theme.palette.primary.main, // Change the color to blue on hover
+    //         },
+    //       }}
+    //     />
+    //   ),
+    //   label: 'users',
+    // },
     {
       icon: (
         <PeopleOutlineIcon
           sx={{
             color: theme.palette.secondary.light,
-            fontSize: '40px',
+            fontSize: '30px',
 
             color: theme.palette.primary.light,
             '&:hover': {
@@ -222,7 +242,7 @@ const DashboardLayout = () => {
         <CameraFrontIcon
           sx={{
             color: theme.palette.secondary.light,
-            fontSize: '40px',
+            fontSize: '30px',
 
             color: theme.palette.primary.light,
             '&:hover': {
@@ -233,6 +253,35 @@ const DashboardLayout = () => {
       ),
       label: 'beneficiary',
     },
+
+{
+
+    icon:(
+      <>
+ <Tooltip title="Error Actions">
+        <IconButton
+
+        
+          
+          onClick={handledropClose} // Open the menu
+        >
+          <SourceIcon 
+          sx={{
+
+            fontSize: '30px',
+            color: theme.palette.primary.light,
+          }}
+          />
+        </IconButton>
+      </Tooltip>
+     
+  </>
+    ),
+    label:'configuration'
+},
+
+
+  
   ]
 
   // const[alert]

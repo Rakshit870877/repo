@@ -30,6 +30,8 @@ import { ApplicantService } from '@/services/applicant.service'
 import { KycService } from '@/services/kyc.service'
 import { Comment, Coronavirus } from '@mui/icons-material'
 import axios from 'axios'
+import { loaderStateNew } from '@/states/state'
+import { useRecoilState } from 'recoil'
 // import { theme } from '@/contants/theme'
 // const mockData = [
 //   {
@@ -165,6 +167,7 @@ const KYCPage = () => {
   const [selectedDocumentModal, setSelectedDocumentModel] = useState({})
   const [selectedVerifcationOpen, setselectedVerifcationOpen] = useState(false)
   const [mockdata, setMockData] = useState<Array<any>>([])
+  const[loader,setCommonLoader]=useRecoilState(loaderStateNew)
 
 
   const [comments, setComments] = useState([
@@ -244,14 +247,20 @@ const KYCPage = () => {
   let applicant_service = new ApplicantService()
 
   useEffect(() => {
+    console.log("setting Loader")
+    setCommonLoader(true)
     applicant_service.getApplicantKyc().then((data) => {
+      
       // console.log(data)
 
       console.log('data is here', data)
       setMockData(data)
        //@ts-ignores
       setFilteredData(data)
+      setCommonLoader(false)
     })
+
+
   }, [])
 
   const applyFilters = () => {
@@ -397,7 +406,7 @@ const KYCPage = () => {
         marginTop={2}
         sx={{
           width: '73vw',
-
+          height:'80vh',
           '& .super-app-theme--header': {
             backgroundColor: '#005099',
             color: 'white',
@@ -743,83 +752,7 @@ setComments(selectedKYC?.comments)
         </Box>
       </Drawer>
 
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            borderRadius: 2,
-            p: 4,
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Comments
-          </Typography>
 
-          {/* Comments List */}
-          <List>
-            {comments.map((comment) => (
-              <React.Fragment key={comment.commentId}>
-                <ListItem alignItems="flex-start">
-                  <ListItemText
-                    primary={comment.commentText}
-                    secondary={
-                      <>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {comment.user}
-                        </Typography>
-                        {` — ${new Date(
-                          comment.commentDate
-                        ).toLocaleString()}`}
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </React.Fragment>
-            ))}
-          </List>
-
-          {/* Add Comment Section */}
-          <Box
-            component="form"
-            sx={{
-              mt: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 1,
-            }}
-          >
-            <TextField
-              label="Add a comment"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={2}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddComment}
-              disabled={!newComment.trim() || loading}
-              startIcon={loading && <CircularProgress size={20} />}
-            >
-              {loading ? "Submitting..." : "Submit"}
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
 
 
 

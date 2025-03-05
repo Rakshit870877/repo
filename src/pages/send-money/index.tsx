@@ -40,6 +40,11 @@ import { Beneficiary } from '@/types/transaction.type'
 import { TransactionService } from '@/services/transaction.service'
 import GifModal from '@/components/successModal'
 import { KycService } from '@/services/kyc.service'
+import PaymentPopup from '@/components/payment-popup'
+import BobCategoryDropdown from '@/components/bob-matrix'
+import { useRecoilState } from 'recoil'
+import { loaderStateNew } from '@/states/state'
+import { Segment } from '@mui/icons-material'
 
 const users = [
   {
@@ -74,9 +79,9 @@ const users = [
   },
 ]
 const countries = [
-  { code: 'US', name: 'United States', currency: 'USD', forexRate: '0.043', flag: 'https://flagcdn.com/us.svg' },
+  
   { code: 'IN', name: 'India', currency: 'INR', forexRate: '4.57', flag: 'https://flagcdn.com/in.svg' },
-  { code: 'GB', name: 'United Kingdom', currency: 'GBP', forexRate: '0.053', flag: 'https://flagcdn.com/gb.svg' },
+ 
   // { code: 'ZA', name: 'South Africa', currency: 'ZAR', forexRate: '4.7', flag: 'https://flagcdn.com/za.svg' }, // Added South Africa
 ]
 
@@ -117,6 +122,8 @@ const SendMoneyPage = () => {
   const[userlist,setUserList]=useState([])
   const[benficiary,setbenificiary]=useState<Array<any>>([])
   const[gifsuccess,setGifSuccess]=useState(false)
+  const [sendCountry,setsendCountry]=useState("")
+  const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
 //   const[selected ]
 
 
@@ -133,6 +140,8 @@ const SendMoneyPage = () => {
   const [amount, setAmount] = useState<number>(0)
   const[selectedTransferMethod,setSelectedTransferMethod]=useState("BankTransfer")
 
+  const[url,seturl]=useState<string>('')
+
 
 
 let applicant_service=new ApplicantService()
@@ -141,6 +150,7 @@ let transaction_service=new TransactionService()
 
   
 useEffect(()=>{
+  setcommonloader(true)
   applicant_service.getApplicantDetalis().then(data=>{
 
 
@@ -176,7 +186,7 @@ benificary:benificiary_list
 
 
 setUserList(users as any)
-
+setcommonloader(false)
 
 })
   
@@ -193,16 +203,27 @@ let kyc_service=new KycService()
 
     // Find the selected country
     const selected = countries.find((country) => country.code === countryCode)
+
+console.log(selected?.currency)
+
+
     if (selected) {
+
+      transaction_service.getForexRate(selected?.currency).then(data=>{
+        console.log(data)
+        setForexRate(data)
+      
+      })
       setCurrency(selected.currency)
-      setForexRate(selected.forexRate)
+      setsendCountry(selected.code)
+    
     }
   }
   const handleRadioChange = (row: any) => {
     
     setSelectedTime(row)
     setSelectedTimeTableRow(row.id)
-    setSelectedTimeCharge(row.charges)
+    // setSelectedTimeCharge(row.charges)
   }
   const handleChange = (
      //@ts-ignore
@@ -211,9 +232,9 @@ let kyc_service=new KycService()
   }
 
   const TimechargesRows: GridRowsProp = [
-    { id: 1, time: '2 hours', charges: 10,total:200 },
-    { id: 2, time: '8 hours', charges: 5 ,total:200},
-    { id: 3, time: '2 days', charges: 0.5 ,total:200},
+    { id: 1, time: '2 hours', charges: 10,total:200 ,segment:1},
+    { id: 2, time: '8 hours', charges: 5 ,total:200,segment:2},
+    { id: 3, time: '2 days', charges: 0.5 ,total:200,Segment:3},
   ]
   const chargesTableColumns: GridColDef[] = [
     {
@@ -225,11 +246,16 @@ let kyc_service=new KycService()
           checked={selectedTimeTableRow === params.row.id}
           onChange={() => {handleRadioChange(params.row)
 
+           let data= kyc_service.getCharges('SA',sendCountry,amount,params?.row?.id).then(data=>{
 
-           let data= kyc_service.getCharges(sourceCountry,currency,amount,"01").then(data=>{
+            if(data?.data?.length>0){
+         console.log(    )
+         setSelectedTimeCharge( data?.data[0].minimumCharges)
 
+            }
+                   
 
-            console.log(data)
+           
            })
           }}
           value={params.row.id}
@@ -243,30 +269,7 @@ let kyc_service=new KycService()
     },
     { field: 'time', headerName: 'Time', flex: 1, headerClassName: 'super-app-theme--header' },
    
-    { field: 'charges', headerName: 'Fees', flex: 1, headerClassName: 'super-app-theme--header',
-
-
-      renderCell: (params: any) => <span>{params.row.charges + ' ' + sourceCountry}</span>,
-
     
-
-
-
-
-     },
-    {
-      field: 'total',
-      headerName: 'Total Amount ',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-      renderCell: (params: GridRenderCellParams) => {
-        // Set charges based on specific conditions
-        const timeOfDay = params.row.time
-        let chargeValue = 50
-
-        return <span>{`${Number(amount) + params.row.charges + ' ' + sourceCountry}`}</span>
-      },
-    },
   ]
 
   const calculateProgress = () => {
@@ -523,7 +526,7 @@ let kyc_service=new KycService()
                     },
                   }}
                 >
-                  <Paper sx={{ padding: 3, marginBottom: 3 }}>
+                  {/* <Paper sx={{ padding: 3, marginBottom: 3 }}>
                     <Typography variant="h6" gutterBottom>
                       Select Payment Gateway
                     </Typography>
@@ -548,7 +551,7 @@ let kyc_service=new KycService()
                       renderInput={(params) => <TextField {...params} label="Payment Gateway" variant="filled" fullWidth />}
                       isOptionEqualToValue={(option, value) => option.id === value?.id}
                     />
-                  </Paper>
+                  </Paper> */}
                 </Grid>
 
                 {selectedGateway ? (
@@ -583,16 +586,16 @@ let kyc_service=new KycService()
      Settlement  Amount: {  amount * Number(forexRate)+" " +currency}
       </Typography>
       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-    Total Amount: {  (Number( amount)+Number(gatewayCharge)+Number(selecteTimeChange))+" " +sourceCountry}
+    Total Amount: {  (Number( amount)+Number(selecteTimeChange))+" " +sourceCountry}
       </Typography>
       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
       Base Amount: {  amount+" " +sourceCountry}
       </Typography>
-      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+      {/* <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
         Gateway Fee: {  gatewayCharge +" " +sourceCountry }
-      </Typography>
+      </Typography> */}
       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-        Time Charges: {  selecteTimeChange +" " +sourceCountry }
+        Platform Charges: {  selecteTimeChange?selecteTimeChange:0  +" " +sourceCountry }
       </Typography>
       
       <Button variant="contained" color="primary" onClick={() => {
@@ -650,9 +653,9 @@ let kyc_service=new KycService()
                   />
                 {/* <TextField label="Amount" variant="filled" fullWidth defaultValue="1000 USD" disabled /> */}
               </Grid>
-              <Grid item xs={12} md={6}>
+              {/* <Grid item xs={12} md={6}>
                 <TextField label="Payment Method" variant="filled" fullWidth defaultValue={selectedTransferMethod} disabled />
-              </Grid>
+              </Grid> */}
             </Grid>
 
             <Divider sx={{ marginY: 2 }} />
@@ -745,12 +748,13 @@ let kyc_service=new KycService()
               BOP Category
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <TextField label="BOP Category" variant="filled" fullWidth placeholder="Enter BOP Category" />
+              
+
+              <Grid item xs={12} md={12}>
+              <BobCategoryDropdown amount={amount}></BobCategoryDropdown>
               </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField label="BOP Description" variant="filled" fullWidth placeholder="Enter BOP Description" />
-              </Grid>
+
+           
               {/* <Grid item xs={12} md={6}>
                 <TextField label="Amount" variant="filled" fullWidth placeholder="Enter Amount" />
               </Grid> */}
@@ -785,11 +789,11 @@ let kyc_service=new KycService()
                   <strong>Amount:</strong> {amount +"  "+ sourceCountry}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              {/* <Grid item xs={12} md={6}>
                 <Typography variant="body1">
                   <strong>Payment Method:</strong> {selectedTransferMethod}
                 </Typography>
-              </Grid>
+              </Grid> */}
             </Grid>
 
             <Divider sx={{ marginY: 2 }} />
@@ -824,13 +828,13 @@ let kyc_service=new KycService()
                     <TableCell align="right">{amount +" "+sourceCountry}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Time Charges</TableCell>
+                    <TableCell>Platfrom Charges</TableCell>
                     <TableCell align="right">{selecteTimeChange+" "+sourceCountry }</TableCell>
                   </TableRow>
-                  <TableRow>
+                  {/* <TableRow>
                     <TableCell>Gateway Charges</TableCell>
                     <TableCell align="right">{ gatewayCharge +" " +sourceCountry}</TableCell>
-                  </TableRow>
+                  </TableRow> */}
                   <TableRow>
                     <TableCell>
                       <strong>Net Payable</strong>
@@ -842,6 +846,9 @@ let kyc_service=new KycService()
                 </TableBody>
               </Table>
             </TableContainer>
+
+
+
 
             <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() => {
 
@@ -862,15 +869,21 @@ let payload={
  totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
 
  }
-
  
- transaction_service.createTransaction(payload).then(data=>{
 
-  console.log(data)
+ transaction_service.createTransaction(payload).then(data=>{
+  transaction_service.createPayfastTransaction(data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
+
+seturl(res.url)
+window.open(res.url, "_blank", "noopener,noreferrer");
+ 
+
+})
  })
 
 
- setGifSuccess(true)
+//  setGifSuccess(true)
+ 
 
 
   
@@ -879,15 +892,18 @@ let payload={
               Confirm & Pay
             </Button>
           </Box>
-        </TabPanel>
+        </TabPanel>,
       </TabContext>
 
-      <GifModal 
+      {/* <GifModal 
       
        //@ts-ignore
-      open={gifsuccess} setOpen={setGifSuccess}></GifModal>
+      open={gifsuccess} setOpen={setGifSuccess}></GifModal> */}
     
 
+
+
+    <PaymentPopup open={gifsuccess} setOpen={setGifSuccess} url={url}></PaymentPopup>
 
     
     </Box>

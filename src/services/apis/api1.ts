@@ -27,7 +27,9 @@ instance.interceptors.request.use(
 
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token
-      //   config.headers["ngrok-skip-browser-warning"] = "69420";
+        config.headers["ngrok-skip-browser-warning"] = "69420";
+        // "ngrok-skip-browser-warning": true
+        config.headers["ngrok-skip-browser-warning"]="true"
     }
     logger.log('Request Interceptor:', config)
     return config
@@ -99,7 +101,9 @@ const init = () => {
   instance.defaults.headers['Cache-Control'] = 'no-cache'
   // Access-Control-Allow-Origin: *,
   instance.defaults.headers['Access-Control-Allow-Origin'] = '*'
-  // instance.defaults.withCredentials = true;
+  instance.defaults.headers['ngrok-skip-browser-warning']="f434"
+  instance.defaults.withCredentials = true;
+
 }
 
 const get = async (url: string) => {

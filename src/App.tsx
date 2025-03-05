@@ -50,6 +50,12 @@ import BeneficiaryEnquiry from './pages/beneficiary-enquiry'
 // import ApplicantPage from './pages/applicant'
 import SendMoneyPage from './pages/send-money'
 import BeneficiaryTable from './components/beneficiary-table'
+import MainTabsPage from './pages/static-data/staticdata.page'
+import CurrencyBarChart from './pages/dashboard/dashboard.page'
+import ReconPage from './pages/transaction/recon'
+import GifModal from './components/successModal'
+import ChargesDataGridTable from './pages/add-charges'
+import ListCharges from './pages/list-chages'
 
 // const { VITE_APP_VAPID_KEY } = import.meta.env
 
@@ -157,7 +163,7 @@ function App() {
                 <Route path="logs" element={<LogsList />} />
                 <Route path="logs/add" element={<NewLog />} />
                 <Route path="schedule" element={<Scheduler />} />
-
+                <Route path="configuration" element={<MainTabsPage />} />
                 <Route path="*" element={<IndexPage />} />
               </Route>
             ) : currentrole == 'user' ? (
@@ -171,14 +177,21 @@ function App() {
                 <Route path="add-applicant" element={<AddApplicant />} />
                 <Route path="about-beneficiary" element={<AboutBeneficiary />} />
                 <Route path="add-beneficiary" element={<AddBeneficiary />} />
+                <Route path="recon" element ={<ReconPage/>}/>
+                <Route path='charges/add' element={<ChargesDataGridTable/>}/>
+                <Route path='list-charges' element={<ListCharges/>}/>
+              
+
+              
               
                 <Route path="beneficiary-details/:beneficiaryId" element={<BeneficiaryDetailPage />} />
                 <Route path="beneficiary" element={<BeneficiaryEnquiry />} />
+                <Route path="configuration" element={<MainTabsPage />} />
 
                 <Route path="driver" element={<DriverList />} />
                 <Route path="users" element={<UserList />} />
                 {/* <Route path="users/add" element={<UserAdd />} /> */}
-                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="price" element={<CurrencyBarChart />} />
 
                 {/* <Route path="customer" element={<CustomerDatabase/>}/> */}
                 <Route path="logs" element={<LogsList />} />
@@ -204,6 +217,7 @@ function App() {
             )}
 
             <Route path="login" element={<Login />} />
+            <Route path="transaction/create" element ={<GifModal/>}/>
             <Route path="reset-password" element={<ResetPasswordPage />} />
           </Routes>
         </BrowserRouter>

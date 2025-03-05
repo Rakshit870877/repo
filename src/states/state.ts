@@ -37,6 +37,11 @@ export const loaderState = atom({
   default: false,
 })
 
+export const loaderStateNew = atom({
+  key: 'LoaderStateNew',
+  default: false,
+})
+
 export const alertState = atom({
   key: 'alertState',
   default: false,
