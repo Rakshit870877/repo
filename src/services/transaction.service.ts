@@ -5,21 +5,20 @@ const { VITE_APP_BACKEND, VITE_APP_URL, VITE_APP_APPLICANT, VITE_APP_TRANSACTION
 
 export class TransactionService extends BaseService {
   async gettransactions(): Promise<TransactionDetailsResponse> {
+
+ 
+ 
+    
     let url = '/api/transactions/transaction-details'
     try {
 
-    let data= await fetch("https://055f-49-36-189-96.ngrok-free.app/api/transactions/transaction-details", {
-        method: "GET",
-        headers: {
 
-            'ngrok-skip-browser-warning':"9188",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
+      // http://64.227.139.142:9091/api/applicant/applicant-all-details
+ 
 
 
-      // let data = await api1.get(url)
+
+      let data = await api1.get(url)
       
       return data as any
     } catch (e) {

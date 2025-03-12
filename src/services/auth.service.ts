@@ -19,7 +19,7 @@ class AuthService extends BaseService {
     let url = '/admin/login'
 
     try {
-      console.log(role)
+     
       switch (role.split(' ').join('')) {
         case 'admin':
           url = `/admin/login`
@@ -166,7 +166,7 @@ class AuthService extends BaseService {
           throw new Error("Can't Verify your Identiy")
         }
       } else {
-        throw new Error('Not Authorized')
+        throw new Error('Not Authorized') 
       }
     } catch (err) {
       throw new Error("Can't Verify your Identiy")

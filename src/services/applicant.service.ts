@@ -24,14 +24,14 @@ class ApplicantService extends BaseService {
   }
 
   async getApplicantDetalis(): Promise<Array<ApplicantData>> {
-    let url = `${VITE_APP_APPLICANT}/applicant-all-details`
+    let url = `/api/applicant/applicant-all-details`
     try {
-      let { data } = await axios.get(url)
-     
+      // let { data } = await axios.get(url)
+     let {data}=await api1.get(url)
       // let response = await api1.post(url, payload)
       //@ts-ignore
       console.log(data.data)
-      return data.data
+      return data
     } catch (err) {
       console.log('error in service file', err)
       throw new Error('Unable to submit applicant form. Please try again.')
@@ -52,10 +52,10 @@ class ApplicantService extends BaseService {
   }
 
   async getApplicantKyc(): Promise<Array<KYCData>> {
-    let url = `${VITE_APP_KYC}/api/kyc`
+    let url = `/api/kyc`
     try {
-      let { data } = await axios.get(url)
-      // let response = await api1.post(url, payload)
+      // let { data } = await axios.get(url)
+      let data= await api1.get(url)
       //@ts-ignore
       return data
     } catch (err) {
@@ -66,10 +66,10 @@ class ApplicantService extends BaseService {
 
   async searchByApplicantId(applicantId: string): Promise<ApplicantResponse> {
     // let url = `/api/applicants/${applicantId}`;
-    let url = VITE_APP_APPLICANT+`/applicant-all-details/${applicantId}`
+    let url = `/api/applicant/applicant-all-details/${applicantId}`
     try {
-      // let response = await api1.get(url)
-      let {data} = await axios.get(url)
+      let data = await api1.get(url)
+      // let {data} = await axios.get(url)
       return data
     } catch (err) {
       console.log('Error in service file:', err)

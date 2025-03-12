@@ -18,10 +18,10 @@ class BeneficiaryService extends BaseService {
         }
 
         async searchByBeneficiaryId(beneficiaryId: string): Promise<BeneficiaryFormData> {
-            let url = VITE_APP_BENIFICIARY+`/beneficiary/${beneficiaryId}`;  
+            let url = `/api/applicant/beneficiary/${beneficiaryId}`;  
             try {
               const {data} = await api1.get(url); 
-              console.log("responseeee", data)
+         
               return data;  
             } catch (err) {
               console.error('Error fetching  data:', err);

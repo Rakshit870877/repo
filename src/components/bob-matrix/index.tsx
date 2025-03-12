@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Select, MenuItem, FormControl, InputLabel, Button, Input } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
+//@ts-igno
+
 const BobCategoryDropdown = ({amount}) => {
   const [category, setCategory] = useState<string>('');
  
