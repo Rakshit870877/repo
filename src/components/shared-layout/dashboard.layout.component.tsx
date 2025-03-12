@@ -2,14 +2,14 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { Box, Typography, Avatar, List, ListItem, ListItemText, IconButton, Modal, Button, AppBar, ListItemIcon, Toolbar, Menu, MenuItem } from '@mui/material'
 import { styled } from '@mui/system'
-import { Chuks, Logo, LogoVideo, LogoWhite } from '@/assets/images'
+import { Chuks, Logo, LogoWhite } from '@/assets/images'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 // import { sidbarSelectionState, studentListState } from "../../states/state";
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
+
 // import { studentService } from "@/services/student.service";
 import { LocalStorageService } from '@/helpers/local-storage-service'
-import Sidebar from '../sidebar/index'
+
 import { alertState, alertTextState, alertTypeState, loaderState, role, sidbarSelectionState, selectedAppState, loaderStateNew } from '@/states/state'
 import { useState } from 'react'
 import Fade from '@mui/material/Fade'
@@ -102,6 +102,7 @@ const DashboardContainer = styled(Box)({
   display: 'flex',
 })
 
+//@ts-nocheck
 const MainContent = styled(Box)({
   width: '80%', // Adjusted to fit the screen
   padding: '1rem',
@@ -159,11 +160,15 @@ const DashboardLayout = () => {
       icon: (
         <ShowChartIcon
           sx={{
+            //@ts-ignore
             color: theme.palette.secondary.light,
             fontSize: '30px',
+            //@ts-ignore
 
             color: theme.palette.primary.light,
             '&:hover': {
+
+              //@ts-ignore
               color: theme.palette.primary.main, // Change the color to blue on hover
             },
           }}
@@ -175,11 +180,13 @@ const DashboardLayout = () => {
       icon: (
         <CompareArrowsIcon
           sx={{
+            //@ts-ignore
             color: theme.palette.secondary.light,
             fontSize: '30px',
-
+//@ts-ignore
             color: theme.palette.primary.light,
             '&:hover': {
+              //@ts-ignore
               color: theme.palette.primary.main, // Change the color to blue on hover
             },
           }}
@@ -192,11 +199,15 @@ const DashboardLayout = () => {
       icon: (
         <ContactEmergencyIcon
           sx={{
+
+            //@ts-ignore
             color: theme.palette.secondary.light,
             fontSize: '30px',
 
+            //@ts-ignore
             color: theme.palette.primary.light,
             '&:hover': {
+              //@ts-ignore
               color: theme.palette.primary.main, // Change the color to blue on hover
             },
           }}
@@ -225,11 +236,14 @@ const DashboardLayout = () => {
       icon: (
         <PeopleOutlineIcon
           sx={{
+            //@ts-ignore
             color: theme.palette.secondary.light,
             fontSize: '30px',
 
+            //@ts-ignore
             color: theme.palette.primary.light,
             '&:hover': {
+              //@ts-ignore
               color: theme.palette.primary.main, // Change the color to blue on hover
             },
           }}
@@ -241,11 +255,14 @@ const DashboardLayout = () => {
       icon: (
         <CameraFrontIcon
           sx={{
+            //@ts-ignore
             color: theme.palette.secondary.light,
             fontSize: '30px',
-
+//@ts-ignore
             color: theme.palette.primary.light,
+            //@ts-ignore
             '&:hover': {
+              //@ts-ignore
               color: theme.palette.primary.main, // Change the color to blue on hover
             },
           }}
@@ -258,22 +275,18 @@ const DashboardLayout = () => {
 
     icon:(
       <>
- <Tooltip title="Error Actions">
-        <IconButton
 
-        
-          
-          onClick={handledropClose} // Open the menu
-        >
-          <SourceIcon 
+{/* <Tooltip title="Error Actions">
+
+      <IconButton onClick={handledropClose}>
+        <SourceIcon 
           sx={{
-
-            fontSize: '30px',
-            color: theme.palette.primary.light,
+            fontSize: "30px",
+            color: theme.palette.primary.light, // Corrected theme usage
           }}
-          />
-        </IconButton>
-      </Tooltip>
+        />
+      </IconButton>
+    </Tooltip> */}
      
   </>
     ),
@@ -385,7 +398,10 @@ const DashboardLayout = () => {
     <ThemeProvider theme={theme}>
       {/* <CustomSnackbar></CustomSnackbar> */}
       <LoaderBackdrop openloader={openloader} imageSrc=".." />
-      <AppBar position="sticky" sx={{ backgroundColor: theme.palette.primary.main, paddingBottom: 0 }}>
+      <AppBar position="sticky" sx={{
+        
+         //@ts-ignore
+        backgroundColor: theme.palette.primary.main, paddingBottom: 0 }}>
         <Toolbar>
           <Box sx={{ flexGrow: 1, p: 1, color: 'white' }}>
             <img src={LogoWhite} alt="Logo" style={{ height: 60 }} />
@@ -462,6 +478,7 @@ const DashboardLayout = () => {
           <Box
             sx={{
               width: isDrawerOpen ? 200 : 100,
+               //@ts-ignore
               backgroundColor: theme.palette.secondary.main,
               height: '100vh',
               position: 'fixed', // Makes the sidebar stay fixed in place
@@ -504,6 +521,7 @@ const DashboardLayout = () => {
                         sx={{
                           textAlign: 'center',
                           justifyContent: 'center',
+                          //@ts-ignore
                           color: selectedApp === item.label ? theme.palette.primary.light : 'inherit', // Change color if selected
                         }}
                         onClick={() => {

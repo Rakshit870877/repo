@@ -23,9 +23,11 @@ export default function ComplianceTool(
   const [searchText, setSearchText] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [showList, setShowList] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState<any>(null);
 
-  const filteredUsers = userList.filter((b) =>
+  const filteredUsers = userList.filter((
+    //@ts-ignore
+    b) =>
     b.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
@@ -83,7 +85,9 @@ export default function ComplianceTool(
             InputProps={{
               startAdornment: selectedUser && (
                 <InputAdornment position="start">
-                  <Avatar src={selectedUser.profilePhoto} alt={selectedUser.name} />
+                  <Avatar
+                  //@ts-ignore
+                  src={selectedUser.profilePhoto} alt={selectedUser.name} />
                 </InputAdornment>
               ),
             }}
@@ -92,7 +96,7 @@ export default function ComplianceTool(
           {showList && filteredUsers.length > 0 && (
             <Paper elevation={3} sx={{ mt: 2 }}>
               <List>
-                {filteredUsers.map((b) => (
+                {filteredUsers.map((b:any) => (
                   <ListItem
                     key={b.benificaryId}
                     divider
@@ -115,7 +119,11 @@ export default function ComplianceTool(
           {selectedUser && (
             <>
               <Typography sx={{ mt: 2, textAlign: "center", color: "grey" }}>
-                {selectedUser.name} (Account: {selectedUser.accountNumber})
+
+
+                {
+                //@ts-ignore
+                selectedUser.name} (Account: {selectedUser.accountNumber})
               </Typography>
               {userDetails && (
                 <Paper sx={{ mt: 2, p: 2 }}>

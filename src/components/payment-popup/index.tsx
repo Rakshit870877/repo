@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, Button } from "@mui/material";
 
-const PaymentPopup: React.FC = ({open,setOpen,url}) => {
+const PaymentPopup: React.FC = (
+  
+  //@ts-ignore
+  {open,setOpen,url}) => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

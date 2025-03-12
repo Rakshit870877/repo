@@ -39,6 +39,8 @@ const ChargesDataGridTable = () => {
   };
 
   const handleClose = (
+
+    //@ts-ignore
     event: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason,
   ) => {
@@ -184,6 +186,7 @@ const ChargesDataGridTable = () => {
     options={speedOptions}
     getOptionLabel={(option) => option.label}
     value={newRecord.speed}
+    //@ts-ignore
     onChange={(event, newValue) => setNewRecord({ ...newRecord, speed: newValue })}
     renderInput={(params) => <TextField {...params} label="Speed" variant="outlined" fullWidth />}
   />

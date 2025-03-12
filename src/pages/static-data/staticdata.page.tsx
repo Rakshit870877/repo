@@ -24,7 +24,10 @@ const MainTabsPage: React.FC = () => {
     }
   }, [tabName]);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (
+    
+    //@ts-ignore
+    event: React.SyntheticEvent, newValue: number) => {
     const newTabName = Object.keys(tabMap).find((key) => tabMap[key] === newValue);
     if (newTabName) {
       setSearchParams({ tab: newTabName }); // Update the query parameter

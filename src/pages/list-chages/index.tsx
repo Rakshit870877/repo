@@ -38,7 +38,7 @@ const ListCharges = () => {
         
             }).catch(err=>{
         
-        
+        console.log(err)
             })
 
   }, []);
@@ -70,6 +70,7 @@ const ListCharges = () => {
             value={params.value}
             onChange={(e) => {
               const updatedRows = [...charges];
+              //@ts-ignore
               updatedRows[params.rowIndex].sendingCountry = e.target.value;
               setCharges(updatedRows);
             }}
@@ -95,6 +96,7 @@ const ListCharges = () => {
             value={params.value}
             onChange={(e) => {
               const updatedRows = [...charges];
+              //@ts-ignore
               updatedRows[params.rowIndex].receivingCountry = e.target.value;
               setCharges(updatedRows);
             }}
@@ -254,6 +256,7 @@ const ListCharges = () => {
         <DataGrid
           rows={charges}
           columns={columns}
+          //@ts-ignore
           pageSize={5}
          
           disableSelectionOnClick

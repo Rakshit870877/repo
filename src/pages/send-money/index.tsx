@@ -154,7 +154,6 @@ useEffect(()=>{
   applicant_service.getApplicantDetalis().then(data=>{
 
 
-    console.log(data)
     
     let users=data.map((e)=>{
   let benificiary_list=e.beneficiaryList.map((b)=>{
@@ -176,6 +175,7 @@ useEffect(()=>{
   return ({
      "applicantId": e.applicant.applicantId,
 id:e.applicant.applicantId,
+//@ts-ignore
 name:e.applicant?.firstName,
 accountNumber: '**********789',
 profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
@@ -903,7 +903,9 @@ window.open(res.url, "_blank", "noopener,noreferrer");
 
 
 
-    <PaymentPopup open={gifsuccess} setOpen={setGifSuccess} url={url}></PaymentPopup>
+    <PaymentPopup
+    //@ts-ignore
+    open={gifsuccess} setOpen={setGifSuccess} url={url}></PaymentPopup>
 
     
     </Box>

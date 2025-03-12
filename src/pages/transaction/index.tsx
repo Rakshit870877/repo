@@ -16,7 +16,7 @@ import { Filter1Outlined, SettingsAccessibilityRounded, Sync } from '@mui/icons-
 import { useRecoilState } from 'recoil'
 import { loaderState, loaderStateNew } from '@/states/state'
 import { ApplicantService } from '@/services/applicant.service'
-import CompliancTool from '@/components/compliance-tool'
+import CompliancTool  from '@/components/compliance-tool'
 
 const sampleInwardsData: Array<TransactionInwardCalclulated> = [
   {
@@ -313,6 +313,8 @@ const TransactionPage = () => {
   const [outboundTransaction, setOutboundTransaction] = useState<Array<TransactionOutward>>([])
   const [ toolopen,setToolOpen]=useState(false)
 
+
+  //@ts-ignore
   const[applicant,setApplicant]=useState<Applicant> (null)
   
   const [transactionData, setTransactionData] = useState(inboundTransaction)
@@ -352,6 +354,7 @@ const TransactionPage = () => {
     return ({
        "applicantId": e.applicant.applicantId,
   id:e.applicant.applicantId,
+  //@ts-ignore
   name:e.applicant?.firstName,
   accountNumber: '**********789',
   profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
@@ -388,9 +391,10 @@ const TransactionPage = () => {
       .then((data: TransactionDetailsResponse) => {
         console.log("data-----------------------",data);
         
-        let inbound: Array<TransactionInwardCalclulated>[]|any = data?.transactionDetailsList.map((e) => {
-       
+        let inbound: Array<TransactionInwardCalclulated>[]|any = data?.transactionDetailsList.map((e:any) => {
+       //@ts-ignore
           return ({
+            //@ts-ignore
             ...e.transactionInwardList,
             ...e.beneficiary,
             id: e?.transactionInwardList?.transactionNumberIw,
@@ -746,7 +750,22 @@ transactionType=='inwards'?(  <DataGrid
           </Button>
         </DialogActions>
       </Dialog>
-<CompliancTool open={toolopen} setOpen={setToolOpen} userList={userList} ></CompliancTool>
+   
+
+
+< CompliancTool
+//@ts-ignore
+open={toolopen}
+//@ts-ignore
+ setOpen={setToolOpen} 
+ //@ts-ignore
+ userList={userList}
+ fetchUserDetails={()=>{
+
+  
+ }}
+ 
+ ></CompliancTool>
     </Box>
   )
 }

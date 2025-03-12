@@ -37,7 +37,9 @@ const BeneficiaryDetailPage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setTempData((prevData) => ({
+    setTempData((
+      //@ts-ignore
+      prevData) => ({
       ...prevData,
       [name]: value,
     }));

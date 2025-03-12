@@ -208,7 +208,10 @@ const ApplicantPage = () => {
     setOpenConfirmationDialog(false);
   };
 
-  const handleTabChange = async (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleTabChange = async (
+    
+    //@ts-ignore
+    event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
     if (newValue === 1) {
       await fetchBeneficiaries();

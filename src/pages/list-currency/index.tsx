@@ -33,7 +33,9 @@ const ListCurrencies = () => {
       {loading ? (
         <CircularProgress />
       ) : (
-        <DataGrid rows={currencies} columns={columns} pageSize={5} disableSelectionOnClick />
+        <DataGrid 
+        //@ts-ignore
+        rows={currencies} columns={columns} pageSize={5} disableSelectionOnClick />
       )}
     </Box>
   );

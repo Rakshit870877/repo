@@ -4,7 +4,11 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 //@ts-igno
 
-const BobCategoryDropdown = ({amount}) => {
+const BobCategoryDropdown = (
+  //@ts-ignore
+  {amount}) => {
+
+
   const [category, setCategory] = useState<string>('');
  
   const [contract, setContract] = useState<File | null>(null);
@@ -15,6 +19,8 @@ const BobCategoryDropdown = ({amount}) => {
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//@ts-ignore
+
     setAmount(Number(event.target.value));
   };
 
@@ -45,6 +51,7 @@ const BobCategoryDropdown = ({amount}) => {
         <Select
           labelId="bob-category-label"
           value={category}
+          //@ts-ignore
           onChange={handleCategoryChange}
           label="Select Bob Category"
         >

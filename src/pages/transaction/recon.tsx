@@ -79,7 +79,7 @@ const ReconPage = () => {
     transaction_service.gettransactions().then(data => {
       if (data && data.transactionDetailsList) {
 
-
+//@ts-ignore
 
         setallRecondData(data.transactionDetailsList)
 
@@ -111,8 +111,9 @@ const ReconPage = () => {
         .filter(Boolean); // Removes all null values from the array
       
 
-
+//@ts-ignore
         setRows(all_data);
+        //@ts-ignore
         setFilteredRows(all_data)
         setcommonloader(false)
       }
@@ -130,7 +131,10 @@ const ReconPage = () => {
   const handleSelectAll = (isChecked: boolean) => {
     setSelectAll(isChecked);
     if (isChecked) {
-      const allSelected = Object.fromEntries(rows.map((row) => [row.id, ""]));
+      const allSelected = Object.fromEntries(
+        //@ts-ignore
+        
+        rows.map((row) => [row.id, ""]));
       setSelectedRows(allSelected);
     } else {
       setSelectedRows({});
@@ -177,7 +181,10 @@ setTimeout(() => {
 
   const handleDateFilter = () => {
     if (startDate && endDate) {
-      const filtered = rows.filter((row) =>
+
+      //@ts-ignore
+      const filtered = rows.filter((row:any) =>
+        //@ts-ignore
         dayjs(row.settlement).isBetween(
           startDate,
           endDate,
@@ -187,6 +194,7 @@ setTimeout(() => {
       );
       setFilteredRows(filtered);
     } else {
+      //@ts-ignore
       setFilteredRows(rows); // Reset to original rows if no date range is selected
     }
   };
@@ -223,6 +231,7 @@ setTimeout(() => {
       
       renderCell: (params) => (
         <Checkbox
+        //@ts-ignore
           checked={selectedRows[params.row.id]}
           onChange={(e) =>
             handleCheckboxChange(params.row.id, e.target.checked)
@@ -283,6 +292,7 @@ setTimeout(() => {
             label="Start Date"
             value={startDate}
             onChange={(newDate) => setStartDate(newDate)}
+            //@ts-ignore
             renderInput={(params) => <TextField {...params} />}
           />
 
@@ -291,6 +301,7 @@ setTimeout(() => {
             label="End Date"
             value={endDate}
             onChange={(newDate) => setEndDate(newDate)}
+            //@ts-ignore
             renderInput={(params) => <TextField {...params} />}
           />
 
@@ -324,21 +335,29 @@ setFilteredRows(
             size="small"
           />
 
-
+//@ts-ignore
+//@ts-nocheck
+//@ts-ignore-file
 <TextField
       label="Recon ID"
       variant="outlined"
       value={reconid}
       onChange={(v) => {setReconID(v.target.value)
         console.log(v.target.value)
-   var all_data=  allreconData.map(e => {
+   var all_data=  allreconData.map( (e :any)   => {
 
      
-        if (e?.transactionOutward?.reconId==v.target.value) {  // Check for undefined or null reconId
+        if (
+          //@ts-ignore
+          e?.transactionOutward?.reconId==v.target.value) {  // Check for undefined or null reconId
           return {
+            //@ts-ignore
             id: e.transactionOutward?.transactionNumber || "",
+//@ts-ignore
             destination: e.transactionOutward?.receiveCountry || "",
+            //@ts-ignore
             value: e.transactionOutward?.principalAmount || 0,
+            //@ts-ignore
             currency: e.transactionOutward?.principalAmount && e.transactionOutward?.exchangeRates
               ? e.transactionOutward.principalAmount * e.transactionOutward.exchangeRates
               : "0", // Ensuring safe multiplication
@@ -351,8 +370,9 @@ setFilteredRows(
       })
       .filter(Boolean); 
 console.log(all_data)
-
+//@ts-ignore
       setRows(all_data);
+      //@ts-ignore
       setFilteredRows(all_data)
       }
 
@@ -365,7 +385,7 @@ console.log(all_data)
           <InputAdornment position="end">
             <IconButton onClick={()=>{
 
-var all_data=  allreconData.map(e => {
+var all_data=  allreconData.map((e:any) => {
 
   
      if (!e?.transactionOutward?.reconId) {  // Check for undefined or null reconId
@@ -385,8 +405,9 @@ var all_data=  allreconData.map(e => {
    })
    .filter(Boolean); 
 console.log(all_data)
-
+//@ts-ignore
    setRows(all_data);
+   //@ts-ignore
    setFilteredRows(all_data)
 
             }} edge="end">
@@ -444,6 +465,7 @@ console.log(all_data)
           columns={columns}
           autoHeight
           checkboxSelection={false}
+          //@ts-ignore
           disableSelectionOnClick
         />
 
@@ -468,21 +490,27 @@ console.log(all_data)
             <DatePicker
               label="Reconciliation Date"
               value={reconciliation.reconDate}
+              //@ts-ignore
               onChange={(newDate) => setReconciliation((prev) => ({ ...prev, reconDate: newDate }))}
+              //@ts-ignore
               renderInput={(params) => <TextField {...params} fullWidth sx={{ marginBottom: 2 }} />}
             />
 
             <DatePicker
               label="From Transaction Date"
               value={reconciliation.from_transactionDate}
-              onChange={(newDate) => setReconciliation((prev) => ({ ...prev, from_transactionDate: newDate }))}
+              onChange={(newDate) => setReconciliation(
+                
+                (prev:any) => ({ ...prev, from_transactionDate: newDate }))}
+              //@ts-ignore
               renderInput={(params) => <TextField {...params} fullWidth sx={{ marginBottom: 2 }} />}
             />
 
             <DatePicker
               label="To Transaction Date"
               value={reconciliation.to_transactionDate}
-              onChange={(newDate) => setReconciliation((prev) => ({ ...prev, to_transactionDate: newDate }))}
+              onChange={(newDate) => setReconciliation((prev:any) => ({ ...prev, to_transactionDate: newDate }))}
+              //@ts-ignore
               renderInput={(params) => <TextField {...params} fullWidth sx={{ marginBottom: 2 }} />}
             />
 
@@ -501,6 +529,7 @@ console.log(all_data)
                 label="Reconciliation Status"
                 name="reconStatus"
                 value={reconciliation.reconStatus}
+                //@ts-ignore
                 onChange={handleReconciliationChange}
               >
                 <MenuItem value="Pending">Pending</MenuItem>

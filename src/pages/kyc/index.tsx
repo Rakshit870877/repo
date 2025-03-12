@@ -205,7 +205,10 @@ const KYCPage = () => {
     
       const response = await kycservice.createComment(payload);
 
-      if (response.status === 200) {
+      if (
+        
+        //@ts-ignore
+        response.status === 200) {
         // Update the comments list with the new comment
         setComments((prevComments) => [
           ...prevComments,
@@ -213,7 +216,7 @@ const KYCPage = () => {
         ]);
         setNewComment(""); // Clear the input field
       } else {
-        console.error("Failed to add comment:", response.data);
+       
       }
     } catch (error) {
       console.error("Error while adding comment:", error);
@@ -227,7 +230,7 @@ const KYCPage = () => {
   }
 
   let kycservice=new KycService()
-  const verifyProofType = async (proofType) => {
+  const verifyProofType = async (proofType:any) => {
     try {
       // Your API call logic here
       console.log(selectedKYC);

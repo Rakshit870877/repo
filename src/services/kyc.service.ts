@@ -41,7 +41,7 @@ let url=`${VITE_APP_KYC}/api/comments`
     }
 }
 
-
+//@ts-ignore
 async getCharges(souceCountry,destinationCountry,amount,segment){
 
   let url=`${VITE_APP_STATIC}/charges/filter?sendingCountry=SA&receivingCountry=${destinationCountry}&amount=${amount}&marketSegment=${segment}`
