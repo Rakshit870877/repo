@@ -251,25 +251,25 @@ const DashboardLayout = () => {
       ),
       label: 'applicant',
     },
-    {
-      icon: (
-        <CameraFrontIcon
-          sx={{
-            //@ts-ignore
-            color: theme.palette.secondary.light,
-            fontSize: '30px',
-//@ts-ignore
-            color: theme.palette.primary.light,
-            //@ts-ignore
-            '&:hover': {
-              //@ts-ignore
-              color: theme.palette.primary.main, // Change the color to blue on hover
-            },
-          }}
-        />
-      ),
-      label: 'beneficiary',
-    },
+//     {
+//       icon: (
+//         <CameraFrontIcon
+//           sx={{
+//             //@ts-ignore
+//             color: theme.palette.secondary.light,
+//             fontSize: '30px',
+// //@ts-ignore
+//             color: theme.palette.primary.light,
+//             //@ts-ignore
+//             '&:hover': {
+//               //@ts-ignore
+//               color: theme.palette.primary.main, // Change the color to blue on hover
+//             },
+//           }}
+//         />
+//       ),
+//       label: 'beneficiary',
+//     },
 
 {
 

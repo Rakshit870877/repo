@@ -26,7 +26,7 @@ export class TransactionService extends BaseService {
     }
   }
   async createTransaction(payload: any) {
-    let url = `${VITE_APP_TRANSACTION}/transaction-outward/create`
+    let url = `/api/transactions/transaction-outward/create`
     try {
       let { data } = await api1.post(url, payload)
 
@@ -39,7 +39,7 @@ export class TransactionService extends BaseService {
   }
 
   async createPayfastTransaction(transaction: any,amount:any) {
-    let url = `${VITE_APP_TRANSACTION}/transaction-outward/ozow?amount=${amount}&transactionId=${transaction}`
+    let url = `/api/transactions/transaction-outward/ozow?amount=${amount}&transactionId=${transaction}`
     try {
       let  data  = await api1.get(url)    
       
