@@ -335,9 +335,7 @@ setFilteredRows(
             size="small"
           />
 
-//@ts-ignore
-//@ts-nocheck
-//@ts-ignore-file
+
 <TextField
       label="Recon ID"
       variant="outlined"

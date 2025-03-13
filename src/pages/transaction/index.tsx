@@ -443,6 +443,8 @@ const TransactionPage = () => {
         })
        
         setInboundTransaction(inbound)
+
+        setInboundTransaction([])
         setTransactionData(inbound)
         setOutboundTransaction(outbound)
         setcommonloader(false)
@@ -539,9 +541,9 @@ const TransactionPage = () => {
 
 
 
-<IconButton onClick={() => setToolOpen(true)}>
+{/* <IconButton onClick={() => setToolOpen(true)}>
         <SettingsAccessibilityRounded />
-      </IconButton>
+      </IconButton> */}
 
  <IconButton onClick={()=>{
 
@@ -762,7 +764,7 @@ open={toolopen}
  userList={userList}
  fetchUserDetails={()=>{
 
-  
+
  }}
  
  ></CompliancTool>

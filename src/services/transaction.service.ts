@@ -51,7 +51,7 @@ export class TransactionService extends BaseService {
   }
 
 async createRecons(payload:any){
-let url=`${VITE_APP_TRANSACTION}/api/recon-transactions/create`
+let url=`/api/transactions/recon-transactions/create`
 try{
 let data=await api1.post(url,payload)
 return data
