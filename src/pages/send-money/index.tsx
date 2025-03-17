@@ -875,7 +875,9 @@ let payload={
   transaction_service.createPayfastTransaction(data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
 
 seturl(res.url)
-window.open(res.url, "_blank", "noopener,noreferrer");
+
+
+window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
  
 
 })
