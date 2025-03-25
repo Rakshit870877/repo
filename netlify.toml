@@ -1,5 +1,5 @@
 [[redirects]]
   from = "/api/*"
-  to = "http://64.227.139.142:9091/api/:splat"
+  to = "https://proxy-server-n7ib.onrender.com/api/:splat"
   status = 200
   force = true
