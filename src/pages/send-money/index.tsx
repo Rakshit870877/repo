@@ -385,19 +385,22 @@ console.log(data)
       const data = await response.json();
       console.log("API Response:", data);
       let payload={
-        benificary:selectedBenficary,
+        //@ts-ignore
+        benificary:{"benificaryId":  selectedBenficary?.benificaryId},
         transferMethod:selectedTransferMethod,
          destinationCountry:selectedCountry,
          selectedTimeMethod:selectedTime,
-         gateway:selectedGateway,
+         gatewayStatus:selectedGateway,
          amount:amount,
         applicant:selectedUser,
         forex:forexRate,
+        gatewayId:'13122',
          //@ts-ignore
         timecharge:selectedTime?.time,
-        sourceCurrency:'Zar',
+        sourceCurrency:'ZAR',
+      
         sourceCountry:"SA",
-        destinationCurrency:currency,
+        destinationCurrency:'INR',
        totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
       
        }
@@ -1009,24 +1012,26 @@ console.log(data)
 
 
             <Button variant="outlined" color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={() => {
-
-let payload={
-  benificary:selectedBenficary,
-  transferMethod:selectedTransferMethod,
-   destinationCountry:selectedCountry,
-   selectedTimeMethod:selectedTime,
-   gateway:selectedGateway,
-   amount:amount,
-  applicant:selectedUser,
-  forex:forexRate,
-   //@ts-ignore
-  timecharge:selectedTime?.time,
-  sourceCurrency:'Zar',
-  sourceCountry:"SA",
-  destinationCurrency:currency,
- totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
-
- }
+   let payload={
+    //@ts-ignore
+    benificary:{"benificaryId":  selectedBenficary?.benificaryId},
+    transferMethod:selectedTransferMethod,
+     destinationCountry:selectedCountry,
+     selectedTimeMethod:selectedTime,
+     gatewayStatus:selectedGateway,
+     amount:amount,
+    applicant:selectedUser,
+    forex:forexRate,
+    gatewayId:'13122',
+     //@ts-ignore
+    timecharge:selectedTime?.time,
+    sourceCurrency:'ZAR',
+  
+    sourceCountry:"SA",
+    destinationCurrency:'INR',
+   totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
+  
+   }
  
 
  transaction_service.createTransaction(payload).then(data=>{
