@@ -45,6 +45,7 @@ import BobCategoryDropdown from '@/components/bob-matrix'
 import { useRecoilState } from 'recoil'
 import { loaderStateNew } from '@/states/state'
 import { Segment } from '@mui/icons-material'
+import axios from 'axios'
 
 const users = [
   {
@@ -110,6 +111,7 @@ const paymentGateways = [
 
 
 const SendMoneyPage = () => {
+  const [checkoutId, setCheckoutId] = useState("");
   const [searchText, setSearchText] = useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
   const [tabValue, setTabValue] = useState('1')
@@ -247,10 +249,10 @@ console.log(selected?.currency)
           onChange={() => {handleRadioChange(params.row)
 
            let data= kyc_service.getCharges('SA',sendCountry,amount,params?.row?.id).then(data=>{
-
-            if(data?.data?.length>0){
+console.log(data)
+            if(data?.length>0){
          console.log(    )
-         setSelectedTimeCharge( data?.data[0].minimumCharges)
+         setSelectedTimeCharge( data[0].minimumCharges)
 
             }
                    
@@ -299,6 +301,162 @@ console.log(selected?.currency)
       setFilteredUsers(filtered)
     }
   }
+
+
+  const handlePayment = async () => {
+    try {
+      let payload = {
+        benificary: selectedBenficary,
+        transferMethod: selectedTransferMethod,
+        destinationCountry: selectedCountry,
+        selectedTimeMethod: selectedTime,
+        gateway: selectedGateway,
+        amount: amount,
+        applicant: selectedUser,
+        forex: forexRate,
+        //@ts-ignore
+        timecharge: selectedTime?.time,
+        sourceCurrency: "ZAR",
+        sourceCountry: "SA",
+        destinationCurrency: currency,
+        totalpaybleamount:
+          Number(amount) + Number(selecteTimeChange) + Number(gatewayCharge),
+      };
+
+      // Create transaction
+      const transactionResponse = await transaction_service.createTransaction(
+        payload
+      );
+
+      console.log(transactionResponse.data);
+
+      // Call Peach Payments API
+      const peachResponse = await axios.post(
+        "https://test.oppwa.com/v1/checkouts",
+        new URLSearchParams({
+          entityId: "8ac7a4c99568514401956b1180e80671",
+          amount: `${Number(amount)}`,
+          currency: "ZAR",
+          paymentType: "DB",
+        }),
+        {
+          headers: {
+            Authorization:
+              "Bearer OGFjN2E0Yzk5NTY4NTE0NDAxOTU2YjExNWY3NDA2NTR8akI9RFUjK0Z0ZTZjYkYya2ZVISM=",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
+      const checkoutId = peachResponse.data.id;
+      console.log("Checkout ID:", checkoutId);
+
+      setCheckoutId(checkoutId);
+
+      window.open(
+        `https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    } catch (error) {
+      console.error("Error processing payment:", error);
+    }
+  };
+
+
+  const handlePaymentClick = async () => {
+    try {
+      // Call Peach Payments API
+      const response = await fetch("https://test.oppwa.com/v1/checkouts", {
+        method: "POST",
+        headers: {
+          Authorization:
+            "Bearer OGFjN2E0Yzk5NTY4NTE0NDAxOTU2YjExNWY3NDA2NTR8akI9RFUjK0Z0ZTZjYkYya2ZVISM=",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          entityId: "8ac7a4c99568514401956b1180e80671",
+          amount: "100",
+          currency: "ZAR",
+          paymentType: "DB",
+        }),
+      });
+
+      const data = await response.json();
+      console.log("API Response:", data);
+      let payload={
+        benificary:selectedBenficary,
+        transferMethod:selectedTransferMethod,
+         destinationCountry:selectedCountry,
+         selectedTimeMethod:selectedTime,
+         gateway:selectedGateway,
+         amount:amount,
+        applicant:selectedUser,
+        forex:forexRate,
+         //@ts-ignore
+        timecharge:selectedTime?.time,
+        sourceCurrency:'Zar',
+        sourceCountry:"SA",
+        destinationCurrency:currency,
+       totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
+      
+       }
+       
+      
+      
+
+
+      transaction_service.createTransaction(payload).then(data=>{
+
+        console.log(data.data)
+        transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
+      
+      seturl(res.url)
+      
+      
+      window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
+       
+      
+      })
+       })
+
+      if (data.id) {
+        // HTML content for the new window
+        const htmlContent = `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Peach Payments</title>
+              <script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${data.id}"></script>
+          </head>
+          <body>
+              <h2>Complete Your Payment</h2>
+              <form action="https://reactnative.dev/" class="paymentWidgets">
+                  VISA MASTER
+              </form>
+          </body>
+          </html>
+        `;
+
+        // Open a new window and write the HTML content
+        const paymentWindow = window.open("", "_blank", "width=600,height=800");
+        if (paymentWindow) {
+          paymentWindow.document.open();
+          paymentWindow.document.write(htmlContent);
+          paymentWindow.document.close();
+        } else {
+          alert("Popup blocked! Please allow popups for this site.");
+        }
+      } else {
+        alert("Failed to create payment session");
+      }
+    } catch (error) {
+      console.error("Payment initiation failed:", error);
+      alert("Error processing payment!");
+    }
+  };
   const handleUserSelect = (user: { name: string; accountNumber: string }) => {
     console.log(user)
     setSelectedUser(user)
@@ -357,7 +515,7 @@ console.log(selected?.currency)
 
       <TabContext value={tabValue}>
         <Tabs value={tabValue} onChange={handleChange} sx={{ marginBottom: 3 }}>
-          <Tab label="Select Gateway" value="1" />
+          <Tab label="Select Applicant" value="1" />
           <Tab label="Select Beneficiary" value="2" />
           <Tab label="Pay Now" value="3" />
         </Tabs>
@@ -850,7 +1008,7 @@ console.log(selected?.currency)
 
 
 
-            <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() => {
+            <Button variant="outlined" color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={() => {
 
 let payload={
   benificary:selectedBenficary,
@@ -872,7 +1030,9 @@ let payload={
  
 
  transaction_service.createTransaction(payload).then(data=>{
-  transaction_service.createPayfastTransaction(data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
+
+  console.log(data.data)
+  transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
 
 seturl(res.url)
 
@@ -891,8 +1051,31 @@ window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
   
 
             }}>
-              Confirm & Pay
+
+
+<img
+        src="https://cdn.prod.website-files.com/6282d4840afd19e1afa62e70/6491490c213c45a9d600d387_ozow_small_xs.png"
+        alt="Ozow"
+        style={{ height: "20px" }}
+      />
+      Confirm & Pay
+              
             </Button>
+
+
+        
+
+
+            <Button variant="outlined"   color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={handlePaymentClick}>
+              
+            <img
+        src="https://www.peachpayments.com/hubfs/peachpayments-logo.svg"
+        alt="Ozow"
+        style={{ height: "20px" }}
+      />
+
+      Confirm & Pay
+    </Button>
           </Box>
         </TabPanel>,
       </TabContext>

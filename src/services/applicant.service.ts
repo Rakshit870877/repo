@@ -22,6 +22,20 @@ class ApplicantService extends BaseService {
       throw new Error('Unable to submit applicant form. Please try again.')
     }
   }
+  async getCompliance(id:any): Promise<any> {
+    let url = `/api/compliance/check/${id}`
+    try {
+      // let { data } = await axios.get(url)
+     let {data}=await api1.get(url)
+      // let response = await api1.post(url, payload)
+      //@ts-ignore
+      console.log(data.data)
+      return data
+    } catch (err) {
+      console.log('error in service file', err)
+      throw new Error('Unable to submit applicant form. Please try again.')
+    }
+  }
 
   async getApplicantDetalis(): Promise<Array<ApplicantData>> {
     let url = `/api/applicant/applicant-all-details`
@@ -39,11 +53,13 @@ class ApplicantService extends BaseService {
   }
 
   async getTransactionsByApplicantId(applicantId: string): Promise<Array<ApplicantData>> {
-    let url = `${VITE_APP_TRANSACTION}/transaction-details/applicant/${applicantId}`
+    let url = `/api/transactions/transaction-details/applicant/id/${applicantId}`
     try {
-      let { data } = await axios.get(url)
+      let  data  = await api1.get(url)
       // let response = await api1.post(url, payload)
       //@ts-ignore
+
+      console.log("data ios herererer=>",data)
       return data.transactionDetailsList;
     } catch (err) {
       console.log('error in service file', err)
@@ -52,7 +68,7 @@ class ApplicantService extends BaseService {
   }
 
   async getApplicantKyc(): Promise<Array<KYCData>> {
-    let url = `/api/kyc`
+    let url = `/api/kyc/kyc`
     try {
       // let { data } = await axios.get(url)
       let data= await api1.get(url)
@@ -66,7 +82,7 @@ class ApplicantService extends BaseService {
 
   async searchByApplicantId(applicantId: string): Promise<ApplicantResponse> {
     // let url = `/api/applicants/${applicantId}`;
-    let url = `/api/applicant/applicant-all-details/${applicantId}`
+    let url = `/api/applicant/applicant-all-details/applicantId/${applicantId}`
     try {
       let data = await api1.get(url)
       // let {data} = await axios.get(url)

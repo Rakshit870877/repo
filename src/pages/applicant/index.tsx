@@ -128,8 +128,12 @@ const ApplicantPage = () => {
 
     try {
       const data = await beneficiary_service.searchByApplicantId(applicantId);
+      console.log("data is coming")
+      console.log("data is here=>",data)
       const beneficiaryArray = Array.isArray(data) ? data : [data];
-      const formattedData = beneficiaryArray[0]?.data?.map((beneficiary: any, index: number) => ({
+      console.log(beneficiaryArray)
+      //@ts-ignore
+      const formattedData = data?.map((beneficiary: any, index: number) => ({
         id: index + 1,
         beneficiaryId: beneficiary?.beneficiaryId,
         beneficiaryName: beneficiary?.beneficiaryName,
@@ -137,7 +141,12 @@ const ApplicantPage = () => {
         bankName: beneficiary?.bankName,
         bankBicCode: beneficiary?.bankBicCode,
         idType: beneficiary?.idType,
-      }));
+      }))
+
+
+      console.log(formattedData)
+
+      
       setBeneficiaries(formattedData || []);
     } catch (error) {
       console.error('Error fetching beneficiaries:', error);
@@ -151,7 +160,7 @@ const ApplicantPage = () => {
       const data = await applicant_service.getTransactionsByApplicantId(applicantId);
       const transactionArray = Array.isArray(data) ? data : [data];
       console.log("__________-hudhush________ ",transactionArray);
-      const formattedData = transactionArray?.map((transaction: any, index: number) => ({
+      const formattedData = data?.map((transaction: any, index: number) => ({
         id: index + 1,
         transactionNumber: transaction?.transactionOutward?.transactionNumber,
         sendCountry: transaction?.transactionOutward?.sendCountry,

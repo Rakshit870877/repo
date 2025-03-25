@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Divider, Grid, Typography, Chip, TextField, Drawer, ToggleButton, ToggleButtonGroup, useTheme, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
+import { Box, Button, Divider, Grid, Typography, Chip, TextField, Drawer, ToggleButton, ToggleButtonGroup, useTheme, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Modal, List, ListItem, ListItemText } from '@mui/material'
 import { DataGrid, GridColDef, GridFilterAltIcon } from '@mui/x-data-grid'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { useNavigate } from 'react-router-dom'
@@ -72,7 +72,7 @@ const TransactionPage = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'destination', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'value', headerName: 'Value', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'value', headerName: 'Amount ZAR', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'settlement', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
 
@@ -84,11 +84,22 @@ const TransactionPage = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
         params.value ? (
-          <Tooltip title={params.value.errorCause || "Unknown Error"} arrow>
-            <Chip label="Error" color="error" />
-          </Tooltip>
+        
+            <Chip onClick={()=>{
+              setmodalOpen(true)
+  
+            }}  label="Error" color="error" />
+         
         ) : (
-          <Chip label="No Error" color="success" />
+          
+          <Chip 
+          onClick={()=>{
+              setmodalOpen(true)
+  
+            }}
+          
+          label="No Error" color="success" />
+       
         ),
     },
 
@@ -220,7 +231,7 @@ const TransactionPage = () => {
   const columns_outward: GridColDef[] = [
     { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'destination', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'value', headerName: 'Value', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'value', headerName: 'Amount Zar', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'final_amount', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
     {
@@ -230,11 +241,17 @@ const TransactionPage = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
         params.value ? (
-          <Tooltip title={params.value.errorCause || "Unknown Error"} arrow>
-            <Chip label="Error" color="error" />
-          </Tooltip>
+          
+          <Chip onClick={()=>{
+            setmodalOpen(true)
+
+          }}  label="Error" color="error" />
+        
         ) : (
-          <Chip label="No Error" color="success" />
+          <Chip onClick={()=>{
+            setmodalOpen(true)
+
+          }}  label="Error" color="error" />
         ),
     },
     { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
@@ -305,6 +322,7 @@ const TransactionPage = () => {
 
 
   const [isDrawerOpen, setDrawerOpen] = useState(false)
+  const [modalOpen,setmodalOpen]=useState(false)
 
   const [transactionDetails, setTransactionDetails] = useState<any>(null)
   const [transactionType, setTransactionType] = useState('inwards') // Default to 'inwards'
@@ -312,6 +330,7 @@ const TransactionPage = () => {
   const [inboundTransaction, setInboundTransaction] = useState<Array<TransactionInward>>([])
   const [outboundTransaction, setOutboundTransaction] = useState<Array<TransactionOutward>>([])
   const [ toolopen,setToolOpen]=useState(false)
+  const[errors,seterrors]=useState(["Invalid email", "Password too short", "Username required"])
 
 
   //@ts-ignore
@@ -397,6 +416,7 @@ const TransactionPage = () => {
             //@ts-ignore
             ...e.transactionInwardList,
             ...e.beneficiary,
+          
             id: e?.transactionInwardList?.transactionNumberIw,
             destination: e?.transactionInwardList?.receivingCountry,
             value: e?.transactionInwardList?.settlementAmount,
@@ -416,6 +436,7 @@ const TransactionPage = () => {
           return {
             ...e.transactionOutward,
             ...e.beneficiary,
+            ...e.applicant,
             id: e?.transactionOutward.transactionNumber,
             destination: e?.transactionOutward?.receiveCountry,
             value: e?.transactionOutward?.settlementAmount,
@@ -434,6 +455,8 @@ const TransactionPage = () => {
           }
         })
         
+         console.log("outbound",outbound)
+        console.log(outbound)
 
         let user:Array<Applicant>[]|any=data?.transactionDetailsList.map((e) => {
           return {
@@ -541,9 +564,9 @@ const TransactionPage = () => {
 
 
 
-{/* <IconButton onClick={() => setToolOpen(true)}>
+<IconButton onClick={() => setToolOpen(true)}>
         <SettingsAccessibilityRounded />
-      </IconButton> */}
+      </IconButton>
 
  <IconButton onClick={()=>{
 
@@ -707,6 +730,22 @@ transactionType=='inwards'?(  <DataGrid
             </Grid>
 
             <Divider sx={{ my: 2 }} />
+
+
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ marginBottom: 2 }}>
+              Applicant Details
+            </Typography>
+            <Grid container spacing={2} mb={2}>
+              <Grid item xs={12} md={6}>
+                <TextField label="Applicant Id" variant="filled" fullWidth defaultValue={ JSON.stringify( transactionDetails?.applicant?.applicantId)} size="small" disabled />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField label="Applicant Name" variant="filled" fullWidth defaultValue={transactionDetails?.applicant?.firstName} size="small" disabled />
+              </Grid>
+           
+            </Grid>
+
             {/* <Button variant="contained" color="primary" onClick={closeDrawer}>
               Close
             </Button> */}
@@ -768,6 +807,37 @@ open={toolopen}
  }}
  
  ></CompliancTool>
+
+
+<Modal open={modalOpen} onClose={() => setmodalOpen(false)}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 400,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Error List
+        </Typography>
+        <List>
+          {errors.map((error, index) => (
+            <ListItem key={index} divider>
+              <ListItemText primary={`• ${error}`} />
+            </ListItem>
+          ))}
+        </List>
+        <Button variant="contained" color="error" fullWidth onClick={() => setmodalOpen(false)} sx={{ mt: 2 }}>
+          Close
+        </Button>
+      </Box>
+    </Modal>
     </Box>
   )
 }

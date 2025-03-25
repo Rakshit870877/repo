@@ -1,6 +1,7 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 interface Transaction {
   id: number;
@@ -16,7 +17,7 @@ interface TransactionTableProps {
 }
 //@ts-ignore
 const TransactionTable: React.FC<TransactionTableProps> = ({ transaction }) => {
-
+ let navigate= useNavigate()
   const columns = [
     {
       field: 'id',
@@ -74,6 +75,18 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transaction }) => {
 
   return (
     <Box sx={{ width: '70vw' }}>
+
+
+<Button
+      variant="outlined"
+      onClick={() => navigate("/add-beneficiary")}
+      sx={{
+
+        marginBottom:"3%"
+      }}
+    >
+     ADD Beneficary
+    </Button>
       <DataGrid
         sx={{
           width: '100%',

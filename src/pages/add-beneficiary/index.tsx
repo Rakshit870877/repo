@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Grid, TextField, Typography, Button, useTheme } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Grid, TextField, Typography, Button, useTheme, InputAdornment, Avatar, Paper, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { BeneficiaryFormData, BeneficiaryFormErrors } from '@/types/beneficiary.type';
 import { BeneficiaryService } from '@/services/beneficiary.service';
+import { ApplicantService } from '@/services/applicant.service';
+import { useRecoilState } from 'recoil';
+import { loaderState, loaderStateNew } from '@/states/state';
 
 
 const beneficiary_service = new BeneficiaryService();
@@ -12,7 +15,107 @@ const AddBeneficiary = () => {
     const [text, setText] = useState('');
     const [type, setType] = useState('');
     const [open, setOpen] = useState(false);
+      const [searchText, setSearchText] = useState("");
+      const [selectedUser, setSelectedUser] = useState<any>(null);
+      const [showList, setShowList] = useState(false);
+      const [userDetails, setUserDetails] = useState<any>(null);
+        
+          const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
+      
+    
+          const[userList,setUserList]=useState([])
+    
+   
+ 
+let applicant_service=new ApplicantService()
+         
+        useEffect(()=>{
+          setcommonloader(true)
+          applicant_service.getApplicantDetalis().then(data=>{
+        
+        
+            console.log(data)
+            
+            let users=data.map((e)=>{
+          let benificiary_list=e.beneficiaryList.map((b)=>{
+        
+            return(
+        
+        
+        
+              { "benificaryId": b.beneficiaryId,
+                "name": b.beneficiaryName,
+                "accountHolderName":b.beneficiaryName,
+                 "accountNumber": b.bankBicCode, 
+                 "bank": b.bankName, 
+                 "ifscCode": b.bankBicCode })
+            
+            
+            })
+        
+          return ({
+             "applicantId": e.applicant.applicantId,
+        id:e.applicant.applicantId,
+        //@ts-ignore
+        name:e.applicant?.firstName,
+        accountNumber: '**********789',
+        profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
+        benificary:benificiary_list
+        
+          })
+        })
+        
+        
+        setUserList(users as any)
+        setcommonloader(false)
+        
+        })
+          
+        // console.log(se)
+        
+        },[])  
 
+
+          const handleUserSelect = async (user:any) => {
+            setSelectedUser(user);
+            setSearchText(user.name);
+            setShowList(false);
+            setUserDetails(null);
+        
+            try {
+              let applicant_service = new ApplicantService();
+        
+              console.log("Selected User:", user);
+        
+              // Fetch compliance data with testing data appended
+              let comp_data = await applicant_service.getCompliance({
+                applicantId: user.applicantId,
+                //@ts-ignore
+                ...testData, // Appending test data
+              });
+        
+              console.log("Compliance Data:", comp_data); // Log the compliance data
+        
+              // Fetch user details with testing data appended
+               //@ts-ignore
+              const response = []
+        
+              // Merge compliance data into userDetails state
+              setUserDetails({
+                 //@ts-ignore
+                ...response,
+                 //@ts-ignore
+                complianceLimit: comp_data?.limit || testData.mockData.complianceLimit, // Extract compliance limit or use test data
+                //@ts-ignore
+                message: comp_data?.message || testData.mockData.message,
+              });
+        
+            } catch (error) {
+              console.error("Error fetching user details:", error);
+            }
+          };
+
+  
   // Initial state for form data and errors
   const [formData, setFormData] = useState<BeneficiaryFormData>({
     beneficiaryName: '',
@@ -42,13 +145,24 @@ const AddBeneficiary = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
 
+
+  const filteredUsers = userList.filter((b) =>
+
+       //@ts-ignore
+    b.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     //@ts-ignore
+
+
     setFormData((prevData) => ({
       ...prevData,
+      
       [name]: value,
+      applicant:selectedUser?.applicantId
     }));
   };
 
@@ -80,18 +194,28 @@ const AddBeneficiary = () => {
   };
 
   const handleSubmit = async (e: any) => {
+
+    console.log("added neficary")
     e.preventDefault();
     setIsSubmitting(true);
 
+    
+
     const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
+    console.log(Object.keys(errors))
+    if (Object.keys(errors).length > 1) {
       setFormErrors(errors);
       setIsSubmitting(false);
       return;
     }
+    console.log("fojbhjbj b r")
 
+  
+    // setfilterdUsers(filteredUsers)
     // Simulate form submission
+    console.log(selectedUser)
     console.log('Form submitted:', formData);
+  
     setIsSubmitting(false);
     // Navigate to another page after successful submission
 
@@ -119,6 +243,9 @@ const AddBeneficiary = () => {
     }
   };
 
+
+
+
   return (
     <Box sx={{ width: "80vw" }}>
       <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', marginBottom: 1 }}>
@@ -145,7 +272,7 @@ const AddBeneficiary = () => {
       <Box sx={{ width: '50vw' }}>
         <Grid container spacing={2} marginBottom={1}>
           <Grid item xs={12} sm={4}>
-            <TextField
+            {/* <TextField
               label="Applicant ID"
               variant="filled"
               name="applicant"
@@ -154,7 +281,59 @@ const AddBeneficiary = () => {
               onChange={handleChange}
               error={!!formErrors.applicant}
               helperText={formErrors.applicant}
-            />
+            /> */}
+
+<TextField
+            variant="filled"
+            fullWidth
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              setShowList(true);
+            }}
+            placeholder="Type a User name or ID..."
+            InputProps={{
+              startAdornment: selectedUser && (
+                <InputAdornment position="start">
+
+                  <Avatar src={selectedUser.profilePhoto} alt={selectedUser.name} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* User List */}
+          {showList && filteredUsers.length > 0 && (
+            <Paper elevation={3} sx={{ mt: 2 }}>
+              <List>
+                {filteredUsers.map((b) => (
+                  <ListItem
+                  //@ts-ignore
+                    key={b.benificaryId}
+                    divider
+                    button
+                    onClick={() => handleUserSelect(b)}
+                  >
+                    <ListItemAvatar>
+                      <Avatar 
+                      //@ts-ignore
+                      src={b.profilePhoto} alt={b.name} />
+                    </ListItemAvatar>
+                    <ListItemText
+
+                    //@ts-ignore
+                      primary={b.name}
+                      //@ts-ignore
+                      secondary={`ID: ${b.benificaryId} | Account: ${b.accountNumber}`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          )}
+
+
+
           </Grid>
         </Grid>
 

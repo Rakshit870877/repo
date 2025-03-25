@@ -7,9 +7,11 @@ const { VITE_APP_BENIFICIARY,VITE_APP_TRANSACTION } = import.meta.env
 
 class BeneficiaryService extends BaseService {
         async submitBeneficiaryForm(payload: BeneficiaryFormData): Promise<BeneficiaryResponse> {
-            let url = VITE_APP_BENIFICIARY+'/beneficiary/create'; 
+            let url = '/api/applicant/beneficiary/create'; 
             try {
-            let response = await axios.post(url, payload); 
+
+              
+            let response = await api1.post(url, payload); 
             return response as any; 
             } catch (err) {
                 console.log("error in service file", err)
@@ -42,9 +44,9 @@ class BeneficiaryService extends BaseService {
           }
 
           async searchByApplicantId(applicantId: string): Promise<BeneficiaryResponse> {
-            let url = VITE_APP_BENIFICIARY+`/beneficiary/applicant/${applicantId}`;  
+            let url = `/api/applicant/beneficiary/applicant/${applicantId}`;  
             try {
-              const { data } = await axios.get(url); 
+              const { data } = await api1.get(url); 
               return data;  
             } catch (err) {
               console.error('Error fetching  data:', err);

@@ -26,6 +26,7 @@ const ApplicantEnquiry = () => {
       // Call the respective API based on search fields
       if (applicantId && nationality) {
         data = await applicant_service.searchByApplicantIdAndCountry(applicantId, nationality);
+        console.log("data=>",data)
       } else if (applicantId) {
         data = await applicant_service.searchByApplicantId(applicantId);
       } else if (nationality) {

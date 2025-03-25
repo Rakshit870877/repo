@@ -28,7 +28,7 @@ import { Customer } from '@/types/customer.type'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { ApplicantService } from '@/services/applicant.service'
 import { KycService } from '@/services/kyc.service'
-import { Comment, Coronavirus } from '@mui/icons-material'
+import { Close, Comment, Coronavirus, Send } from '@mui/icons-material'
 import axios from 'axios'
 import { loaderStateNew } from '@/states/state'
 import { useRecoilState } from 'recoil'
@@ -261,7 +261,12 @@ const KYCPage = () => {
        //@ts-ignores
       setFilteredData(data)
       setCommonLoader(false)
+
+
+
+
     })
+
 
 
   }, [])
@@ -280,6 +285,8 @@ const KYCPage = () => {
   const openDrawer = (row: any) => {
     setSelectedKYC(row)
     setIsDrawerOpen(true)
+console.log(row)
+    kycservice.getComment(row)
   }
 
   const closeDrawer = () => {
@@ -724,7 +731,23 @@ const KYCPage = () => {
                     {/* <TextField label="Additional Comments" fullWidth defaultValue={proofType?.verificationStatusComments} disabled /> */}
                     <IconButton onClick={() => {setOpen(true)
                     console.log(selectedKYC?.comments)
-setComments(selectedKYC?.comments)
+                    setComments([
+                      {
+                        commentId: "CMT1",
+                        commentText: "Document verification in progress.",
+                        commentDate: "2025-01-06T10:00:00Z",
+                        user: "admin",
+                      },
+                      {
+                        commentId: "CMT2",
+                        commentText: "Document uploaded for verification.",
+                        commentDate: "2025-01-05T12:30:00Z",
+                        user: "user1",
+                      },
+                    ])
+
+                    kycservice.getComment(selectedKYC?.kycId)
+// setComments()
 
 
 
@@ -756,6 +779,91 @@ setComments(selectedKYC?.comments)
       </Drawer>
 
 
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            maxHeight: "80vh",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 3,
+            borderRadius: 2,
+            overflowY: "auto",
+          }}
+        >
+          {/* Modal Header */}
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">Comments</Typography>
+            <IconButton onClick={() => setOpen(false)}>
+              <Close />
+            </IconButton>
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          {/* Comments List */}
+          <List sx={{ maxHeight: "50vh", overflowY: "auto" }}>
+            {comments.map((comment, index) => (
+              <Box key={comment.commentId} sx={{ position: "relative", pl: 3 }}>
+                {/* Vertical Line Connector */}
+                {index !== comments.length - 1 && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: 12,
+                      height: "100%",
+                      width: 2,
+                      bgcolor: "gray",
+                    }}
+                  />
+                )}
+
+                {/* Comment Item */}
+                <ListItem sx={{ alignItems: "flex-start", gap: 1 }}>
+                  <Avatar sx={{ bgcolor: "primary.main", width: 30, height: 30 }}>
+                    {comment.user.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <ListItemText
+                    primary={comment.user}
+                    secondary={
+                      <>
+                        <Typography variant="body2" sx={{ color: "text.primary" }}>
+                          {comment.commentText}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                          {new Date(comment.commentDate).toLocaleString()}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+              </Box>
+            ))}
+          </List>
+
+          <Divider sx={{ my: 2 }} />
+
+          {/* Add Comment Section */}
+          <Box display="flex" alignItems="center" gap={1}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              placeholder="Add a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <IconButton onClick={handleAddComment} color="primary" disabled={loading}>
+              {loading ? <CircularProgress size={24} /> : <Send />}
+            </IconButton>
+          </Box>
+        </Box>
+      </Modal>
 
 
 

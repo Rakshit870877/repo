@@ -1,6 +1,7 @@
 import { TransactionDetailsResponse } from '@/types/transaction.type'
 import api1 from './apis/api1'
 import { BaseService } from './base.service'
+import axios from 'axios'
 const { VITE_APP_BACKEND, VITE_APP_URL, VITE_APP_APPLICANT, VITE_APP_TRANSACTION,VITE_FOREX_APP_CREDENTIALS } = import.meta.env
 
 export class TransactionService extends BaseService {
@@ -26,9 +27,11 @@ export class TransactionService extends BaseService {
     }
   }
   async createTransaction(payload: any) {
-    let url = `/api/transactions/transaction-outward/create`
+    let url = `${VITE_APP_TRANSACTION}/api/transactions/transaction-outward/create`
     try {
-      let { data } = await api1.post(url, payload)
+
+      
+      let { data } = await axios.post(url, payload)
 
 
 
@@ -39,7 +42,7 @@ export class TransactionService extends BaseService {
   }
 
   async createPayfastTransaction(transaction: any,amount:any) {
-    let url = `/api/transactions/transaction-outward/ozow?amount=${amount}&transactionId=${transaction}`
+    let url = `${VITE_APP_TRANSACTION}/api/transactions/transaction-outward/ozow?amount=${amount}&transactionId=${transaction}`
     try {
       let  data  = await api1.get(url)    
       
@@ -69,7 +72,7 @@ async getForexRate(country:any){
   let url=`https://data.fixer.io/api/latest?access_key=${VITE_FOREX_APP_CREDENTIALS}&base=ZAR&symbols=${country}`
   
   try{
-  let data=await api1.get(url)
+  let {data} =await axios.get(url)
 
   return data.rates[country]
   }

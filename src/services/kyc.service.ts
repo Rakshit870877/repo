@@ -42,10 +42,25 @@ let url=`${VITE_APP_KYC}/api/comments`
     }
 }
 
+async getComment(kyc_id:any){
+
+    let url=`${VITE_APP_KYC}/api/comments/${kyc_id}`
+    
+        try{
+         let data= api1.get(url)
+         return data
+        }
+        catch(err){
+    
+            console.log(err)
+        }
+    }
+    
+
 //@ts-ignore
 async getCharges(souceCountry,destinationCountry,amount,segment){
 
-  let url=`api/charges/filter?sendingCountry=SA&receivingCountry=${destinationCountry}&amount=${amount}&marketSegment=${segment}`
+  let url=`/api/charges/service/filter?sendingCountry=SA&receivingCountry=${destinationCountry}&amount=${amount}&marketSegment=${segment}`
     try{
 
         
