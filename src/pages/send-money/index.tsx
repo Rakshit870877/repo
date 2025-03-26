@@ -203,6 +203,7 @@ const SendMoneyPage = () => {
   const handleChange = (
     //@ts-ignore
     event,
+    //@ts-ignore
     newValue,
   ) => {
     setTabValue(newValue)
@@ -224,17 +225,17 @@ const SendMoneyPage = () => {
           onChange={() => {
             handleRadioChange(params.row)
 
-           let data= kyc_service.getCharges('SA',sendCountry,amount,params?.row?.id).then(data=>{
-console.log(data)
-            if(data?.length>0){
-         console.log(    )
-         setSelectedTimeCharge( data[0].minimumCharges)
+            let data = kyc_service.getCharges('SA', sendCountry, amount, params?.row?.id).then(data => {
+              console.log(data)
+              if (data?.length > 0) {
+                console.log()
+                setSelectedTimeCharge(data[0].minimumCharges)
 
-            }
-                   
+              }
 
-           
-           })
+
+
+            })
           }}
           value={params.row.id}
           inputProps={{ 'aria-label': `Select row ${params.row.id}` }}
@@ -360,41 +361,32 @@ console.log(data)
 
       const data = await response.json();
       console.log("API Response:", data);
-      let payload={
-        benificary:selectedBenficary,
-        transferMethod:selectedTransferMethod,
-         destinationCountry:selectedCountry,
-         selectedTimeMethod:selectedTime,
-         gateway:selectedGateway,
-         amount:amount,
-        applicant:selectedUser,
-        forex:forexRate,
-         //@ts-ignore
-        timecharge:selectedTime?.time,
-        sourceCurrency:'Zar',
-        sourceCountry:"SA",
-        destinationCurrency:currency,
-       totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
-      
-       }
-       
-      
-      
+      let payload = {
+        benificary: selectedBenficary,
+        transferMethod: selectedTransferMethod,
+        destinationCountry: selectedCountry,
+        selectedTimeMethod: selectedTime,
+        gateway: selectedGateway,
+        amount: amount,
+        applicant: selectedUser,
+        forex: forexRate,
+        //@ts-ignore
+        timecharge: selectedTime?.time,
+        sourceCurrency: 'Zar',
+        sourceCountry: "SA",
+        destinationCurrency: currency,
+        totalpaybleamount: (Number(amount) + Number(selecteTimeChange) + Number(gatewayCharge))
 
+      }
 
-      transaction_service.createTransaction(payload).then(data=>{
+      transaction_service.createTransaction(payload).then(data => {
 
         console.log(data.data)
-        transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
-      
-      seturl(res.url)
-      
-      
-      window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
-       
-      
+        transaction_service.createPayfastTransaction(data?.data, ((Number(amount) + Number(selecteTimeChange) + Number(gatewayCharge)))).then((res) => {
+          seturl(res.url)
+          window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
+        })
       })
-       })
 
       if (data.id) {
         // HTML content for the new window
@@ -538,6 +530,7 @@ console.log(data)
                                 //@ts-ignore
                                 user.profilePhoto
                               }
+                              //@ts-ignore
                               alt={user.name}
                             >
                               {
@@ -551,6 +544,7 @@ console.log(data)
                               //@ts-ignore
                               user.name
                             }
+                            //@ts-ignore
                             secondary={`ID: ${user.id} | Account: ${user.accountNumber}`}
                           />
                         </ListItem>
@@ -853,6 +847,7 @@ console.log(data)
                               <Avatar
                                 //@ts-ignore
                                 src={user.profilePhoto}
+                                //@ts-ignore
                                 alt={user.name}
                               >
                                 {
@@ -864,6 +859,7 @@ console.log(data)
                             <ListItemText
                               //@ts-ignore
                               primary={user.name}
+                              //@ts-ignore
                               secondary={`ID: ${user.id} | Account: ${user.accountNumber}`}
                             />
                           </ListItem>
@@ -1008,74 +1004,74 @@ console.log(data)
 
 
 
-            <Button variant="outlined" color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={() => {
+            <Button variant="outlined" color="primary" sx={{ marginTop: 3, display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={() => {
 
-let payload={
-  benificary:selectedBenficary,
-  transferMethod:selectedTransferMethod,
-   destinationCountry:selectedCountry,
-   selectedTimeMethod:selectedTime,
-   gateway:selectedGateway,
-   amount:amount,
-  applicant:selectedUser,
-  forex:forexRate,
-   //@ts-ignore
-  timecharge:selectedTime?.time,
-  sourceCurrency:'Zar',
-  sourceCountry:"SA",
-  destinationCurrency:currency,
- totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
+              let payload = {
+                benificary: selectedBenficary,
+                transferMethod: selectedTransferMethod,
+                destinationCountry: selectedCountry,
+                selectedTimeMethod: selectedTime,
+                gateway: selectedGateway,
+                amount: amount,
+                applicant: selectedUser,
+                forex: forexRate,
+                //@ts-ignore
+                timecharge: selectedTime?.time,
+                sourceCurrency: 'Zar',
+                sourceCountry: "SA",
+                destinationCurrency: currency,
+                totalpaybleamount: (Number(amount) + Number(selecteTimeChange) + Number(gatewayCharge))
 
- }
- 
-
- transaction_service.createTransaction(payload).then(data=>{
-
-  console.log(data.data)
-  transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
-
-seturl(res.url)
+              }
 
 
-window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
- 
+              transaction_service.createTransaction(payload).then(data => {
 
-})
- })
+                console.log(data.data)
+                transaction_service.createPayfastTransaction(data?.data, ((Number(amount) + Number(selecteTimeChange) + Number(gatewayCharge)))).then((res) => {
 
-
-//  setGifSuccess(true)
- 
+                  seturl(res.url)
 
 
-  
+                  window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
+
+
+                })
+              })
+
+
+              //  setGifSuccess(true)
+
+
+
+
 
             }}>
 
 
-<img
-        src="https://cdn.prod.website-files.com/6282d4840afd19e1afa62e70/6491490c213c45a9d600d387_ozow_small_xs.png"
-        alt="Ozow"
-        style={{ height: "20px" }}
-      />
-      Confirm & Pay
-              
+              <img
+                src="https://cdn.prod.website-files.com/6282d4840afd19e1afa62e70/6491490c213c45a9d600d387_ozow_small_xs.png"
+                alt="Ozow"
+                style={{ height: "20px" }}
+              />
+              Confirm & Pay
+
             </Button>
 
 
-        
 
 
-            <Button variant="outlined"   color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={handlePaymentClick}>
-              
-            <img
-        src="https://www.peachpayments.com/hubfs/peachpayments-logo.svg"
-        alt="Ozow"
-        style={{ height: "20px" }}
-      />
 
-      Confirm & Pay
-    </Button>
+            <Button variant="outlined" color="primary" sx={{ marginTop: 3, display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={handlePaymentClick}>
+
+              <img
+                src="https://www.peachpayments.com/hubfs/peachpayments-logo.svg"
+                alt="Ozow"
+                style={{ height: "20px" }}
+              />
+
+              Confirm & Pay
+            </Button>
           </Box>
         </TabPanel>
         ,
