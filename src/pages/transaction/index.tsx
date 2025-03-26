@@ -16,11 +16,11 @@ import { Filter1Outlined, SettingsAccessibilityRounded, Sync } from '@mui/icons-
 import { useRecoilState } from 'recoil'
 import { loaderState, loaderStateNew } from '@/states/state'
 import { ApplicantService } from '@/services/applicant.service'
-import CompliancTool  from '@/components/compliance-tool'
+import CompliancTool from '@/components/compliance-tool'
 
 const sampleInwardsData: Array<TransactionInwardCalclulated> = [
   {
-     //@ts-ignore
+    //@ts-ignore
     id: 'IMP11231',
     destination: 'USA',
     value: 1000,
@@ -84,22 +84,22 @@ const TransactionPage = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
         params.value ? (
-        
-            <Chip onClick={()=>{
-              setmodalOpen(true)
-  
-            }}  label="Error" color="error" />
-         
+
+          <Chip onClick={() => {
+            setmodalOpen(true)
+
+          }} label="Error" color="error" />
+
         ) : (
-          
-          <Chip 
-          onClick={()=>{
+
+          <Chip
+            onClick={() => {
               setmodalOpen(true)
-  
+
             }}
-          
-          label="No Error" color="success" />
-       
+
+            label="No Error" color="success" />
+
         ),
     },
 
@@ -132,7 +132,7 @@ const TransactionPage = () => {
         ),
     },
 
-   
+
 
 
 
@@ -149,19 +149,19 @@ const TransactionPage = () => {
         // <Button variant="contained" color="primary" onClick={() => handleViewMore(params.row)}>
         //   View More
         // </Button>
-       
-  <IconButton onClick={()=>{
 
-      handleViewMore(params.row)
-     }}>
-     <VisibilityIcon />
-     </IconButton>
-     
+        <IconButton onClick={() => {
+
+          handleViewMore(params.row)
+        }}>
+          <VisibilityIcon />
+        </IconButton>
+
       ),
     },
 
 
-  
+
   ]
 
   const columns_inwards: GridColDef[] = [
@@ -185,7 +185,7 @@ const TransactionPage = () => {
         ),
     },
     { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
-  
+
     // status:e?.transactionOutward?.transactionStatus=="CR"?"Pending":"Done",
 
 
@@ -195,7 +195,7 @@ const TransactionPage = () => {
       flex: 1,
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
-        params?.value?.reporting=="Reported" ? (
+        params?.value?.reporting == "Reported" ? (
           <Tooltip title={params?.value?.reporting || "Unknown Error"} arrow>
             <Chip label="Reported" color="success" />
           </Tooltip>
@@ -205,14 +205,14 @@ const TransactionPage = () => {
     },
 
 
-  
+
     {
       field: "status",
       headerName: "Status",
       flex: 1,
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
-        params?.value?.status=='Pending' ? (
+        params?.value?.status == 'Pending' ? (
           <Tooltip title={params.value.status || "Unknown Error"} arrow>
             <Chip label="Pending" color="error" />
           </Tooltip>
@@ -221,8 +221,8 @@ const TransactionPage = () => {
         ),
     },
 
- 
-  
+
+
   ]
 
   // reporting:e?.transactionOutward?.reportingStatus=="ACK"?"Reported":"Pending",
@@ -241,17 +241,17 @@ const TransactionPage = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
         params.value ? (
-          
-          <Chip onClick={()=>{
+
+          <Chip onClick={() => {
             setmodalOpen(true)
 
-          }}  label="Error" color="error" />
-        
+          }} label="Error" color="error" />
+
         ) : (
-          <Chip onClick={()=>{
+          <Chip onClick={() => {
             setmodalOpen(true)
 
-          }}  label="Error" color="error" />
+          }} label="Error" color="error" />
         ),
     },
     { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
@@ -266,29 +266,32 @@ const TransactionPage = () => {
         //   View More
         // </Button>
         // <Button variant="contained" color="primary" startIcon={<VisibilityIcon />} onClick={() => handleViewMore(params.row)}>
-         
-         
         //   View More
         // </Button>
-
-        <IconButton onClick={()=>{
-
-          handleViewMore(params.row)
-         }}>
-         <VisibilityIcon />
-         </IconButton>
-
+        <>
+          <IconButton onClick={() => {
+            handleViewMore(params.row)
+          }}>
+            <VisibilityIcon />
+          </IconButton>
+          {params?.row?.transactionNumber? <a style={{
+              cursor: 'pointer',
+            }}
+            onClick={()=>navigate(`/bop-details/${params.row.transactionNumber}`)}>
+            View Bop
+          </a>:null}
+         </>
       ),
     },
 
-   
+
     {
       field: "reporting",
       headerName: "Reporting Status",
       flex: 1,
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
-        params?.value?.reporting=="Reported" ? (
+        params?.value?.reporting == "Reported" ? (
           <Tooltip title={params?.value?.reporting || "Unknown Error"} arrow>
             <Chip label="Reported" color="success" />
           </Tooltip>
@@ -298,14 +301,14 @@ const TransactionPage = () => {
     },
 
 
-  
+
     {
       field: "status",
       headerName: "Status",
       flex: 1,
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
-        params.value.status=='Pending' ? (
+        params.value.status == 'Pending' ? (
           <Tooltip title={params.value.status || "Unknown Error"} arrow>
             <Chip label="Pending" color="error" />
           </Tooltip>
@@ -317,82 +320,84 @@ const TransactionPage = () => {
 
 
 
-  
+
   ]
 
 
   const [isDrawerOpen, setDrawerOpen] = useState(false)
-  const [modalOpen,setmodalOpen]=useState(false)
+  const [modalOpen, setmodalOpen] = useState(false)
 
   const [transactionDetails, setTransactionDetails] = useState<any>(null)
   const [transactionType, setTransactionType] = useState('inwards') // Default to 'inwards'
 
   const [inboundTransaction, setInboundTransaction] = useState<Array<TransactionInward>>([])
   const [outboundTransaction, setOutboundTransaction] = useState<Array<TransactionOutward>>([])
-  const [ toolopen,setToolOpen]=useState(false)
-  const[errors,seterrors]=useState(["Invalid email", "Password too short", "Username required"])
+  const [toolopen, setToolOpen] = useState(false)
+  const [errors, seterrors] = useState(["Invalid email", "Password too short", "Username required"])
 
 
   //@ts-ignore
-  const[applicant,setApplicant]=useState<Applicant> (null)
-  
+  const [applicant, setApplicant] = useState<Applicant>(null)
+
   const [transactionData, setTransactionData] = useState(inboundTransaction)
-    const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
+  const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
 
-    const[userList,setUserList]=useState([])
+  const [userList, setUserList] = useState([])
 
-    let applicant_service=new ApplicantService()
+  let applicant_service = new ApplicantService()
 
 
 
-   
-  useEffect(()=>{
+
+  useEffect(() => {
     setcommonloader(true)
-    applicant_service.getApplicantDetalis().then(data=>{
-  
-  
-      console.log(data)
-      
-      let users=data.map((e)=>{
-    let benificiary_list=e.beneficiaryList.map((b)=>{
-  
-      return(
-  
-  
-  
-        { "benificaryId": b.beneficiaryId,
-          "name": b.beneficiaryName,
-          "accountHolderName":b.beneficiaryName,
-           "accountNumber": b.bankBicCode, 
-           "bank": b.bankName, 
-           "ifscCode": b.bankBicCode })
-      
-      
-      })
-  
-    return ({
-       "applicantId": e.applicant.applicantId,
-  id:e.applicant.applicantId,
-  //@ts-ignore
-  name:e.applicant?.firstName,
-  accountNumber: '**********789',
-  profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
-  benificary:benificiary_list
-  
-    })
-  })
-  
-  
-  setUserList(users as any)
-  setcommonloader(false)
-  
-  })
-    
-  // console.log(se)
-  
-  },[])  
+    applicant_service.getApplicantDetalis().then(data => {
 
-  const handleViewMore = (row:any) => {
+
+      console.log(data)
+
+      let users = data.map((e) => {
+        let benificiary_list = e.beneficiaryList.map((b) => {
+
+          return (
+
+
+
+            {
+              "benificaryId": b.beneficiaryId,
+              "name": b.beneficiaryName,
+              "accountHolderName": b.beneficiaryName,
+              "accountNumber": b.bankBicCode,
+              "bank": b.bankName,
+              "ifscCode": b.bankBicCode
+            })
+
+
+        })
+
+        return ({
+          "applicantId": e.applicant.applicantId,
+          id: e.applicant.applicantId,
+          //@ts-ignore
+          name: e.applicant?.firstName,
+          accountNumber: '**********789',
+          profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
+          benificary: benificiary_list
+
+        })
+      })
+
+
+      setUserList(users as any)
+      setcommonloader(false)
+
+    })
+
+    // console.log(se)
+
+  }, [])
+
+  const handleViewMore = (row: any) => {
     setTransactionDetails(row)
     setDrawerOpen(true)
   }
@@ -400,39 +405,39 @@ const TransactionPage = () => {
   let transaction_Service = new TransactionService()
 
 
-  const trnx=[]
+  const trnx = []
   useEffect(() => {
 
     setcommonloader(true)
-    
+
     transaction_Service
       .gettransactions()
       .then((data: TransactionDetailsResponse) => {
-        console.log("data-----------------------",data);
-        
-        let inbound: Array<TransactionInwardCalclulated>[]|any = data?.transactionDetailsList.map((e:any) => {
-       //@ts-ignore
+        console.log("data-----------------------", data);
+
+        let inbound: Array<TransactionInwardCalclulated>[] | any = data?.transactionDetailsList.map((e: any) => {
+          //@ts-ignore
           return ({
             //@ts-ignore
             ...e.transactionInwardList,
             ...e.beneficiary,
-          
+
             id: e?.transactionInwardList?.transactionNumberIw,
             destination: e?.transactionInwardList?.receivingCountry,
             value: e?.transactionInwardList?.settlementAmount,
             currency: e?.transactionInwardList?.settlementCurrency,
             settlement: e?.transactionInwardList?.settlementAmount,
             destinationBank: e?.transactionInwardList?.destinationBankCode,
-            errorCause:" ",
-            forex:e?.transactionOutward?.exchangeRates,
-            date:e?.transactionOutward?.owCreatedDate,
-            final_amount:e?.transactionOutward?.exchangeRates*e?.transactionOutward?.principalAmount,
-            applicant:e?.applicant
+            errorCause: " ",
+            forex: e?.transactionOutward?.exchangeRates,
+            date: e?.transactionOutward?.owCreatedDate,
+            final_amount: e?.transactionOutward?.exchangeRates * e?.transactionOutward?.principalAmount,
+            applicant: e?.applicant
           })
         })
 
 
-        let outbound: Array<TansactionOutwardCalculated>[] |any= data?.transactionDetailsList.map((e) => {
+        let outbound: Array<TansactionOutwardCalculated>[] | any = data?.transactionDetailsList.map((e) => {
           return {
             ...e.transactionOutward,
             ...e.beneficiary,
@@ -443,52 +448,52 @@ const TransactionPage = () => {
             currency: e?.transactionOutward?.settlementCurrency,
             settlement: e?.transactionOutward?.settlementAmount,
             destinationBank: e?.transactionOutward?.destinationBankBicCode,
-            forex:e?.transactionOutward?.exchangeRates,
-            date:e?.transactionOutward?.owCreatedDate,
-            
-         
+            forex: e?.transactionOutward?.exchangeRates,
+            date: e?.transactionOutward?.owCreatedDate,
 
-            reporting:e?.transactionOutward?.reportingStatus=="ACK"?"Reported":"Pending",
-            status:e?.transactionOutward?.transactionStatus=="CR"?"Pending":"Done",
-            final_amount:e?.transactionOutward?.exchangeRates*e?.transactionOutward.principalAmount,
-            applicant:e?.applicant
+
+
+            reporting: e?.transactionOutward?.reportingStatus == "ACK" ? "Reported" : "Pending",
+            status: e?.transactionOutward?.transactionStatus == "CR" ? "Pending" : "Done",
+            final_amount: e?.transactionOutward?.exchangeRates * e?.transactionOutward.principalAmount,
+            applicant: e?.applicant
           }
         })
-        
-         console.log("outbound",outbound)
+
+        console.log("outbound", outbound)
         console.log(outbound)
 
-        let user:Array<Applicant>[]|any=data?.transactionDetailsList.map((e) => {
+        let user: Array<Applicant>[] | any = data?.transactionDetailsList.map((e) => {
           return {
-           ...e.applicant
-            
+            ...e.applicant
+
           }
         })
-       
+
         setInboundTransaction(inbound)
 
         setInboundTransaction([])
         setTransactionData(inbound)
         setOutboundTransaction(outbound)
         setcommonloader(false)
-   
-        
+
+
       })
       .catch(
-         //@ts-ignore
-        (err:any) => {
+        //@ts-ignore
+        (err: any) => {
 
-          console.log("err",err)
+          console.log("err", err)
         })
   }, [])
 
   const handleToggleTransactionType = (
-    
-     //@ts-ignore
+
+    //@ts-ignore
     event, newType) => {
     if (newType) {
       setTransactionType(newType)
-       //@ts-ignore
+      //@ts-ignore
       setTransactionData(newType === 'inwards' ? inboundTransaction : outboundTransaction)
     }
   }
@@ -524,7 +529,7 @@ const TransactionPage = () => {
     <Box sx={{ width: '100%' }}>
 
 
-      
+
       <Typography variant="h4" gutterBottom>
         <strong>Transactions</strong>
       </Typography>
@@ -541,7 +546,7 @@ const TransactionPage = () => {
         marginTop={2}
         sx={{
           width: '80vw',
-          height:'80vh',
+          height: '80vh',
 
           '& .super-app-theme--header': {
             backgroundColor: '#005099',
@@ -564,19 +569,19 @@ const TransactionPage = () => {
 
 
 
-<IconButton onClick={() => setToolOpen(true)}>
-        <SettingsAccessibilityRounded />
-      </IconButton>
+            <IconButton onClick={() => setToolOpen(true)}>
+              <SettingsAccessibilityRounded />
+            </IconButton>
 
- <IconButton onClick={()=>{
+            <IconButton onClick={() => {
 
-navigate('/recon')
+              navigate('/recon')
 
- }} color="primary">
-        <Sync sx={{
-          marginBottom:"10%"
-        }}/>
-      </IconButton>
+            }} color="primary">
+              <Sync sx={{
+                marginBottom: "10%"
+              }} />
+            </IconButton>
 
             <Button
               variant="outlined"
@@ -584,63 +589,58 @@ navigate('/recon')
                 marginBottom: '10%',
               }}
               onClick={
-                 //@ts-ignore
+                //@ts-ignore
                 (e) => {
-                // console.log()
-                navigate('/sendmoney')
-              }}
+                  // console.log()
+                  navigate('/sendmoney')
+                }}
             >
               + Transaction
             </Button>
           </div>
         </div>
+        {
 
 
+          transactionType == 'inwards' ? (<DataGrid
+            rows={inboundTransaction}
+            columns={columns_inwards}
+            getRowId={(row) => row.id}
+            //@ts-ignore
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            disableSelectionOnClick
+            sx={{
+              '& .MuiDataGrid-root': {
+                border: '1 px solid blue',
+              },
+              '& .MuiDataGrid-cell': {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              },
+            }}
+          />) : (<DataGrid
+            rows={outboundTransaction}
+            columns={columns_outward}
+            getRowId={(row) => row.id}
+            //@ts-ignore
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            disableSelectionOnClick
+            sx={{
+              '& .MuiDataGrid-root': {
+                border: '1 px solid blue',
+              },
+              '& .MuiDataGrid-cell': {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              },
+            }}
+          />)
+        }
 
-
-
-{
-
-
-transactionType=='inwards'?(  <DataGrid
-  rows={inboundTransaction}
-  columns={columns_inwards}
-  getRowId={(row) => row.id} 
-   //@ts-ignore
-  pageSize={5}
-  rowsPerPageOptions={[5]}
-  disableSelectionOnClick
-  sx={{
-    '& .MuiDataGrid-root': {
-      border: '1 px solid blue',
-    },
-    '& .MuiDataGrid-cell': {
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-  }}
-/>):( <DataGrid
-          rows={outboundTransaction}
-          columns={columns_outward}
-          getRowId={(row) => row.id} 
-           //@ts-ignore
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          disableSelectionOnClick
-          sx={{
-            '& .MuiDataGrid-root': {
-              border: '1 px solid blue',
-            },
-            '& .MuiDataGrid-cell': {
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            },
-          }}
-        />)
-}
-       
       </Box>
 
       <Drawer
@@ -682,23 +682,23 @@ transactionType=='inwards'?(  <DataGrid
             <Grid container spacing={2} mb={2}>
               <Grid item xs={12} md={6}>
                 <TextField label="Destination" variant="filled" fullWidth
-                 //@ts-ignore
-                defaultValue={transactionDetails.destination} size="small" disabled />
+                  //@ts-ignore
+                  defaultValue={transactionDetails.destination} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Value" variant="filled" fullWidth 
-                 //@ts-ignore
-                defaultValue={transactionDetails.value} size="small" disabled />
+                <TextField label="Value" variant="filled" fullWidth
+                  //@ts-ignore
+                  defaultValue={transactionDetails.value} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Currency" variant="filled" fullWidth 
-                 //@ts-ignore
-                defaultValue={transactionDetails.currency} size="small" disabled />
+                <TextField label="Currency" variant="filled" fullWidth
+                  //@ts-ignore
+                  defaultValue={transactionDetails.currency} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Date" variant="filled" fullWidth 
-                 //@ts-ignore
-                defaultValue={transactionDetails.date} size="small" disabled />
+                <TextField label="Date" variant="filled" fullWidth
+                  //@ts-ignore
+                  defaultValue={transactionDetails.date} size="small" disabled />
               </Grid>
             </Grid>
 
@@ -730,20 +730,18 @@ transactionType=='inwards'?(  <DataGrid
             </Grid>
 
             <Divider sx={{ my: 2 }} />
-
-
             <Divider sx={{ my: 2 }} />
             <Typography variant="subtitle1" fontWeight="bold" sx={{ marginBottom: 2 }}>
               Applicant Details
             </Typography>
             <Grid container spacing={2} mb={2}>
               <Grid item xs={12} md={6}>
-                <TextField label="Applicant Id" variant="filled" fullWidth defaultValue={ JSON.stringify( transactionDetails?.applicant?.applicantId)} size="small" disabled />
+                <TextField label="Applicant Id" variant="filled" fullWidth defaultValue={JSON.stringify(transactionDetails?.applicant?.applicantId)} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField label="Applicant Name" variant="filled" fullWidth defaultValue={transactionDetails?.applicant?.firstName} size="small" disabled />
               </Grid>
-           
+
             </Grid>
 
             {/* <Button variant="contained" color="primary" onClick={closeDrawer}>
@@ -751,9 +749,7 @@ transactionType=='inwards'?(  <DataGrid
             </Button> */}
           </Box>
         )}
-
       </Drawer>
-
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>Select Date Range</DialogTitle>
@@ -791,55 +787,49 @@ transactionType=='inwards'?(  <DataGrid
           </Button>
         </DialogActions>
       </Dialog>
-   
 
+      < CompliancTool
+        //@ts-ignore
+        open={toolopen}
+        //@ts-ignore
+        setOpen={setToolOpen}
+        //@ts-ignore
+        userList={userList}
+        fetchUserDetails={() => { }}
+      />
 
-< CompliancTool
-//@ts-ignore
-open={toolopen}
-//@ts-ignore
- setOpen={setToolOpen} 
- //@ts-ignore
- userList={userList}
- fetchUserDetails={()=>{
-
-
- }}
- 
- ></CompliancTool>
-
-
-<Modal open={modalOpen} onClose={() => setmodalOpen(false)}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 400,
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
-        <Typography variant="h6" gutterBottom>
-          Error List
-        </Typography>
-        <List>
-          {errors.map((error, index) => (
-            <ListItem key={index} divider>
-              <ListItemText primary={`• ${error}`} />
-            </ListItem>
-          ))}
-        </List>
-        <Button variant="contained" color="error" fullWidth onClick={() => setmodalOpen(false)} sx={{ mt: 2 }}>
-          Close
-        </Button>
-      </Box>
-    </Modal>
+      <Modal open={modalOpen} onClose={() => setmodalOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Error List
+          </Typography>
+          <List>
+            {errors.map((error, index) => (
+              <ListItem key={index} divider>
+                <ListItemText primary={`• ${error}`} />
+              </ListItem>
+            ))}
+          </List>
+          <Button variant="contained" color="error" fullWidth onClick={() => setmodalOpen(false)} sx={{ mt: 2 }}>
+            Close
+          </Button>
+        </Box>
+      </Modal>
     </Box>
   )
 }
 
 export default TransactionPage
+

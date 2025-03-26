@@ -1,0 +1,120 @@
+import React, { useEffect } from 'react'
+import { DataGrid } from '@mui/x-data-grid'
+import { Box, Typography } from '@mui/material'
+
+const {VITE_FOREX_NODE_APP_URL} = import.meta.env;
+const backendUrl = VITE_FOREX_NODE_APP_URL
+
+const BopTable: React.FC = () => {
+  const [bopData, setBopData] = React.useState([])
+
+  useEffect(() => {
+    fetchBopListingData()
+  }, [])
+
+  const fetchBopListingData = async () => {
+    fetch(`${backendUrl}/bob/getAll`, {
+      method: 'GET', // The HTTP method (GET by default, so this is optional)
+      headers: {
+        'Content-Type': 'application/json', // Optional: Set content-type header
+        // You can add more headers if needed
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.json() // or response.text() if you expect plain text
+      })
+      .then((data) => {
+        console.log(data) // Handle the data from the response
+        setBopData(data)
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error)
+      })
+  }
+
+  const columns = [
+    {
+      field: 'transaction_number',
+      headerName: 'Transaction No.',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+    },
+    {
+      field: 'transaction_attempt',
+      headerName: 'Transaction Attempt No',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+    },
+    {
+      field: 'name',
+      headerName: 'Resident Name',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+    },
+    {
+      field: 'id1',
+      headerName: 'Action',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params: any) => (
+        <a
+          href={`http://localhost:5173/bop-details/${params.row.transaction_number}`}
+          style={{
+            textDecoration: 'underline',
+            cursor: 'pointer',
+          }}
+        >
+          View More
+        </a>
+      ),
+    },
+  ]
+
+  return (
+    <Box sx={{ width: '70vw' }}>
+      <DataGrid
+        sx={{
+          width: '100%',
+          '& .MuiDataGrid-columnHeaders': {
+            '& .super-app-theme--header': {
+              backgroundColor: '#005099',
+              color: 'white',
+            },
+          },
+          '& .MuiDataGrid-columnHeaderTitle': {
+            fontWeight: 'bold',
+          },
+          '& .MuiDataGrid-cell': {
+            fontSize: '14px',
+          },
+          '& .MuiDataGrid-row:nth-of-type(even)': {
+            backgroundColor: '#f0f8ff',
+          },
+          '& .MuiDataGrid-row:nth-of-type(odd)': {
+            backgroundColor: '#ffffff',
+          },
+          '& .super-app-theme--header': {
+            fontSize: '16px',
+          },
+        }}
+        columns={columns}
+        rows={bopData}
+        //@ts-ignore
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        getRowId={(row: any) => row.id} // Ensure proper row ID handling
+      />
+    </Box>
+  )
+}
+
+export default BopTable

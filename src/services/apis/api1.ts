@@ -28,9 +28,8 @@ instance.interceptors.request.use(
     if (token) {
       // config.headers['Authorization'] = 'Bearer ' + token
         config.headers["ngrok-skip-browser-warning"] = "69420";
-        config.headers["Access-Control-Allow-Origin"]="*"
-        // "ngrok-skip-browser-warning": true
-        // config.headers["ngrok-skip-browser-warning"]="true"
+        // "ngrok-skip-browser-warning": true;
+        config.headers["ngrok-skip-browser-warning"]="true"
     }
     logger.log('Request Interceptor:', config)
     return config

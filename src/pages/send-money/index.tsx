@@ -80,9 +80,8 @@ const users = [
   },
 ]
 const countries = [
-  
   { code: 'IN', name: 'India', currency: 'INR', forexRate: '4.57', flag: 'https://flagcdn.com/in.svg' },
- 
+
   // { code: 'ZA', name: 'South Africa', currency: 'ZAR', forexRate: '4.7', flag: 'https://flagcdn.com/za.svg' }, // Added South Africa
 ]
 
@@ -109,95 +108,74 @@ const paymentGateways = [
   },
 ]
 
-
 const SendMoneyPage = () => {
   const [checkoutId, setCheckoutId] = useState("");
   const [searchText, setSearchText] = useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
   const [tabValue, setTabValue] = useState('1')
-  const[selectedTime,setSelectedTime]=useState({})
+  const [selectedTime, setSelectedTime] = useState({})
   const [selectedTimeTableRow, setSelectedTimeTableRow] = useState<number | null>(null)
-  const[finalamount,setFinalAmount]=useState(0)
-  const[sourceCountry,setSourceCountry]=useState('ZAR')
-  const[gatewayCharge,  setGatewayCharge]=useState(0)
-  const[selectedBenficary,setSelectedBenificary]=useState({})
-  const[userlist,setUserList]=useState([])
-  const[benficiary,setbenificiary]=useState<Array<any>>([])
-  const[gifsuccess,setGifSuccess]=useState(false)
-  const [sendCountry,setsendCountry]=useState("")
+  const [finalamount, setFinalAmount] = useState(0)
+  const [sourceCountry, setSourceCountry] = useState('ZAR')
+  const [gatewayCharge, setGatewayCharge] = useState(0)
+  const [selectedBenficary, setSelectedBenificary] = useState({})
+  const [userlist, setUserList] = useState([])
+  const [benficiary, setbenificiary] = useState<Array<any>>([])
+  const [gifsuccess, setGifSuccess] = useState(false)
+  const [sendCountry, setsendCountry] = useState('')
   const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
-//   const[selected ]
+  //   const[selected ]
 
-
-  const [selecteTimeChange,setSelectedTimeCharge]=useState<number|null>(null)
-
-
+  const [selecteTimeChange, setSelectedTimeCharge] = useState<number | null>(null)
 
   const [selectedUser, setSelectedUser] = useState<{ name: string; accountNumber: string } | null>(null)
-//   const [selected]
+  //   const [selected]
 
   const [selectedCountry, setSelectedCountry] = useState<string>('')
   const [currency, setCurrency] = useState<string>('')
   const [forexRate, setForexRate] = useState<string>('')
   const [amount, setAmount] = useState<number>(0)
-  const[selectedTransferMethod,setSelectedTransferMethod]=useState("BankTransfer")
+  const [selectedTransferMethod, setSelectedTransferMethod] = useState('BankTransfer')
 
-  const[url,seturl]=useState<string>('')
+  const [url, seturl] = useState<string>('')
 
+  let applicant_service = new ApplicantService()
+  let transaction_service = new TransactionService()
 
+  useEffect(() => {
+    setcommonloader(true)
+    applicant_service.getApplicantDetalis().then((data) => {
+      let users = data.map((e) => {
+        let benificiary_list = e.beneficiaryList.map((b) => {
+          return {
+            benificaryId: b.beneficiaryId,
+            name: b.beneficiaryName,
+            accountHolderName: b.beneficiaryName,
+            accountNumber: b.bankBicCode,
+            bank: b.bankName,
+            ifscCode: b.bankBicCode,
+          }
+        })
 
-let applicant_service=new ApplicantService()
-let transaction_service=new TransactionService()
+        return {
+          applicantId: e.applicant.applicantId,
+          id: e.applicant.applicantId,
+          //@ts-ignore
+          name: e.applicant?.firstName,
+          accountNumber: '**********789',
+          profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
+          benificary: benificiary_list,
+        }
+      })
 
-
-  
-useEffect(()=>{
-  setcommonloader(true)
-  applicant_service.getApplicantDetalis().then(data=>{
-
-
-    
-    let users=data.map((e)=>{
-  let benificiary_list=e.beneficiaryList.map((b)=>{
-
-    return(
-
-
-
-      { "benificaryId": b.beneficiaryId,
-        "name": b.beneficiaryName,
-        "accountHolderName":b.beneficiaryName,
-         "accountNumber": b.bankBicCode, 
-         "bank": b.bankName, 
-         "ifscCode": b.bankBicCode })
-    
-    
+      setUserList(users as any)
+      setcommonloader(false)
     })
 
-  return ({
-     "applicantId": e.applicant.applicantId,
-id:e.applicant.applicantId,
-//@ts-ignore
-name:e.applicant?.firstName,
-accountNumber: '**********789',
-profilePhoto: 'https://randomuser.me/api/portraits/women/4.jpg',
-benificary:benificiary_list
+    // console.log(se)
+  }, [])
 
-  })
-})
-
-
-setUserList(users as any)
-setcommonloader(false)
-
-})
-  
-// console.log(se)
-
-},[])
-
-let kyc_service=new KycService()
-
+  let kyc_service = new KycService()
 
   const handleCountryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const countryCode = event.target.value as string
@@ -206,37 +184,34 @@ let kyc_service=new KycService()
     // Find the selected country
     const selected = countries.find((country) => country.code === countryCode)
 
-console.log(selected?.currency)
-
+    console.log(selected?.currency)
 
     if (selected) {
-
-      transaction_service.getForexRate(selected?.currency).then(data=>{
+      transaction_service.getForexRate(selected?.currency).then((data) => {
         console.log(data)
         setForexRate(data)
-      
       })
       setCurrency(selected.currency)
       setsendCountry(selected.code)
-    
     }
   }
   const handleRadioChange = (row: any) => {
-    
     setSelectedTime(row)
     setSelectedTimeTableRow(row.id)
     // setSelectedTimeCharge(row.charges)
   }
   const handleChange = (
-     //@ts-ignore
-    event, newValue) => {
+    //@ts-ignore
+    event,
+    newValue,
+  ) => {
     setTabValue(newValue)
   }
 
   const TimechargesRows: GridRowsProp = [
-    { id: 1, time: '2 hours', charges: 10,total:200 ,segment:1},
-    { id: 2, time: '8 hours', charges: 5 ,total:200,segment:2},
-    { id: 3, time: '2 days', charges: 0.5 ,total:200,Segment:3},
+    { id: 1, time: '2 hours', charges: 10, total: 200, segment: 1 },
+    { id: 2, time: '8 hours', charges: 5, total: 200, segment: 2 },
+    { id: 3, time: '2 days', charges: 0.5, total: 200, Segment: 3 },
   ]
   const chargesTableColumns: GridColDef[] = [
     {
@@ -246,7 +221,8 @@ console.log(selected?.currency)
       renderCell: (params: GridRenderCellParams) => (
         <Radio
           checked={selectedTimeTableRow === params.row.id}
-          onChange={() => {handleRadioChange(params.row)
+          onChange={() => {
+            handleRadioChange(params.row)
 
            let data= kyc_service.getCharges('SA',sendCountry,amount,params?.row?.id).then(data=>{
 console.log(data)
@@ -270,8 +246,6 @@ console.log(data)
       headerClassName: 'super-app-theme--header',
     },
     { field: 'time', headerName: 'Time', flex: 1, headerClassName: 'super-app-theme--header' },
-   
-    
   ]
 
   const calculateProgress = () => {
@@ -295,9 +269,11 @@ console.log(data)
     if (value.trim() === '') {
       setFilteredUsers([])
     } else {
-      const filtered = userlist.filter((user) => 
-         //@ts-ignore
-        user?.name?.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value))
+      const filtered = userlist.filter(
+        (user) =>
+          //@ts-ignore
+          user?.name?.toLowerCase().includes(value.toLowerCase()) || user.id.toString().includes(value),
+      )
       setFilteredUsers(filtered)
     }
   }
@@ -519,12 +495,10 @@ console.log(data)
           <Tab label="Select Beneficiary" value="2" />
           <Tab label="Pay Now" value="3" />
         </Tabs>
-
         <TabPanel value="1">
           <Box>
             <Grid container spacing={2} marginBottom={2}>
               <Grid item xs={12} md={6}>
-
                 <TextField
                   //   label="Select User"
                   variant="filled"
@@ -535,10 +509,12 @@ console.log(data)
                   InputProps={{
                     startAdornment: selectedUser && (
                       <InputAdornment position="start">
-                        <Avatar 
-                        
-                         //@ts-ignore
-                        src={selectedUser.profilePhoto} alt={selectedUser.name} style={{ marginRight: '8px' }} />
+                        <Avatar
+                          //@ts-ignore
+                          src={selectedUser.profilePhoto}
+                          alt={selectedUser.name}
+                          style={{ marginRight: '8px' }}
+                        />
                       </InputAdornment>
                     ),
                   }}
@@ -549,21 +525,34 @@ console.log(data)
                     <List>
                       {filteredUsers.map((user) => (
                         // {user}
-                        <ListItem 
-                         //@ts-ignore
-                        key={user.id} divider button onClick={() => handleUserSelect(user)}>
+                        <ListItem
+                          //@ts-ignore
+                          key={user.id}
+                          divider
+                          button
+                          onClick={() => handleUserSelect(user)}
+                        >
                           <ListItemAvatar>
-                            <Avatar src={
-                               //@ts-ignore
-                              user.profilePhoto} alt={user.name}>
+                            <Avatar
+                              src={
+                                //@ts-ignore
+                                user.profilePhoto
+                              }
+                              alt={user.name}
+                            >
                               {
-                                 //@ts-ignore
-                              user.name[0]}
+                                //@ts-ignore
+                                user.name[0]
+                              }
                             </Avatar>
                           </ListItemAvatar>
-                          <ListItemText primary={
-                             //@ts-ignore
-                            user.name} secondary={`ID: ${user.id} | Account: ${user.accountNumber}`} />
+                          <ListItemText
+                            primary={
+                              //@ts-ignore
+                              user.name
+                            }
+                            secondary={`ID: ${user.id} | Account: ${user.accountNumber}`}
+                          />
                         </ListItem>
                       ))}
                     </List>
@@ -579,8 +568,6 @@ console.log(data)
                       }}
                     />
                     {selectedUser.name} (Account: {selectedUser.accountNumber})
-
-                
                   </Typography>
                 )}
               </Grid>
@@ -591,9 +578,12 @@ console.log(data)
                 <Grid item xs={12} md={3}>
                   <FormControl variant="filled" fullWidth>
                     <InputLabel>Destination Country</InputLabel>
-                    <Select value={selectedCountry} 
-                     //@ts-ignore
-                    onChange={handleCountryChange} displayEmpty>
+                    <Select
+                      value={selectedCountry}
+                      //@ts-ignore
+                      onChange={handleCountryChange}
+                      displayEmpty
+                    >
                       {countries.map((country) => (
                         <MenuItem key={country.code} value={country.code}>
                           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -609,7 +599,7 @@ console.log(data)
                 {/* Amount Input */}
                 <Grid item xs={12} md={3}>
                   <TextField
-                    label={  ` Amount in ${sourceCountry}`}
+                    label={` Amount in ${sourceCountry}`}
                     variant="filled"
                     fullWidth
                     onChange={(e) => {
@@ -656,13 +646,13 @@ console.log(data)
                     },
                   }}
                 >
-                  {selectedCountry&& amount>0 ? (
+                  {selectedCountry && amount > 0 ? (
                     <>
                       {' '}
                       <DataGrid
                         rows={TimechargesRows}
                         columns={chargesTableColumns}
-                         //@ts-ignore
+                        //@ts-ignore
                         pageSize={5}
                         disableSelectionOnClick
                         hideFooterSelectedRowCount
@@ -726,8 +716,14 @@ console.log(data)
                       }}
                     >
                       <PaymentMethodsTable
-                       //@ts-ignore
-                      amount={amount} timecharge={selecteTimeChange} setFinalRate={setFinalAmount} setGatewayCharge={setGatewayCharge}  currency={sourceCountry} setSelectedTransferMethod={setSelectedTransferMethod} />
+                        //@ts-ignore
+                        amount={amount}
+                        timecharge={selecteTimeChange}
+                        setFinalRate={setFinalAmount}
+                        setGatewayCharge={setGatewayCharge}
+                        currency={sourceCountry}
+                        setSelectedTransferMethod={setSelectedTransferMethod}
+                      />
                     </Grid>
                   </>
                 ) : (
@@ -736,79 +732,75 @@ console.log(data)
               </Grid>
             </Box>
 
-
-
             <Box sx={{ textAlign: 'left', marginTop: 2 }}>
-
-            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-     Settlement  Amount: {  amount * Number(forexRate)+" " +currency}
-      </Typography>
-      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-    Total Amount: {  (Number( amount)+Number(selecteTimeChange))+" " +sourceCountry}
-      </Typography>
-      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-      Base Amount: {  amount+" " +sourceCountry}
-      </Typography>
-      {/* <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                Settlement Amount: {amount * Number(forexRate) + ' ' + currency}
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                Total Amount: {Number(amount) + Number(selecteTimeChange) + ' ' + sourceCountry}
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                Base Amount: {amount + ' ' + sourceCountry}
+              </Typography>
+              {/* <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
         Gateway Fee: {  gatewayCharge +" " +sourceCountry }
       </Typography> */}
-      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-        Platform Charges: {  selecteTimeChange?selecteTimeChange:0  +" " +sourceCountry }
-      </Typography>
-      
-      <Button variant="contained" color="primary" onClick={() => {
-        
-        setTabValue('2')
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                Platform Charges: {selecteTimeChange ? selecteTimeChange : 0 + ' ' + sourceCountry}
+              </Typography>
 
-
-      
-
-
-      }}>
-              Continue
-            </Button>
-    </Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setTabValue('2')
+                }}
+              >
+                Continue
+              </Button>
+            </Box>
           </Box>
         </TabPanel>
         <TabPanel value="2">
           <Box>
             <Typography variant="h5" gutterBottom>
-             Transaction Details
+              Transaction Details
             </Typography>
 
             <Grid container spacing={2} marginBottom={2}>
               <Grid item xs={12} md={6}>
                 {/* <TextField label="Destination Country" variant="filled" fullWidth defaultValue={selectedCountry} disabled /> */}
                 <FormControl variant="filled" fullWidth disabled>
-                    <InputLabel>Destination Country</InputLabel>
-                    <Select value={selectedCountry} 
-                     //@ts-ignore
-                    
-                    onChange={handleCountryChange} displayEmpty>
-                      {countries.map((country) => (
-                        <MenuItem key={country.code} value={country.code}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar src={country.flag} alt={country.name} sx={{ width: 24, height: 24, marginRight: '8px' }} />
-                            <Typography>{country.name}</Typography>
-                          </div>
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <InputLabel>Destination Country</InputLabel>
+                  <Select
+                    value={selectedCountry}
+                    //@ts-ignore
 
-
+                    onChange={handleCountryChange}
+                    displayEmpty
+                  >
+                    {countries.map((country) => (
+                      <MenuItem key={country.code} value={country.code}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <Avatar src={country.flag} alt={country.name} sx={{ width: 24, height: 24, marginRight: '8px' }} />
+                          <Typography>{country.name}</Typography>
+                        </div>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
-              <TextField
-                    label="Amount"
-                    variant="filled"
-                    fullWidth
-                    defaultValue={amount}
-                    disabled
-                    onChange={(e) => {
-                      setAmount(e.target.value as any)
-                    }}
-                  />
+                <TextField
+                  label="Amount"
+                  variant="filled"
+                  fullWidth
+                  defaultValue={amount}
+                  disabled
+                  onChange={(e) => {
+                    setAmount(e.target.value as any)
+                  }}
+                />
                 {/* <TextField label="Amount" variant="filled" fullWidth defaultValue="1000 USD" disabled /> */}
               </Grid>
               {/* <Grid item xs={12} md={6}>
@@ -823,55 +815,63 @@ console.log(data)
             </Typography>
             <Grid container spacing={2} marginBottom={2}>
               <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    disabled
+                    //   label="Select User"
+                    variant="filled"
+                    fullWidth
+                    value={searchText}
+                    onChange={handleSearchChange}
+                    placeholder="Type a  User name or ID..."
+                    InputProps={{
+                      startAdornment: selectedUser && (
+                        <InputAdornment position="start">
+                          <Avatar
+                            //@ts-ignore
+                            src={selectedUser.profilePhoto}
+                            alt={selectedUser.name}
+                            style={{ marginRight: '8px' }}
+                          />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
 
-              <Grid item xs={12} md={6}>
-
-                <TextField
-                disabled
-                  //   label="Select User"
-                  variant="filled"
-                  fullWidth
-                  value={searchText}
-                  onChange={handleSearchChange}
-                  placeholder="Type a  User name or ID..."
-                  InputProps={{
-                    startAdornment: selectedUser && (
-                      <InputAdornment position="start">
-                        <Avatar 
-                         //@ts-ignore
-                        src={selectedUser.profilePhoto} alt={selectedUser.name} style={{ marginRight: '8px' }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                {filteredUsers.length > 0 && (
-                  <Paper elevation={3} style={{ marginTop: '10px' }}>
-                    <List>
-                      {filteredUsers.map((user) => (
-                        <ListItem 
-                         //@ts-ignore
-                        key={user.id} divider button onClick={() => handleUserSelect(user)}>
-                          <ListItemAvatar>
-                            <Avatar 
-                             //@ts-ignore
-                            src={user.profilePhoto} alt={user.name}>
-
-                              {
-                               //@ts-ignore
-                              user.name[0]}
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText 
-                          
-                           //@ts-ignore
-                          primary={user.name} secondary={`ID: ${user.id} | Account: ${user.accountNumber}`} />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Paper>
-                )}
-              </Grid>
+                  {filteredUsers.length > 0 && (
+                    <Paper elevation={3} style={{ marginTop: '10px' }}>
+                      <List>
+                        {filteredUsers.map((user) => (
+                          <ListItem
+                            //@ts-ignore
+                            key={user.id}
+                            divider
+                            button
+                            onClick={() => handleUserSelect(user)}
+                          >
+                            <ListItemAvatar>
+                              <Avatar
+                                //@ts-ignore
+                                src={user.profilePhoto}
+                                alt={user.name}
+                              >
+                                {
+                                  //@ts-ignore
+                                  user.name[0]
+                                }
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              //@ts-ignore
+                              primary={user.name}
+                              secondary={`ID: ${user.id} | Account: ${user.accountNumber}`}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Paper>
+                  )}
+                </Grid>
                 {/* <TextField label="Customer ID" variant="filled" fullWidth placeholder="Enter Customer ID" /> */}
               </Grid>
             </Grid>
@@ -895,10 +895,12 @@ console.log(data)
                 <TextField label="IFSC Code" variant="filled" fullWidth placeholder="Enter IFSC Code" />
               </Grid>
             </Grid> */}
-            <BeneficiaryForm selectedBenificary={selectedBenficary} setselectedBenficiary={setSelectedBenificary} 
-            
-             //@ts-ignore
-            beneficiaries={selectedUser?.benificary} ></BeneficiaryForm>
+            <BeneficiaryForm
+              selectedBenificary={selectedBenficary}
+              setselectedBenficiary={setSelectedBenificary}
+              //@ts-ignore
+              beneficiaries={selectedUser?.benificary}
+            ></BeneficiaryForm>
 
             <Divider sx={{ marginY: 2 }} />
 
@@ -906,30 +908,27 @@ console.log(data)
               BOP Category
             </Typography>
             <Grid container spacing={2}>
-              
-
               <Grid item xs={12} md={12}>
-              <BobCategoryDropdown amount={amount}></BobCategoryDropdown>
+                <BobCategoryDropdown amount={amount}></BobCategoryDropdown>
               </Grid>
 
-           
               {/* <Grid item xs={12} md={6}>
                 <TextField label="Amount" variant="filled" fullWidth placeholder="Enter Amount" />
               </Grid> */}
             </Grid>
 
-            <Button variant="contained" color="primary" sx={{ marginTop: 3 }} onClick={() =>{ 
-
-              setTabValue('3')
-   
-
-
-            }}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 3 }}
+              onClick={() => {
+                setTabValue('3')
+              }}
+            >
               Continue
             </Button>
           </Box>
         </TabPanel>
-
         <TabPanel value="3">
           <Box>
             <Typography variant="h5" gutterBottom>
@@ -944,7 +943,7 @@ console.log(data)
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography variant="body1">
-                  <strong>Amount:</strong> {amount +"  "+ sourceCountry}
+                  <strong>Amount:</strong> {amount + '  ' + sourceCountry}
                 </Typography>
               </Grid>
               {/* <Grid item xs={12} md={6}>
@@ -972,22 +971,23 @@ console.log(data)
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                <TableRow>
+                  <TableRow>
                     <TableCell>Settlement Amount</TableCell>
                     <TableCell align="right">
                       {
-                       //@ts-ignore
-                      amount*forexRate +" "+currency }</TableCell>
+                        //@ts-ignore
+                        amount * forexRate + ' ' + currency
+                      }
+                    </TableCell>
                   </TableRow>
-
 
                   <TableRow>
                     <TableCell>Amount</TableCell>
-                    <TableCell align="right">{amount +" "+sourceCountry}</TableCell>
+                    <TableCell align="right">{amount + ' ' + sourceCountry}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Platfrom Charges</TableCell>
-                    <TableCell align="right">{selecteTimeChange+" "+sourceCountry }</TableCell>
+                    <TableCell align="right">{selecteTimeChange + ' ' + sourceCountry}</TableCell>
                   </TableRow>
                   {/* <TableRow>
                     <TableCell>Gateway Charges</TableCell>
@@ -997,8 +997,8 @@ console.log(data)
                     <TableCell>
                       <strong>Net Payable</strong>
                     </TableCell>
-                    <TableCell align="right"> 
-                      <strong>{sourceCountry+ " "+ (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)) }</strong>
+                    <TableCell align="right">
+                      <strong>{sourceCountry + ' ' + (Number(amount) + Number(selecteTimeChange) + Number(gatewayCharge))}</strong>
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -1077,24 +1077,22 @@ window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
       Confirm & Pay
     </Button>
           </Box>
-        </TabPanel>,
+        </TabPanel>
+        ,
       </TabContext>
 
       {/* <GifModal 
       
        //@ts-ignore
       open={gifsuccess} setOpen={setGifSuccess}></GifModal> */}
-    
 
-
-
-    <PaymentPopup
-    //@ts-ignore
-    open={gifsuccess} setOpen={setGifSuccess} url={url}></PaymentPopup>
-
-    
+      <PaymentPopup
+        //@ts-ignore
+        open={gifsuccess}
+        setOpen={setGifSuccess}
+        url={url}
+      ></PaymentPopup>
     </Box>
-
   )
 }
 

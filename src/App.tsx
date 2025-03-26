@@ -56,7 +56,8 @@ import ReconPage from './pages/transaction/recon'
 import GifModal from './components/successModal'
 import ChargesDataGridTable from './pages/add-charges'
 import ListCharges from './pages/list-chages'
-
+import BopScreen from './components/bop-screen'
+import BopTable from './pages/bop-table'
 // const { VITE_APP_VAPID_KEY } = import.meta.env
 
 // const[sta]
@@ -177,13 +178,10 @@ function App() {
                 <Route path="add-applicant" element={<AddApplicant />} />
                 <Route path="about-beneficiary" element={<AboutBeneficiary />} />
                 <Route path="add-beneficiary" element={<AddBeneficiary />} />
-                <Route path="recon" element ={<ReconPage/>}/>
-                <Route path='charges/add' element={<ChargesDataGridTable/>}/>
-                <Route path='list-charges' element={<ListCharges/>}/>
-              
+                <Route path="recon" element={<ReconPage />} />
+                <Route path="charges/add" element={<ChargesDataGridTable />} />
+                <Route path="list-charges" element={<ListCharges />} />
 
-              
-              
                 <Route path="beneficiary-details/:beneficiaryId" element={<BeneficiaryDetailPage />} />
                 <Route path="beneficiary" element={<BeneficiaryEnquiry />} />
                 <Route path="configuration" element={<MainTabsPage />} />
@@ -192,6 +190,8 @@ function App() {
                 <Route path="users" element={<UserList />} />
                 {/* <Route path="users/add" element={<UserAdd />} /> */}
                 <Route path="price" element={<CurrencyBarChart />} />
+                <Route path="bop-details/:transactionId" element={<BopScreen />} />
+                <Route path="bop-listing" element={<BopTable />} />
 
                 {/* <Route path="customer" element={<CustomerDatabase/>}/> */}
                 <Route path="logs" element={<LogsList />} />
@@ -217,7 +217,7 @@ function App() {
             )}
 
             <Route path="login" element={<Login />} />
-            <Route path="transaction/create" element ={<GifModal/>}/>
+            <Route path="transaction/create" element={<GifModal />} />
             <Route path="reset-password" element={<ResetPasswordPage />} />
           </Routes>
         </BrowserRouter>

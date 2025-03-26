@@ -1,6 +1,20 @@
-
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { Box, Typography, Avatar, List, ListItem, ListItemText, IconButton, Modal, Button, AppBar, ListItemIcon, Toolbar, Menu, MenuItem } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Avatar,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Modal,
+  Button,
+  AppBar,
+  ListItemIcon,
+  Toolbar,
+  Menu,
+  MenuItem,
+} from '@mui/material'
 import { styled } from '@mui/system'
 import { Chuks, Logo, LogoWhite } from '@/assets/images'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -14,10 +28,10 @@ import { alertState, alertTextState, alertTypeState, loaderState, role, sidbarSe
 import { useState } from 'react'
 import Fade from '@mui/material/Fade'
 import Backdrop from '@mui/material/Backdrop'
-import LogoutIcon from '@mui/icons-material/Logout';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import CameraFrontIcon from '@mui/icons-material/CameraFront';
- 
+import LogoutIcon from '@mui/icons-material/Logout'
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
+import CameraFrontIcon from '@mui/icons-material/CameraFront'
+
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary'
 // import { snackbarOpenState } from "../../states/state";
 // import { Logo } from "@/assets/images";
@@ -41,9 +55,9 @@ import GridViewIcon from '@mui/icons-material/GridView'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency'
 import FlagSelector from '../flagselector'
-import {Tooltip} from '@mui/material'
-import SourceIcon from '@mui/icons-material/Source';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
+import { Tooltip } from '@mui/material'
+import SourceIcon from '@mui/icons-material/Source'
+import ShowChartIcon from '@mui/icons-material/ShowChart'
 // import { IconButton } from '@mui/material';
 
 import { Us, Sa, Za } from 'react-flags-select'
@@ -119,20 +133,20 @@ const Header = styled(Box)({
 const DashboardLayout = () => {
   let navigate = useNavigate()
   const theme = useTheme()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const opendropdown = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const opendropdown = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handledropClose = (option?: string) => {
-    setAnchorEl(null);
+    setAnchorEl(null)
     if (option) {
-      console.log(`Selected: ${option}`);
+      console.log(`Selected: ${option}`)
       // Add logic for each option
     }
-  };
+  }
 
   // const [studentList, setstudentList] = useRecoilState(studentListState);
   const [selectedApp, setSelectedApp] = useRecoilState(selectedAppState)
@@ -145,7 +159,6 @@ const DashboardLayout = () => {
   const [selectedTab, setSelectedTab] = useRecoilState(sidbarSelectionState)
 
   const [droppopopen, setdropopoOpen] = useState(false)
-
 
   const [openloader, setopenloader] = useRecoilState(loaderStateNew)
 
@@ -167,7 +180,6 @@ const DashboardLayout = () => {
 
             color: theme.palette.primary.light,
             '&:hover': {
-
               //@ts-ignore
               color: theme.palette.primary.main, // Change the color to blue on hover
             },
@@ -183,7 +195,7 @@ const DashboardLayout = () => {
             //@ts-ignore
             color: theme.palette.secondary.light,
             fontSize: '30px',
-//@ts-ignore
+            //@ts-ignore
             color: theme.palette.primary.light,
             '&:hover': {
               //@ts-ignore
@@ -199,7 +211,6 @@ const DashboardLayout = () => {
       icon: (
         <ContactEmergencyIcon
           sx={{
-
             //@ts-ignore
             color: theme.palette.secondary.light,
             fontSize: '30px',
@@ -251,51 +262,57 @@ const DashboardLayout = () => {
       ),
       label: 'applicant',
     },
-//     {
-//       icon: (
-//         <CameraFrontIcon
-//           sx={{
-//             //@ts-ignore
-//             color: theme.palette.secondary.light,
-//             fontSize: '30px',
-// //@ts-ignore
-//             color: theme.palette.primary.light,
-//             //@ts-ignore
-//             '&:hover': {
-//               //@ts-ignore
-//               color: theme.palette.primary.main, // Change the color to blue on hover
-//             },
-//           }}
-//         />
-//       ),
-//       label: 'beneficiary',
-//     },
+    //     {
+    //       icon: (
+    //         <CameraFrontIcon
+    //           sx={{
+    //             //@ts-ignore
+    //             color: theme.palette.secondary.light,
+    //             fontSize: '30px',
+    // //@ts-ignore
+    //             color: theme.palette.primary.light,
+    //             //@ts-ignore
+    //             '&:hover': {
+    //               //@ts-ignore
+    //               color: theme.palette.primary.main, // Change the color to blue on hover
+    //             },
+    //           }}
+    //         />
+    //       ),
+    //       label: 'beneficiary',
+    //     },
 
-{
+    {
+      icon: (
+        <>
+          <SourceIcon
+            sx={{
+              //@ts-ignore
+              fontSize: '30px',
+              //@ts-ignore
+              color: theme.palette.primary.light, // Corrected theme usage
+            }}
+          />
+        </>
+      ),
+      label: 'configuration',
+    },
 
-    icon:(
-      <>
-
-
-
-     
-        <SourceIcon 
-          sx={{
-            //@ts-ignore
-            fontSize: "30px",
-                //@ts-ignore
-            color: theme.palette.primary.light, // Corrected theme usage
-          }}
-        />
-    
-     
-  </>
-    ),
-    label:'configuration'
-},
-
-
-  
+    {
+      icon: (
+        <>
+          <SourceIcon
+            sx={{
+              //@ts-ignore
+              fontSize: '30px',
+              //@ts-ignore
+              color: theme.palette.primary.light, // Corrected theme usage
+            }}
+          />
+        </>
+      ),
+      label: 'bop-listing',
+    },
   ]
 
   // const[alert]
@@ -399,10 +416,14 @@ const DashboardLayout = () => {
     <ThemeProvider theme={theme}>
       {/* <CustomSnackbar></CustomSnackbar> */}
       <LoaderBackdrop openloader={openloader} imageSrc=".." />
-      <AppBar position="sticky" sx={{
-        
-         //@ts-ignore
-        backgroundColor: theme.palette.primary.main, paddingBottom: 0 }}>
+      <AppBar
+        position="sticky"
+        sx={{
+          //@ts-ignore
+          backgroundColor: theme.palette.primary.main,
+          paddingBottom: 0,
+        }}
+      >
         <Toolbar>
           <Box sx={{ flexGrow: 1, p: 1, color: 'white' }}>
             <img src={LogoWhite} alt="Logo" style={{ height: 60 }} />
@@ -479,7 +500,7 @@ const DashboardLayout = () => {
           <Box
             sx={{
               width: isDrawerOpen ? 200 : 100,
-               //@ts-ignore
+              //@ts-ignore
               backgroundColor: theme.palette.secondary.main,
               height: '100vh',
               position: 'fixed', // Makes the sidebar stay fixed in place
@@ -579,12 +600,9 @@ const DashboardLayout = () => {
                 </Stack>
               </ListItem>
             </List>
-            
-
-            
 
             {/* Logout icon */}
-            
+
             <List
               sx={{
                 textAlign: 'center',
@@ -615,7 +633,6 @@ const DashboardLayout = () => {
                 </Stack>
               </ListItem>
             </List>
-            
           </Box>
 
           <Box
