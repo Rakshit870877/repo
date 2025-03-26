@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import { Box, Typography } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 const {VITE_FOREX_NODE_APP_URL} = import.meta.env;
 const backendUrl = VITE_FOREX_NODE_APP_URL
 
 const BopTable: React.FC = () => {
   const [bopData, setBopData] = React.useState([])
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBopListingData()
@@ -67,9 +69,8 @@ const BopTable: React.FC = () => {
       headerClassName: 'super-app-theme--header',
       renderCell: (params: any) => (
         <a
-          href={`http://localhost:5173/bop-details/${params.row.transaction_number}`}
+        onClick={()=>navigate(`/bop-details/${params.row.transaction_number}`)}
           style={{
-            textDecoration: 'underline',
             cursor: 'pointer',
           }}
         >
