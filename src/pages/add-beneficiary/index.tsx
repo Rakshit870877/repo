@@ -195,6 +195,9 @@ let applicant_service=new ApplicantService()
 
   const handleSubmit = async (e: any) => {
 
+
+
+
     console.log("added neficary")
     e.preventDefault();
     setIsSubmitting(true);
@@ -208,7 +211,7 @@ let applicant_service=new ApplicantService()
       setIsSubmitting(false);
       return;
     }
-    console.log("fojbhjbj b r")
+   
 
   
     // setfilterdUsers(filteredUsers)
@@ -222,24 +225,29 @@ let applicant_service=new ApplicantService()
     try {
         //@ts-ignore
         console.log(formData);
+        setcommonloader(true)
       const response = await beneficiary_service.submitBeneficiaryForm(formData);
       //@ts-ignore
       if (response.status == 200) {
         setText('Beneficiary Successfully Added');
         setType('success');
         setOpen(true);
-        alert("Beneficiary created successfully");
+        // alert("Beneficiary created successfully");
         navigate('/beneficiary');
       } else {
         setText('Unable to Submit Beneficiary');
         setType('error');
         setOpen(true);
       }
+
+
+      setcommonloader(false)
     } catch (error) {
       console.error('Error submitting form:', error);
       setText('Error while submitting form');
       setType('error');
       setOpen(true);
+      setcommonloader(false)
     }
   };
 

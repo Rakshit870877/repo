@@ -234,10 +234,13 @@ const KYCPage = () => {
     try {
       // Your API call logic here
       console.log(selectedKYC);
+      console.log(proofType)
       console.log(proofType.kycId,proofType.documentCode)
-      kycservice.verifyDocument(proofType.documentCode,proofType.kycId).then(data=>{
+      kycservice.verifyDocument(proofType?.id?.documentCode,proofType?.id?.kycId).then(data=>{
 
         console.log(data)
+
+        window.location.reload()
       }).catch(err=>{
 
         console.log(err)
@@ -458,6 +461,10 @@ console.log(row)
             },
             { field: 'permanentAddressCountry', headerName: 'Resident Country', flex: 1, headerClassName: 'super-app-theme--header' },
             ,
+
+            { field: 'applicantId', headerName: 'Applicant ID', flex: 1, headerClassName: 'super-app-theme--header' },
+
+        
             {
               field: 'kycStatus',
               headerName: 'Verification Status',

@@ -43,9 +43,10 @@ import { KycService } from '@/services/kyc.service'
 import PaymentPopup from '@/components/payment-popup'
 import BobCategoryDropdown from '@/components/bob-matrix'
 import { useRecoilState } from 'recoil'
-import { loaderStateNew } from '@/states/state'
+import { alertState, alertTextState, alertTypeState, loaderStateNew } from '@/states/state'
 import { Segment } from '@mui/icons-material'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const users = [
   {
@@ -111,6 +112,11 @@ const paymentGateways = [
 
 
 const SendMoneyPage = () => {
+
+    const [open, setOpen] = useRecoilState(alertState)
+    const [text, setText] = useRecoilState(alertTextState)
+    const [type, settype] = useRecoilState(alertTypeState)
+    const[commonLoader,setCommonLoader]=useRecoilState(loaderStateNew)
   const [checkoutId, setCheckoutId] = useState("");
   const [searchText, setSearchText] = useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
@@ -126,6 +132,8 @@ const SendMoneyPage = () => {
   const[gifsuccess,setGifSuccess]=useState(false)
   const [sendCountry,setsendCountry]=useState("")
   const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
+
+
 //   const[selected ]
 
 
@@ -301,7 +309,7 @@ console.log(data)
       setFilteredUsers(filtered)
     }
   }
-
+ let navigate=useNavigate()
 
   const handlePayment = async () => {
     try {
@@ -367,6 +375,8 @@ console.log(data)
   const handlePaymentClick = async () => {
     try {
       // Call Peach Payments API
+
+      setcommonloader(true)
       const response = await fetch("https://test.oppwa.com/v1/checkouts", {
         method: "POST",
         headers: {
@@ -405,56 +415,84 @@ console.log(data)
       
        }
        
-      
-      
+    
 
 
-      transaction_service.createTransaction(payload).then(data=>{
+       transaction_service.createTransaction(payload).then(data=>{
+        setCommonLoader(true)
 
+        if(data){
+
+          settype('success')
+        setText("Tnansaction created Succesfully")
+        }
+        else{
+
+          settype('error')
+          setText("Tnansaction created false")
+        }
+        setOpen(true)
+        setcommonloader(false)
+       
+        navigate('/transaction')
         console.log(data.data)
-        transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
+      //   transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
       
-      seturl(res.url)
+
+      //     console.log(res)
+      //  seturl(res.url)
+
+      //  if(res){
+      //   settype('success')
+      //   setText("Tnansaction created Succesfully")
+
+      //  }else{
+      //   settype('error')
+      //   setText("Tnansaction created false")
+
+      //  }
+     
+      //  setOpen(true)
+      // setcommonloader(false)
       
-      
-      window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
+      // window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
        
       
-      })
+      // })
        })
 
-      if (data.id) {
-        // HTML content for the new window
-        const htmlContent = `
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Peach Payments</title>
-              <script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${data.id}"></script>
-          </head>
-          <body>
-              <h2>Complete Your Payment</h2>
-              <form action="https://reactnative.dev/" class="paymentWidgets">
-                  VISA MASTER
-              </form>
-          </body>
-          </html>
-        `;
+      // if (data.id) {
+      //   // HTML content for the new window
+      //   const htmlContent = `
+      //     <!DOCTYPE html>
+      //     <html lang="en">
+      //     <head>
+      //         <meta charset="UTF-8">
+      //         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      //         <title>Peach Payments</title>
+      //         <script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${data.id}"></script>
+      //     </head>
+      //     <body>
+      //         <h2>Complete Your Payment</h2>
+      //         <form action="https://reactnative.dev/" class="paymentWidgets">
+      //             VISA MASTER
+      //         </form>
+      //     </body>
+      //     </html>
+      //   `;
 
-        // Open a new window and write the HTML content
-        const paymentWindow = window.open("", "_blank", "width=600,height=800");
-        if (paymentWindow) {
-          paymentWindow.document.open();
-          paymentWindow.document.write(htmlContent);
-          paymentWindow.document.close();
-        } else {
-          alert("Popup blocked! Please allow popups for this site.");
-        }
-      } else {
-        alert("Failed to create payment session");
-      }
+      //   // Open a new window and write the HTML content
+      //   const paymentWindow = window.open("", "_blank", "width=600,height=800");
+      //   if (paymentWindow) {
+      //     paymentWindow.document.open();
+      //     paymentWindow.document.write(htmlContent);
+      //     paymentWindow.document.close();
+      //   } else {
+      //     alert("Popup blocked! Please allow popups for this site.");
+      //   }
+      // } else {
+      //   alert("Failed to create payment session");
+      // }
     } catch (error) {
       console.error("Payment initiation failed:", error);
       alert("Error processing payment!");
@@ -1012,7 +1050,9 @@ console.log(data)
 
 
             <Button variant="outlined" color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={() => {
-   let payload={
+  setcommonloader(true)
+  
+  let payload={
     //@ts-ignore
     benificary:{"benificaryId":  selectedBenficary?.benificaryId},
     transferMethod:selectedTransferMethod,
@@ -1037,19 +1077,22 @@ console.log(data)
  transaction_service.createTransaction(payload).then(data=>{
 
   console.log(data.data)
-  transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
+//   transaction_service.createPayfastTransaction(data?.data,((Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge)))).then((res)=>{
 
-seturl(res.url)
+// seturl(res.url)
 
 
-window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
+// window.open(JSON.parse(res.data)?.url, "_blank", "noopener,noreferrer");
  
 
-})
+// })
  })
 
 
-//  setGifSuccess(true)
+ setGifSuccess(true)
+
+ setcommonloader(false)
+ navigate('/transaction')
  
 
 

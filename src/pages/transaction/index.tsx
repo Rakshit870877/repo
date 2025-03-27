@@ -88,7 +88,7 @@ const TransactionPage = () => {
             <Chip onClick={()=>{
               setmodalOpen(true)
   
-            }}  label="Error" color="error" />
+            }}  label= {  params.value}  color="error" />
          
         ) : (
           
@@ -242,10 +242,7 @@ const TransactionPage = () => {
       renderCell: (params) =>
         params.value ? (
           
-          <Chip onClick={()=>{
-            setmodalOpen(true)
-
-          }}  label="Error" color="error" />
+          <Chip  label={params.value=="N"?"No Error":"Error"} color={params.value=="N"?"success":"error"} />
         
         ) : (
           <Chip onClick={()=>{
