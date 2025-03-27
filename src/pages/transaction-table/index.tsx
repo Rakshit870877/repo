@@ -77,16 +77,17 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transaction }) => {
     <Box sx={{ width: '70vw' }}>
 
 
-<Button
-      variant="outlined"
-      onClick={() => navigate("/add-beneficiary")}
-      sx={{
+    <Button
+          variant="outlined"
+          onClick={() => navigate("/sendmoney")}
+          sx={{
+    
+            marginBottom:"3%"
+          }}
+        >
+        Add Transaction +
+        </Button>
 
-        marginBottom:"3%"
-      }}
-    >
-     ADD Beneficary
-    </Button>
       <DataGrid
         sx={{
           width: '100%',

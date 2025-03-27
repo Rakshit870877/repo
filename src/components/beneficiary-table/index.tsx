@@ -2,7 +2,7 @@ import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { BeneficiaryService } from '@/services/beneficiary.service';
 
 const beneficiary_service= new BeneficiaryService();
@@ -80,26 +80,38 @@ const BeneficiaryTable = ({
       flex: 1,
       headerClassName: 'super-app-theme--header',
     },
-    {
-      field: 'action',
-      headerName: 'Actions',
-      flex: 1,
-      headerClassName: 'super-app-theme--header',
-      renderCell: (params:any) => (
-        <IconButton
-          onClick={() => handleDelete(params.row.beneficiaryId)}
-          color="error"
-        >
-          <DeleteIcon />
-        </IconButton>
-      ),
-    },
+    // {
+    //   field: 'action',
+    //   headerName: 'Actions',
+    //   flex: 1,
+    //   headerClassName: 'super-app-theme--header',
+    //   renderCell: (params:any) => (
+    //     <IconButton
+    //       onClick={() => handleDelete(params.row.beneficiaryId)}
+    //       color="error"
+    //     >
+    //       <DeleteIcon />
+    //     </IconButton>
+    //   ),
+    // },
   ];
 
   const rows = Array.isArray(beneficiary) ? beneficiary : [];
 
   return (
     <>
+
+
+    <Button
+          variant="outlined"
+          onClick={() => navigate("/add-beneficiary")}
+          sx={{
+    
+            marginBottom:"3%"
+          }}
+        >
+         ADD Beneficary
+        </Button>
       {rows.length > 0 ? (
         <DataGrid
           sx={{

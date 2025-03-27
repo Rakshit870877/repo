@@ -84,12 +84,12 @@ const TransactionPage = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
         params.value ? (
-
-          <Chip onClick={() => {
-            setmodalOpen(true)
-
-          }} label="Error" color="error" />
-
+        
+            <Chip onClick={()=>{
+              setmodalOpen(true)
+  
+            }}  label= {  params.value}  color="error" />
+         
         ) : (
 
           <Chip
@@ -241,12 +241,9 @@ const TransactionPage = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
         params.value ? (
-
-          <Chip onClick={() => {
-            setmodalOpen(true)
-
-          }} label="Error" color="error" />
-
+          
+          <Chip  label={params.value=="N"?"No Error":"Error"} color={params.value=="N"?"success":"error"} />
+        
         ) : (
           <Chip onClick={() => {
             setmodalOpen(true)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Grid, TextField, Typography, Button, Switch, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Tabs, Tab, Avatar } from '@mui/material';
+import { Box, Grid, TextField, Typography, Button, Switch, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Tabs, Tab, Avatar, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import TransactionTable from '../transaction-table';
 import DocumentComponent from '../document-tab';
@@ -23,9 +23,7 @@ const ApplicantPage = () => {
   const [residenceCountry, setResidenceCountry] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [postalAddressLine1, setPostalAddressLine1] = useState('');
-  const [postalAddressLine2, setPostalAddressLine2] = useState('');
-  const [postalAddressLine3, setPostalAddressLine3] = useState('');
+
   const [suburb, setSuburb] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
@@ -47,6 +45,129 @@ const ApplicantPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [beneficiaries, setBeneficiaries] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
+
+
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+
+
+
+
+  const [postalAddressLine1, setPostalAddressLine1] = useState('');
+  const [postalAddressLine2, setPostalAddressLine2] = useState('');
+  const [postalAddressLine3, setPostalAddressLine3] = useState('');
+  
+  
+  const [postalselectedCountry, setPostalSelectedCountry] = useState("");
+  const [postalselectedState,  setPostalSelectedState] = useState("");
+  const [postalselectedCity,  setPostalSelectedCity] = useState("");
+  const [postalzipCode,  setPostalZipCode] = useState("");
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //postal
+
+
+  // Address Fields (Physical)
+
+
+
+
+// Handlers for Dropdowns
+
+const countries = [
+  { code: "IN", name: "India" },
+  { code: "ZA", name: "South Africa" }
+];
+
+const states = {
+  IN: ["Maharashtra", "Delhi", "Karnataka"],
+  ZA: ["Gauteng", "Western Cape", "KwaZulu-Natal"]
+};
+
+const cities = {
+  Maharashtra: ["Mumbai", "Pune", "Nagpur"],
+  Delhi: ["New Delhi", "Noida", "Gurgaon"],
+  Karnataka: ["Bangalore", "Mysore", "Mangalore"],
+  Gauteng: ["Johannesburg", "Pretoria", "Soweto"],
+  "Western Cape": ["Cape Town", "Stellenbosch", "Paarl"],
+  "KwaZulu-Natal": ["Durban", "Pietermaritzburg", "Richards Bay"]
+};
+
+const zipCodes: Record<string, string> = {
+  Mumbai: "400001",
+  Pune: "411001",
+  Nagpur: "440001",
+  "New Delhi": "110001",
+  Noida: "201301",
+  Gurgaon: "122001",
+  Bangalore: "560001",
+  Mysore: "570001",
+  Mangalore: "575001",
+  Johannesburg: "2000",
+  Pretoria: "0002",
+  Soweto: "1804",
+  "Cape Town": "8001",
+  Stellenbosch: "7600",
+  Paarl: "7646",
+  Durban: "4001",
+  Pietermaritzburg: "3201",
+  "Richards Bay": "3900"
+};
+
+
+const handleCountryChange = (event: any) => {
+  setSelectedCountry(event.target.value);
+  setSelectedState("");
+  setSelectedCity("");
+  setZipCode("");
+};
+
+const handlePostalCountryChange = (event: any) => {
+  setPostalSelectedCountry(event.target.value);
+  setPostalSelectedState("");
+  setPostalSelectedCity("");
+setPostalZipCode("");
+};
+
+const handleStateChange = (event: any) => {
+  setSelectedState(event.target.value);
+  setSelectedCity("");
+  setZipCode("");
+};
+
+const handlePostalStateChange = (event: any) => {
+  setPostalSelectedState(event.target.value);
+  setPostalSelectedCity("");
+  setPostalZipCode("");
+};
+
+const handleCityChange = (event: any) => {
+  const city = event.target.value;
+  setSelectedCity(city);
+  setZipCode(zipCodes[city] || ""); // Auto-fill Zip Code
+};
+
+
+
+const handlePostalCityChange = (event: any) => {
+  const city = event.target.value;
+setPostalSelectedCity(city);
+  setPostalZipCode(zipCodes[city] || ""); // Auto-fill Zip Code
+};
+
 
   const { applicantId } = useParams();
 
@@ -83,6 +204,8 @@ const ApplicantPage = () => {
          //@ts-ignore
         setSuburb(data?.data?.applicant?.suburb || '');
          //@ts-ignore
+
+        
         setResidenceState(data?.data?.applicant?.residenceState || '');
          //@ts-ignore
         setCity(data?.data?.applicant?.city || '');
@@ -205,6 +328,8 @@ const ApplicantPage = () => {
     setOpenSaveDialog(false);
     setIsEditable(false);
     console.log("Saved applicant data");
+
+   
   };
 
   const handleDiscardChanges = () => {
@@ -241,7 +366,7 @@ const ApplicantPage = () => {
         Applicant Details
       </Typography>
       <FormControlLabel
-        control={<Switch checked={isEditable} onChange={handleToggleChange} />}
+        control={<Switch  disabled  checked={isEditable} onChange={handleToggleChange} />}
         label="Edit Mode"
       />
       </Box>
@@ -321,9 +446,10 @@ const ApplicantPage = () => {
                   label="Phone"
                   variant="filled"
                   value={phone}
+                
                   onChange={handleFieldChange(setPhone)}
                   fullWidth
-                  InputProps={{ readOnly: !isEditable }}
+                  InputProps={{ readOnly: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -376,6 +502,8 @@ const ApplicantPage = () => {
             />
           </Grid>
           <Grid item xs={12} sm={2}>
+
+          
             <TextField
               fullWidth
               label="Suburb"
@@ -385,24 +513,114 @@ const ApplicantPage = () => {
               InputProps={{ readOnly: !isEditable }}
             />
           </Grid>
-          <Grid item xs={12} sm={1.5}>
-            <TextField
+           {/* Country Dropdown */}
+        <Grid item xs={12} sm={2}>
+
+          {
+
+            isEditable?( <FormControl fullWidth>
+              <InputLabel>Country</InputLabel>
+              <Select value={postalselectedCountry} onChange={handlePostalCountryChange} disabled={!isEditable}>
+                {countries.map((country) => (
+                  <MenuItem key={country.code} value={country.code}>
+                    {country.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>):(<>
+
+
+              <TextField
               fullWidth
-              label="City"
-              value={city}
-              onChange={handleFieldChange(setCity)}
+              label="Country"
+              value={country}
+
+              contentEditable="false"
+              //@ts-ignore
+              onChange={handleFieldChange(suburb)}
               InputProps={{ readOnly: !isEditable }}
             />
-          </Grid>
-          <Grid item xs={12} sm={1.5}>
+        
+            
+            </>)
+          }
+         
+        </Grid>
+
+        {/* State Dropdown */}
+        <Grid item xs={12} sm={2}>
+
+          {
+
+            isEditable?(<>
+            
+            <FormControl fullWidth disabled={!postalselectedCountry || !isEditable}>
+            <InputLabel>State/Province</InputLabel>
+          
+          
+            <Select value={postalselectedState} onChange={handlePostalStateChange}>
+              {
+              //@ts-ignore
+              states[postalselectedCountry]?.map((state) => (
+                <MenuItem key={state} value={state}>
+                  {state}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+            </>):<>
+            
             <TextField
               fullWidth
-              label="State/Province"
+              label="State"
               value={state}
-              onChange={handleFieldChange(setState)}
+
+              contentEditable="false"
+              //@ts-ignore
+              onChange={handleFieldChange(suburb)}
               InputProps={{ readOnly: !isEditable }}
             />
-          </Grid>
+            
+            </>
+          }
+         
+        </Grid>
+
+        {/* City Dropdown */}
+        <Grid item xs={12} sm={2}>
+
+          {isEditable?<>
+
+
+            <FormControl fullWidth disabled={!postalselectedState || !isEditable}>
+            <InputLabel>City</InputLabel>
+            <Select value={postalselectedCity} onChange={handlePostalCityChange}>
+              {
+                 //@ts-ignore
+              cities[postalselectedState]?.map((city) => (
+                <MenuItem key={city} value={city}>
+                  {city}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          
+          
+          </>:<>
+          
+          <TextField
+              fullWidth
+              label="city"
+              value={city}
+
+              contentEditable="false"
+              //@ts-ignore
+              onChange={handleFieldChange(suburb)}
+              InputProps={{ readOnly: !isEditable }}
+            />
+          </>}
+     
+        </Grid>
           <Grid item xs={12} sm={1.5}>
             <TextField
               fullWidth
@@ -412,113 +630,200 @@ const ApplicantPage = () => {
               InputProps={{ readOnly: !isEditable }}
             />
           </Grid>
-          <Grid item xs={12} sm={1.5}>
-            <TextField
-              fullWidth
-              label="Country"
-              value={country}
-              onChange={handleFieldChange(setCountry)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
-        </Grid>
-      </Box>
-
-      <Box sx={{ width: "80vw" }}>
-        <Typography variant="subtitle1" sx={{ color: 'grey', marginBottom: 1 }}><strong>Physical Address</strong></Typography>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Address Line 1"
-              value={physicalAddressLine1}
-              onChange={handleFieldChange(setPhysicalAddressLine1)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Address Line 2"
-              value={physicalAddressLine2}
-              onChange={handleFieldChange(setPhysicalAddressLine2)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
+         
         </Grid>
 
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              fullWidth
-              label="Address Line 3"
-              value={physicalAddressLine3}
-              onChange={handleFieldChange(setPhysicalAddressLine3)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <TextField
-              fullWidth
-              label="Suburb"
-              value={suburb}
+
+     
+     
+
+
+
+       {/* Physical Address Section */}
+       <Typography variant="subtitle1" sx={{ color: "grey", marginBottom: 1 }}>
+        <strong>Physical Address</strong>
+      </Typography>
+
+      <Grid container spacing={2} marginBottom={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Address Line 1"
+            value={physicalAddressLine1}
+            onChange={(e) => setPhysicalAddressLine1(e.target.value)}
+            InputProps={{ readOnly: !isEditable }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Address Line 2"
+            value={physicalAddressLine2}
+            onChange={(e) => setPhysicalAddressLine2(e.target.value)}
+            InputProps={{ readOnly: !isEditable }}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2} marginBottom={2}>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            label="Address Line 3"
+            value={physicalAddressLine3}
+            onChange={(e) => setPhysicalAddressLine3(e.target.value)}
+            InputProps={{ readOnly: !isEditable }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <TextField
+            fullWidth
+            label="Suburb"
+            value={suburb}
+            onChange={(e) => setSuburb(e.target.value)}
+            InputProps={{ readOnly: !isEditable }}
+          />
+        </Grid>
+
+        {/* Country Dropdown */}
+
+        <Grid item xs={12} sm={2}>
+
+
+
+        {
+
+isEditable?<>
+
+<FormControl fullWidth>
+            <InputLabel>Country</InputLabel>
+
+
+            <Select value={selectedCountry} onChange={handleCountryChange} disabled={!isEditable}>
+              {countries.map((country) => (
+                <MenuItem key={country.code} value={country.code}>
+                  {country.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+</>:<>
+
+
+<TextField
+            fullWidth
+            label="Country"
+            value={residenceCountry}
+            onChange={(e) => (e.target.value)}
+            InputProps={{ readOnly: !isEditable }}
+          />
+</>
+}
+
+       
+        </Grid>
+
+        {/* State Dropdown */}
+        <Grid item xs={12} sm={2}>
+
+          {
+
+            isEditable?<>
+
+
+<FormControl fullWidth disabled={!selectedCountry || !isEditable}>
+            <InputLabel>State/Province</InputLabel>
+            <Select value={selectedState} onChange={handleStateChange}>
+             
+              {
               //@ts-ignore
-              onChange={handleFieldChange(suburb)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={1.5}>
+              states[selectedCountry]?.map((state) => (
+                <MenuItem key={state} value={state}>
+                  {state}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+            
+            </>:<>
+
+
             <TextField
-              fullWidth
-              label="City"
-              value={residenceCity}
-              onChange={handleFieldChange(setResidenceCity)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={1.5}>
-            <TextField
-              fullWidth
-              label="State/Province"
-              value={residenceState}
-              onChange={handleFieldChange(setResidenceState)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={1.5}>
-            <TextField
-              fullWidth
-              label="Postal Code"
-              value={residencePostalCode}
-              onChange={handleFieldChange(setResidencePostalCode)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={1.5}>
-            <TextField
-              fullWidth
-              label="Country"
-              value={residenceCountry}
-              onChange={handleFieldChange(setResidenceCountry)}
-              InputProps={{ readOnly: !isEditable }}
-            />
-          </Grid>
+            fullWidth
+            label="State"
+            value={residenceState}
+            onChange={(e) => (e.target.value)}
+            InputProps={{ readOnly: !isEditable }}
+          />
+            
+            </>
+          }
+        
         </Grid>
+
+        {/* City Dropdown */}
+        <Grid item xs={12} sm={2}>
+
+          {
+           isEditable?(<>
+             <FormControl fullWidth disabled={!selectedState || !isEditable}>
+            <InputLabel>City</InputLabel>
+            <Select value={selectedCity} onChange={handleCityChange}>
+
+         
+              {
+                 //@ts-ignore
+              cities[selectedState]?.map((city) => (
+                <MenuItem key={city} value={city}>
+                  {city}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+           </>):<>
+           
+           <TextField
+            fullWidth
+            label="City"
+            value={residenceCity}
+            onChange={(e) => (e.target.value)}
+            InputProps={{ readOnly: !isEditable }}
+          />
+           
+           </>
+
+
+          }
+        
+        </Grid>
+
+        {/* Zip Code Auto-Filled */}
+
+
+        <Grid item xs={12} sm={2}>
+          <TextField fullWidth label="Zip Code" value={residencePostalCode} InputProps={{ readOnly: true }} />
+        </Grid>
+      </Grid>
+
+
+
+
       </Box>
 
 
       {/* Tab Component */}
       <Tabs sx={{ marginBottom: '10px' }} value={selectedTab} onChange={handleTabChange} aria-label="Customer data tabs" >
-        <Tab label="Documents" sx={{ marginRight: '2px' }} />
+        {/* <Tab label="Documents" sx={{ marginRight: '2px' }} /> */}
         <Tab label="Beneficiaries" sx={{ marginRight: '2px' }} />
         <Tab label="Transactions" sx={{ marginRight: '2px' }} />
       </Tabs>
 
       {/* Tab Content */}
-      {selectedTab === 0 && <DocumentComponent />}
-      {selectedTab === 1 && <BeneficiaryTable beneficiary={beneficiaries} deleteBeneficiary={beneficiaries}/>}
+      {/* {selectedTab === 0 && <DocumentComponent />} */}
+      {selectedTab === 0 && <BeneficiaryTable beneficiary={beneficiaries} deleteBeneficiary={beneficiaries}/>}
     
-      {selectedTab === 2 && <TransactionTable 
+      {selectedTab === 1 && <TransactionTable 
         //@ts-ignore
        transaction={transactions}/>}
 

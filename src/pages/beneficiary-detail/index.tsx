@@ -134,7 +134,7 @@ const BeneficiaryDetailPage = () => {
               Beneficiary Details
             </Typography>
             <FormControlLabel
-              control={<Switch checked={isEditable} onChange={handleToggleChange} />}
+              control={<Switch disabled checked={isEditable} onChange={handleToggleChange} />}
               label="Edit Mode"
             />
        </Box>
@@ -428,9 +428,9 @@ const BeneficiaryDetailPage = () => {
 
         <Grid container spacing={2} marginBottom={1}>
         <Grid item xs={12} sm={4}>
-          <Button variant="contained" fullWidth onClick={handleSearchTransaction}>
+          {/* <Button variant="contained" fullWidth onClick={handleSearchTransaction}>
             Show Transaction
-          </Button>
+          </Button> */}
         </Grid>
       </Grid> 
 
@@ -453,9 +453,9 @@ const BeneficiaryDetailPage = () => {
       {/* Save and Back Buttons */}
       <Grid container spacing={2} sx={{ marginTop: 2 }} display={'flex'}>
       <Grid item xs={12} sm={3}>
-          <Button variant="outlined" onClick={handleBack} fullWidth>
+          {/* <Button variant="outlined" onClick={handleBack} fullWidth>
             Back to List
-          </Button>
+          </Button> */}
         </Grid>
         <Grid item xs={12} sm={3}>
           {isEditable && (

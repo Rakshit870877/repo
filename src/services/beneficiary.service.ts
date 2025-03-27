@@ -32,9 +32,10 @@ class BeneficiaryService extends BaseService {
           }
 
           async getTransactionsByBeneficiaryId(beneficiaryId: string): Promise<BeneficiaryFormData> {
-            let url = VITE_APP_TRANSACTION+`/transaction-details/beneficiary/${beneficiaryId}`;  
+            let url = `/api/transactions/transaction-details/beneficiary/${beneficiaryId}`;  
             try {
-              const {data} = await axios.get(url); 
+
+              const {data} = await api1.get(url); 
               console.log("responseeee", data)
               return data;  
             } catch (err) {
@@ -66,7 +67,7 @@ class BeneficiaryService extends BaseService {
           }
 
           async updateBeneficiaryForm( payload: BeneficiaryFormData): Promise<BeneficiaryResponse> {
-            let url = `${VITE_APP_BENIFICIARY}/beneficiary/update`;  
+            let url = `/api/applicant/beneficiary/update`;  
             try {
                 let response = await axios.post(url, payload);  
                 return response.data;  
