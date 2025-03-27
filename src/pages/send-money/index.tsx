@@ -183,6 +183,28 @@ const SendMoneyPage = () => {
     // console.log(se)
   }, [])
 
+
+  useEffect(()=>{
+
+
+    setSelectedTimeTableRow(null)
+    // kyc_service.getCharges('SA', sendCountry, amount,1).then(data => {
+    //   console.log(data)
+    //   if (data?.length > 0) {
+    //     console.log()
+    //     setSelectedTimeCharge(data[0].minimumCharges)
+
+    //   }
+    //   else{
+
+    //     setSelectedTimeCharge(0)
+    //   }
+
+
+
+    // })
+
+  },[amount])
   let kyc_service = new KycService()
 
   const handleCountryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -239,6 +261,9 @@ const SendMoneyPage = () => {
                 console.log()
                 setSelectedTimeCharge(data[0].minimumCharges)
 
+              }else{
+
+                setSelectedTimeCharge(0)
               }
 
 
@@ -647,7 +672,12 @@ const SendMoneyPage = () => {
                     variant="filled"
                     fullWidth
                     onChange={(e) => {
+
+
+
                       setAmount(e.target.value as any)
+                   
+                      setSelectedTimeCharge(0)
                     }}
                   />
                 </Grid>
@@ -778,7 +808,7 @@ const SendMoneyPage = () => {
 
             <Box sx={{ textAlign: 'left', marginTop: 2 }}>
               <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                Settlement Amount: {amount * Number(forexRate) + ' ' + currency}
+                Settlement Amount: {  (amount * Number(forexRate)).toFixed(4) + ' ' + currency}
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                 Total Amount: {Number(amount) + Number(selecteTimeChange) + ' ' + sourceCountry}

@@ -277,9 +277,12 @@ setPostalSelectedCity(city);
   }, [applicantId]);
 
   const fetchTransactions = useCallback(async () => {
+
     if (!applicantId) return;
 
     try {
+
+      console.log("getting trx for applicant Id",applicantId)
       const data = await applicant_service.getTransactionsByApplicantId(applicantId);
       const transactionArray = Array.isArray(data) ? data : [data];
       console.log("__________-hudhush________ ",transactionArray);
@@ -347,10 +350,10 @@ setPostalSelectedCity(city);
     //@ts-ignore
     event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
-    if (newValue === 1) {
+    if (newValue === 0) {
       await fetchBeneficiaries();
     }
-    else if(newValue===2){
+    else if(newValue===1){
       await fetchTransactions();
     }
   };

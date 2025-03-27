@@ -314,7 +314,7 @@ console.log(row)
       </Typography>
 
       {/* Filters */}
-      <Grid container spacing={2} marginBottom={2}>
+      {/* <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={4}>
           <TextField
             sx={{
@@ -412,7 +412,7 @@ console.log(row)
       </Grid>
       <Button variant="contained" onClick={applyFilters}>
         Apply Filters
-      </Button>
+      </Button> */}
 
       {/* Data Grid */}
       <Box

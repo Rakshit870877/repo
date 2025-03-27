@@ -232,8 +232,26 @@ const TransactionPage = () => {
     { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'destination', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'value', headerName: 'Amount Zar', flex: 1, headerClassName: 'super-app-theme--header' },
+
+   
+    {
+      field: 'applicant',
+      headerName: 'Applicant',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params) => params.value?.applicantId || ''
+    },
+    
+
+
+    
+
+
+    { field: 'forex', headerName: 'Exchange Rate', flex: 1, headerClassName: 'super-app-theme--header' },
+
+    { field: 'charges', headerName: 'Charges', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'final_amount', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'final_amount', headerName: 'Settlement Amount INR', flex: 1, headerClassName: 'super-app-theme--header' },
     {
       field: "stpError",
       headerName: "STP Error",
@@ -251,7 +269,7 @@ const TransactionPage = () => {
           }} label="Error" color="error" />
         ),
     },
-    { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
+    // { field: 'destinationBank', headerName: 'Destination Bank', flex: 1, headerClassName: 'super-app-theme--header' },
 
     {
       field: 'action',
@@ -289,14 +307,31 @@ const TransactionPage = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
         params?.value?.reporting == "Reported" ? (
-          <Tooltip title={params?.value?.reporting || "Unknown Error"} arrow>
-            <Chip label="Reported" color="success" />
-          </Tooltip>
+          params.value.status
         ) : (
-          <Chip label="Pending" color="error" />
+          (
+            params.value.status
+             )
         ),
     },
 
+
+    
+
+    {
+      field: "owCreatedDate",
+      headerName: "Date",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      renderCell: (
+        params
+           
+        )=>{
+ params.value?.owCreatedDate
+
+        }
+     
+    },
 
 
     {
@@ -310,7 +345,7 @@ const TransactionPage = () => {
             <Chip label="Pending" color="error" />
           </Tooltip>
         ) : (
-          <Chip label="Done" color="success" />
+       params.value.status
         ),
     },
 
@@ -439,19 +474,21 @@ const TransactionPage = () => {
             ...e.transactionOutward,
             ...e.beneficiary,
             ...e.applicant,
+
+
             id: e?.transactionOutward.transactionNumber,
             destination: e?.transactionOutward?.receiveCountry,
-            value: e?.transactionOutward?.settlementAmount,
+            value: e?.transactionOutward?.principalAmount,
             currency: e?.transactionOutward?.settlementCurrency,
-            settlement: e?.transactionOutward?.settlementAmount,
+            settlement: e?.transactionOutward?.principalAmount   *e?.transactionOutward?.exchangeRates,
             destinationBank: e?.transactionOutward?.destinationBankBicCode,
             forex: e?.transactionOutward?.exchangeRates,
             date: e?.transactionOutward?.owCreatedDate,
 
 
 
-            reporting: e?.transactionOutward?.reportingStatus == "ACK" ? "Reported" : "Pending",
-            status: e?.transactionOutward?.transactionStatus == "CR" ? "Pending" : "Done",
+            reporting: e?.transactionOutward?.reportingStatus ,
+            status: e?.transactionOutward?.transactionStatus ,
             final_amount: e?.transactionOutward?.exchangeRates * e?.transactionOutward.principalAmount,
             applicant: e?.applicant
           }
@@ -706,7 +743,7 @@ const TransactionPage = () => {
             </Typography>
             <Grid container spacing={2} mb={2}>
               <Grid item xs={12} md={6}>
-                <TextField label="Account Number" variant="filled" fullWidth defaultValue={transactionDetails?.iban} size="small" disabled />
+                <TextField label="Account Number" variant="filled" fullWidth defaultValue={transactionDetails?.accountNumber} size="small" disabled />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField label="Bank" variant="filled" fullWidth defaultValue={transactionDetails?.bankName} size="small" disabled />
