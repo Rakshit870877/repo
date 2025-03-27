@@ -17,7 +17,7 @@ const BopTable: React.FC = () => {
   }, [])
 
   const fetchBopListingData = async () => {
-    fetch(`${backendUrl}/bob/getAll`, {
+    fetch(`${backendUrl}/bop/getAll`, {
       method: 'GET', // The HTTP method (GET by default, so this is optional)
       headers: {
         'Content-Type': 'application/json', // Optional: Set content-type header
@@ -76,8 +76,9 @@ const BopTable: React.FC = () => {
       flex: 1,
       headerClassName: 'super-app-theme--header',
       renderCell: (params: any) => (
+        
         <IconButton onClick={() => {
-          navigate(`/bop-details/${params.row.transaction_number}`)
+          navigate(`/bop-details/${params.row.transaction_number}/${params.row.transaction_attempt}`)
         }}>
           <VisibilityIcon  style={{
             cursor: 'pointer',
