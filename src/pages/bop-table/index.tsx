@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography,IconButton } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+
 
 const {VITE_FOREX_NODE_APP_URL} = import.meta.env;
 const backendUrl = VITE_FOREX_NODE_APP_URL
@@ -63,19 +65,25 @@ const BopTable: React.FC = () => {
       headerClassName: 'super-app-theme--header',
     },
     {
+      field: 'sap_status',
+      headerName: 'Sap Status',
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+    },
+    {
       field: 'id1',
       headerName: 'Action',
       flex: 1,
       headerClassName: 'super-app-theme--header',
       renderCell: (params: any) => (
-        <a
-        onClick={()=>navigate(`/bop-details/${params.row.transaction_number}`)}
-          style={{
+        <IconButton onClick={() => {
+          navigate(`/bop-details/${params.row.transaction_number}`)
+        }}>
+          <VisibilityIcon  style={{
             cursor: 'pointer',
-          }}
-        >
-          View More
-        </a>
+          }} />
+        </IconButton>
+        
       ),
     },
   ]

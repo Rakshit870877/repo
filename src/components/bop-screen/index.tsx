@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
 import { useNavigate, useParams } from 'react-router-dom'
 
-const {VITE_FOREX_NODE_APP_URL} = import.meta.env;
+const { VITE_FOREX_NODE_APP_URL } = import.meta.env;
 const backendUrl = VITE_FOREX_NODE_APP_URL
 
 const BopScreen: React.FC = () => {
@@ -99,6 +99,18 @@ const BopScreen: React.FC = () => {
     }))
   }
 
+  const handleBopCategoryChange = (e: React.ChangeEvent<HTMLInputElement | { name?: any; value: any }>) => {
+    const { name, value } = e.target
+    setBobCat((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleCancelReplaceBopFunc = () => {
+    console.log("in category section")
+  }
+
   const fetchBopBetailById = async () => {
     fetch(`${backendUrl}/bob/${transactionId}`, {
       method: 'GET', // The HTTP method (GET by default, so this is optional)
@@ -123,6 +135,7 @@ const BopScreen: React.FC = () => {
       })
       .catch((error) => console.error(error))
   }
+
   const fetchBopCategoryDataById = async () => {
     fetch(`${backendUrl}/bopCategory/${transactionId}`, {
       method: 'GET', // The HTTP method (GET by default, so this is optional)
@@ -139,6 +152,8 @@ const BopScreen: React.FC = () => {
       .catch((error) => console.error(error))
   }
 
+  
+
   useEffect(() => {
     if (transactionId) {
       fetchBopBetailById()
@@ -147,8 +162,8 @@ const BopScreen: React.FC = () => {
   }, [])
 
   return (
-    <>
-      <Box>
+    <Box style={{width:'80vw'}}>
+      <Box >
         <Typography variant="h5">Bop Details</Typography>
       </Box>
 
@@ -161,8 +176,7 @@ const BopScreen: React.FC = () => {
             name="transaction_number"
             value={formData.transaction_number || ''}
             disabled
-            fullWidth
-          />
+            fullWidth />
         </Grid>
         <Grid item xs={3}>
           <TextField
@@ -178,52 +192,52 @@ const BopScreen: React.FC = () => {
           <TextField size="small" label="Status" variant="outlined" name="status" value={formData.status || ''} fullWidth />
         </Grid>
         <Grid item xs={3}>
-          <TextField size="small" label="Nationality" variant="outlined" name="nationality" value={formData.nationality || ''} fullWidth />
+          <Button variant="contained" color="primary" onClick={() => handleCancelReplaceBopFunc()}>
+            Cancel Replace Bop
+          </Button>
         </Grid>
+      </Grid>
+
+      <Box mt={3}>
+        <Typography variant="h5" >Bop Category Details</Typography>
+      </Box>
+
+      <Grid container spacing={2} mt={1}>
         <Grid item xs={3}>
           <TextField
             size="small"
             label="Bop Category"
             variant="outlined"
             name="bop_category"
-            value={bobCat?.bop_category || 'Gift'}
-            disabled
+            value={bobCat?.bop_category || '401'}
             fullWidth
+            onChange={handleBopCategoryChange}
           />
         </Grid>
         <Grid item xs={3}>
           <TextField
             size="small"
-            label="Transaction Purpose"
+            label="Bop Sub Category"
             variant="outlined"
-            name="transaction_purpose"
-            value={bobCat?.transaction_purpose || ''}
-            disabled
+            name="bop_subcategory"
+            value={bobCat?.bop_subcategory || '00'}
             fullWidth
+            onChange={handleBopCategoryChange}
           />
         </Grid>
-        <Grid item xs={3}>
+
+        <Grid item xs={6}>
           <TextField
             size="small"
-            label="Adhoc Subject"
+            label="Category Description"
             variant="outlined"
-            name="adhoc_subject"
-            value={bobCat?.adhoc_subject || ''}
-            disabled
+            name="category_description"
+            value={bobCat?.category_description || 'Bop Category Descriptionn'}
             fullWidth
+            onChange={handleBopCategoryChange}
           />
         </Grid>
-        <Grid item xs={3}>
-          <TextField
-            size="small"
-            label="Subject Description"
-            variant="outlined"
-            name="subject_description"
-            value={bobCat?.subject_description || ''}
-            disabled
-            fullWidth
-          />
-        </Grid>
+
         <Grid item xs={3}>
           <TextField
             size="small"
@@ -257,8 +271,6 @@ const BopScreen: React.FC = () => {
             fullWidth
           />
         </Grid>
-
-        {/* principalCurrency */}
         <Grid item xs={3}>
           <TextField
             size="small"
@@ -270,6 +282,64 @@ const BopScreen: React.FC = () => {
             fullWidth
           />
         </Grid>
+
+        <Grid item xs={6}>
+          <TextField
+            size="small"
+            label="Excon Ruling Indicator"
+            variant="outlined"
+            name="excon_ruling_indicator"
+            value={bobCat?.excon_ruling_indicator || ''}
+            fullWidth
+            onChange={handleBopCategoryChange}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            size="small"
+            label="Excon Ruling Section"
+            variant="outlined"
+            name="excon_ruling_section"
+            value={bobCat?.excon_ruling_section || ''}
+            fullWidth
+            onChange={handleBopCategoryChange}
+          />
+        </Grid>
+
+        {/* <Grid item xs={3}>
+          <TextField
+            size="small"
+            label="Transaction Purpose"
+            variant="outlined"
+            name="transaction_purpose"
+            value={bobCat?.transaction_purpose || ''}
+            disabled
+            fullWidth
+          />
+        </Grid> */}
+        <Grid item xs={6}>
+          <TextField
+            size="small"
+            label="Adhoc Subject"
+            variant="outlined"
+            name="adhoc_subject"
+            value={bobCat?.adhoc_subject || ''}
+            disabled
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            size="small"
+            label="Subject Description"
+            variant="outlined"
+            name="subject_description"
+            value={bobCat?.subject_description || ''}
+            disabled
+            fullWidth
+          />
+        </Grid>
+
       </Grid>
 
       <Box mt={3}>
@@ -780,7 +850,7 @@ const BopScreen: React.FC = () => {
           Save
         </Button>
       </Box>
-    </>
+    </Box>
   )
 }
 
