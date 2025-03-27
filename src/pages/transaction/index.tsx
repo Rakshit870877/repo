@@ -274,7 +274,7 @@ const TransactionPage = () => {
           {params?.row?.transactionNumber? <a style={{
               cursor: 'pointer',
             }}
-            onClick={()=>navigate(`/bop-details/${params.row.transactionNumber}`)}>
+            onClick={()=>navigate(`/bop-details/${params.row.transactionNumber}/${params.row.tran_bop_attempt}`)}>
             View Bop
           </a>:null}
          </>

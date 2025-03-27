@@ -190,7 +190,7 @@ function App() {
                 <Route path="users" element={<UserList />} />
                 {/* <Route path="users/add" element={<UserAdd />} /> */}
                 <Route path="price" element={<CurrencyBarChart />} />
-                <Route path="bop-details/:transactionId" element={<BopScreen />} />
+                <Route path="bop-details/:transactionId/:transaction_attempt" element={<BopScreen />} />
                 <Route path="bop-listing" element={<BopTable />} />
 
                 {/* <Route path="customer" element={<CustomerDatabase/>}/> */}
