@@ -50,6 +50,12 @@ const LoginPage = () => {
   useEffect(() => {
     if (local_service.get_accesstoken()) {
       navigate('/price')
+    
+      setTimeout(()=>{
+window.location.reload()
+      
+      },2000)
+    
     }
   }, [navigate, local_service])
 

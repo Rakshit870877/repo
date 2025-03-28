@@ -70,6 +70,6 @@ export const notificationState = atom({
 
 export const selectedAppState = atom({
   key: 'selectedAppState',
-  default: '',
+  default: 'Price',
   effects_UNSTABLE: [localStorageEffect('selectedAppState')],
 })

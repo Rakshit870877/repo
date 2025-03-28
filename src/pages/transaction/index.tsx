@@ -17,6 +17,17 @@ import { useRecoilState } from 'recoil'
 import { loaderState, loaderStateNew } from '@/states/state'
 import { ApplicantService } from '@/services/applicant.service'
 import CompliancTool from '@/components/compliance-tool'
+function formatDateTime(timestamp:any) {
+  const date = new Date(timestamp);
+
+  // Format Date as DD/MM/YYYY
+  const formattedDate = date.toLocaleDateString('en-GB'); 
+
+  // Format Time as HH:MM:SS
+  const formattedTime = date.toLocaleTimeString('en-GB', { hour12: false });
+
+  return `${formattedDate} and ${formattedTime}`;
+}
 
 const sampleInwardsData: Array<TransactionInwardCalclulated> = [
   {
@@ -327,7 +338,7 @@ const TransactionPage = () => {
         params
            
         )=>{
- params.value?.owCreatedDate
+ formatDateTime(params.value?.owCreatedDate)
 
         }
      
