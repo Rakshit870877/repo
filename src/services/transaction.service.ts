@@ -1,8 +1,12 @@
-import { TransactionDetailsResponse } from '@/types/transaction.type'
+import { TransactionDetailsResponse, TransactionInward } from '@/types/transaction.type'
 import api1 from './apis/api1'
 import { BaseService } from './base.service'
 import axios from 'axios'
 const { VITE_APP_BACKEND, VITE_APP_URL, VITE_APP_APPLICANT, VITE_APP_TRANSACTION,VITE_FOREX_APP_CREDENTIALS } = import.meta.env
+
+
+
+
 
 export class TransactionService extends BaseService {
   async gettransactions(): Promise<TransactionDetailsResponse> {
@@ -11,6 +15,41 @@ export class TransactionService extends BaseService {
  
     
     let url = '/api/transactions/transaction-details'
+    try {
+
+
+      // http://64.227.139.142:9091/api/applicant/applicant-all-details
+ 
+
+
+
+      let data = await api1.get(url)
+      
+      return data as any
+    } catch (e) {
+      throw new Error(e as any)
+    }
+  }
+
+
+  async getInwardTransaction(receving_country:any): Promise<Array<TransactionInward>> {
+   
+    let url = `/api/transactions/transaction-inward/receivingCountry/${receving_country}`
+    try {
+
+      let data = await api1.get(url)
+      console.log(data)
+      
+      return data?.transactionDetailList as any
+    } catch (e) {
+      throw new Error(e as any)
+    }
+  }
+
+
+  async getOutwardTransaction(): Promise<TransactionDetailsResponse> {
+   
+    let url = `/api/transactions/transaction-details`
     try {
 
 

@@ -14,7 +14,7 @@ import {
 } from '@/types/transaction.type'
 import { Filter1Outlined, SettingsAccessibilityRounded, Sync } from '@mui/icons-material'
 import { useRecoilState } from 'recoil'
-import { loaderState, loaderStateNew } from '@/states/state'
+import { loaderState, loaderStateNew, selectedCountryState } from '@/states/state'
 import { ApplicantService } from '@/services/applicant.service'
 import CompliancTool from '@/components/compliance-tool'
 function formatDateTime(timestamp:any) {
@@ -83,7 +83,7 @@ const TransactionPage = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'destination', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'value', headerName: 'Amount ZAR', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'value', headerName: 'Amount', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'currency', headerName: 'Currency', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'settlement', headerName: 'Settlement', flex: 1, headerClassName: 'super-app-theme--header' },
 
@@ -242,7 +242,7 @@ const TransactionPage = () => {
   const columns_outward: GridColDef[] = [
     { field: 'id', headerName: 'Transaction ID', flex: 1, headerClassName: 'super-app-theme--header' },
     { field: 'destination', headerName: 'Destination', flex: 1, headerClassName: 'super-app-theme--header' },
-    { field: 'value', headerName: 'Amount Zar', flex: 1, headerClassName: 'super-app-theme--header' },
+    { field: 'value', headerName: 'Amount ', flex: 1, headerClassName: 'super-app-theme--header' },
 
    
     {
@@ -367,6 +367,33 @@ const TransactionPage = () => {
   ]
 
 
+
+  const inward_columns = [
+    { field: 'transactionNumberIw', headerName: 'Transaction Number IW', flex: 1, headerClassName: 'super-app-theme--header'  },
+    { field: 'owTransactionNumber', headerName: 'OW Transaction Number', flex: 1, headerClassName: 'super-app-theme--header'  },
+    { field: 'sendingCountry', headerName: 'Sending Country', width: 130, headerClassName: 'super-app-theme--header'  },
+    { field: 'receivingCountry', headerName: 'Receiving Country', width: 130, headerClassName: 'super-app-theme--header'  },
+    { field: 'settlementCurrency', headerName: 'Settlement Currency', width: 150 , headerClassName: 'super-app-theme--header' },
+    { field: 'settlementAmount', headerName: 'Settlement Amount', type: 'number', width: 150, headerClassName: 'super-app-theme--header'  },
+    { field: 'reportingStatus', headerName: 'Reporting Status', width: 130, headerClassName: 'super-app-theme--header'  },
+    { field: 'destinationBankCode', headerName: 'Destination Bank Code', width: 180, headerClassName: 'super-app-theme--header'  },
+    // {
+    //   field: 'inCreatedDate',
+    //   headerName: 'Created Date',
+    //   width: 180,
+    //   valueGetter: (params) => new Date(params.value).toLocaleString('en-GB'),
+    //    headerClassName: 'super-app-theme--header' 
+    // },
+    // {
+    //   field: 'inModifiedDate',
+    //   headerName: 'Modified Date',
+    //   width: 180,
+    //   valueGetter: (params) => new Date(params.value).toLocaleString('en-GB'),
+    //    headerClassName: 'super-app-theme--header' 
+    // },
+  ];
+  
+
   const [isDrawerOpen, setDrawerOpen] = useState(false)
   const [modalOpen, setmodalOpen] = useState(false)
 
@@ -378,7 +405,7 @@ const TransactionPage = () => {
   const [toolopen, setToolOpen] = useState(false)
   const [errors, seterrors] = useState(["Invalid email", "Password too short", "Username required"])
 
-
+const[selectedCountryOption,setSelectedCountryOption]=useRecoilState(selectedCountryState)
   //@ts-ignore
   const [applicant, setApplicant] = useState<Applicant>(null)
 
@@ -453,6 +480,16 @@ const TransactionPage = () => {
 
     setcommonloader(true)
 
+
+    transaction_Service.getInwardTransaction(selectedCountryOption== "IN"?"IN":"SA").then(data=>{
+      console.log('Inward Transaction')
+      console.log(data)
+      setInboundTransaction(data)
+
+  
+      
+    })
+
     transaction_Service
       .gettransactions()
       .then((data: TransactionDetailsResponse) => {
@@ -480,33 +517,41 @@ const TransactionPage = () => {
         })
 
 
-        let outbound: Array<TansactionOutwardCalculated>[] | any = data?.transactionDetailsList.map((e) => {
+        let outbound: Array<TransactionOutward> | any = data?.transactionDetailsList
+        ?.map((e) => {
           return {
             ...e.transactionOutward,
             ...e.beneficiary,
             ...e.applicant,
-
-
-            id: e?.transactionOutward.transactionNumber,
+      
+            id: e?.transactionOutward?.transactionNumber,
             destination: e?.transactionOutward?.receiveCountry,
             value: e?.transactionOutward?.principalAmount,
             currency: e?.transactionOutward?.settlementCurrency,
-            settlement: e?.transactionOutward?.principalAmount   *e?.transactionOutward?.exchangeRates,
+            settlement: e?.transactionOutward?.principalAmount * e?.transactionOutward?.exchangeRates,
             destinationBank: e?.transactionOutward?.destinationBankBicCode,
             forex: e?.transactionOutward?.exchangeRates,
             date: e?.transactionOutward?.owCreatedDate,
-
-
-
-            reporting: e?.transactionOutward?.reportingStatus ,
-            status: e?.transactionOutward?.transactionStatus ,
-            final_amount: e?.transactionOutward?.exchangeRates * e?.transactionOutward.principalAmount,
-            applicant: e?.applicant
-          }
+  
+            reporting: e?.transactionOutward?.reportingStatus,
+            status: e?.transactionOutward?.transactionStatus,
+            final_amount: e?.transactionOutward?.exchangeRates * e?.transactionOutward?.principalAmount,
+            applicant: e?.applicant,
+          };
         })
+        ?.filter((transaction) => {
+          if (selectedCountryOption === "IN") {
+            return (transaction.destination?.toLowerCase() !== "in");
+          }
+          else{
+            return (transaction.destination?.toLowerCase() !== "za");
 
-        console.log("outbound", outbound)
-        console.log(outbound)
+          }
+
+          return true; // If selectedCountryOption is not "IN", include all destinations
+        });
+      
+
 
         let user: Array<Applicant>[] | any = data?.transactionDetailsList.map((e) => {
           return {
@@ -515,9 +560,9 @@ const TransactionPage = () => {
           }
         })
 
-        setInboundTransaction(inbound)
+     
 
-        setInboundTransaction([])
+        // setInboundTransaction([])
         setTransactionData(inbound)
         setOutboundTransaction(outbound)
         setcommonloader(false)
@@ -648,9 +693,10 @@ const TransactionPage = () => {
 
 
           transactionType == 'inwards' ? (<DataGrid
-            rows={inboundTransaction}
-            columns={columns_inwards}
-            getRowId={(row) => row.id}
+            rows={inboundTransaction?.length>0?inboundTransaction:[]}
+            //@ts-ignore
+            columns={inward_columns}
+            getRowId={(row) => row?.transactionNumberIw}
             //@ts-ignore
             pageSize={5}
             rowsPerPageOptions={[5]}

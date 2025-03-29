@@ -63,10 +63,10 @@ class AuthService extends BaseService {
     }
   }
 
-  async loginAdmin(payload: { email: String; password: String; notification_token?: String }): Promise<CustomerResponse> {
-    let url = '/user/login'
+  async loginAdmin(payload: { username: String; password: String }): Promise<CustomerResponse> {
+    let url = '/api/kyc/auth/login'
     try {
-      let { data } = await api1.post(url, payload)
+      let {data}  = await api1.post(url, payload)
       return data
     } catch (err) {
       throw new Error("Can't Verify your Identiy")

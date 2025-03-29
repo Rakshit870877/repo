@@ -112,7 +112,7 @@ const LoaderBackdrop = ({
   </Backdrop>
 )
 
-let local_service = new LocalStorageService()
+let local_service:any = new LocalStorageService()
 const DashboardContainer = styled(Box)({
   display: 'flex',
 })
@@ -450,7 +450,7 @@ const DashboardLayout = () => {
 
 selecteCountryState=="SA"?<>
 
-<Avatar src={Chuks}>SK</Avatar>
+<Avatar >{local_service.get_user().firstName[0] }</Avatar>
 
 <Box ml={1}>
               <Typography
@@ -461,8 +461,8 @@ selecteCountryState=="SA"?<>
                   color: 'white',
                 }}
               >
-                <strong>Chakshu Chopra </strong>
-              
+                <strong>{ (local_service.get_user().firstName ) +" "+(local_service.get_user().lastName)}</strong>
+               
               </Typography>
 
               <Stack direction="row">
@@ -470,13 +470,13 @@ selecteCountryState=="SA"?<>
                   variant="subtitle2"
                   sx={{
                     fontFamily: 'sans-serif',
-                    fontSize: '12px',
+                    fontSize: '11px',
                     color: 'white',
                   }}
                 >
-                  <strong>UID: 14242</strong>{' '}
-                  {/* {local_service.get_role() ? local_service.get_role()?.toLocaleUpperCase().replace(/"/g, '') : 'Siddhant Kaushik'} */}
-                </Typography>
+                     <strong>{ (local_service.get_user().id)}</strong>
+        
+                      </Typography>
 
                 <Za
                   style={{
@@ -490,7 +490,7 @@ selecteCountryState=="SA"?<>
               </Stack>
             </Box>
 </>:<>
-<Avatar src={John}>SK</Avatar>
+<Avatar >{local_service.get_user().firstName[0] }</Avatar>
 
 <Box ml={1}>
               <Typography
@@ -501,7 +501,7 @@ selecteCountryState=="SA"?<>
                   color: 'white',
                 }}
               >
-                <strong>John  D'Souza </strong>
+                <strong>{ (local_service.get_user().firstName ) +" "+(local_service.get_user().lastName)}</strong>
                
               </Typography>
 
@@ -514,7 +514,8 @@ selecteCountryState=="SA"?<>
                     color: 'white',
                   }}
                 >
-                  UID: 1422{' '}
+                     <strong>{ (local_service.get_user().id)}</strong>
+        
                       </Typography>
 
                 <In

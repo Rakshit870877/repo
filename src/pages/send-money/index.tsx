@@ -43,7 +43,7 @@ import { KycService } from '@/services/kyc.service'
 import PaymentPopup from '@/components/payment-popup'
 import BobCategoryDropdown from '@/components/bob-matrix'
 import { useRecoilState } from 'recoil'
-import { alertState, alertTextState, alertTypeState, loaderStateNew } from '@/states/state'
+import { alertState, alertTextState, alertTypeState, loaderStateNew, selectedCountryState } from '@/states/state'
 import { Segment } from '@mui/icons-material'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -84,6 +84,10 @@ const countries = [
   { code: 'IN', name: 'India', currency: 'INR', forexRate: '4.57', flag: 'https://flagcdn.com/in.svg' },
 
   // { code: 'ZA', name: 'South Africa', currency: 'ZAR', forexRate: '4.7', flag: 'https://flagcdn.com/za.svg' }, // Added South Africa
+]
+const countries_in = [
+
+  { code: 'ZA', name: 'South Africa', currency: 'ZAR', forexRate: '4.7', flag: 'https://flagcdn.com/za.svg' }, // Added South Africa
 ]
 
 const paymentGateways = [
@@ -130,7 +134,7 @@ const SendMoneyPage = () => {
   const [gifsuccess, setGifSuccess] = useState(false)
   const [sendCountry, setsendCountry] = useState('')
   const [commonloader, setcommonloader] = useRecoilState(loaderStateNew)
-
+const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCountryState)
 
 //   const[selected ]
 
@@ -463,38 +467,56 @@ const SendMoneyPage = () => {
       // })
        })
 
-      // if (data.id) {
-      //   // HTML content for the new window
-      //   const htmlContent = `
-      //     <!DOCTYPE html>
-      //     <html lang="en">
-      //     <head>
-      //         <meta charset="UTF-8">
-      //         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      //         <title>Peach Payments</title>
-      //         <script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${data.id}"></script>
-      //     </head>
-      //     <body>
-      //         <h2>Complete Your Payment</h2>
-      //         <form action="https://reactnative.dev/" class="paymentWidgets">
-      //             VISA MASTER
-      //         </form>
-      //     </body>
-      //     </html>
-      //   `;
+       if (data.id) {
+        // HTML content for the new window
+        const htmlContent = `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Peach Payments</title>
+              <script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${data.id}"></script>
+          </head>
+          <body>
+              <h2>Complete Your Payment</h2>
+              <form action="https://reactnative.dev/" class="paymentWidgets">
+                  VISA MASTER
+              </form>
+              <button id="closeBtn">Close</button>
+              <script>
+                document.getElementById('closeBtn').addEventListener('click', function() {
+                  window.close();
+                });
+              </script>
+          </body>
+          </html>
+        `;
+      
+        // Open a new window and write the HTML content
+        const paymentWindow = window.open("", "_blank", "width=600,height=800");
+        if (paymentWindow) {
+          paymentWindow.document.open();
+          paymentWindow.document.write(htmlContent);
+          paymentWindow.document.close();
+      
+          // Check if the window is closed
+          const interval = setInterval(() => {
+            if (paymentWindow.closed) {
+              clearInterval(interval);
+              navigate('/transaction/create'); // Navigate when the window is closed
+            
+            }
+          
+          }, 50);
 
-      //   // Open a new window and write the HTML content
-      //   const paymentWindow = window.open("", "_blank", "width=600,height=800");
-      //   if (paymentWindow) {
-      //     paymentWindow.document.open();
-      //     paymentWindow.document.write(htmlContent);
-      //     paymentWindow.document.close();
-      //   } else {
-      //     alert("Popup blocked! Please allow popups for this site.");
-      //   }
-      // } else {
-      //   alert("Failed to create payment session");
-      // }
+
+
+        } else {
+          alert("Popup blocked! Please allow popups for this site.");
+        }
+      }
+      
     } catch (error) {
       console.error("Payment initiation failed:", error);
       alert("Error processing payment!");
@@ -575,13 +597,13 @@ const SendMoneyPage = () => {
                   placeholder="Type a  User name or ID..."
                   InputProps={{
                     startAdornment: selectedUser && (
-                      <InputAdornment position="start">
+                      <InputAdornment  sx={{marginBottom:'10px'}} position="start">
                         <Avatar
                           //@ts-ignore
-                          src={selectedUser.profilePhoto}
+                          // src={selectedUser.profilePhoto}
                           alt={selectedUser.name}
                           style={{ marginRight: '8px' }}
-                        />
+                        >{selectedUser.name[0]}</Avatar>
                       </InputAdornment>
                     ),
                   }}
@@ -601,10 +623,10 @@ const SendMoneyPage = () => {
                         >
                           <ListItemAvatar>
                             <Avatar
-                              src={
-                                //@ts-ignore
-                                user.profilePhoto
-                              }
+                              // src={
+                              //   //@ts-ignore
+                              //   user.profilePhoto
+                              // }
                               //@ts-ignore
                               alt={user.name}
                             >
@@ -653,14 +675,16 @@ const SendMoneyPage = () => {
                       onChange={handleCountryChange}
                       displayEmpty
                     >
-                      {countries.map((country) => (
-                        <MenuItem key={country.code} value={country.code}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar src={country.flag} alt={country.name} sx={{ width: 24, height: 24, marginRight: '8px' }} />
-                            <Typography>{country.name}</Typography>
-                          </div>
-                        </MenuItem>
-                      ))}
+{(selectedCountryoption === "IN" ? countries_in : countries).map((country) => (
+  <MenuItem key={country.code} value={country.code}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar src={country.flag} alt={country.name} sx={{ width: 24, height: 24, marginRight: '8px' }} />
+      <Typography>{country.name}</Typography>
+    </div>
+  </MenuItem>
+))}
+
+
                     </Select>
                   </FormControl>
                 </Grid>
@@ -853,14 +877,14 @@ const SendMoneyPage = () => {
                     onChange={handleCountryChange}
                     displayEmpty
                   >
-                    {countries.map((country) => (
-                      <MenuItem key={country.code} value={country.code}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar src={country.flag} alt={country.name} sx={{ width: 24, height: 24, marginRight: '8px' }} />
-                          <Typography>{country.name}</Typography>
-                        </div>
-                      </MenuItem>
-                    ))}
+                   {(selectedCountryoption === "IN" ? countries_in : countries).map((country) => (
+  <MenuItem key={country.code} value={country.code}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar src={country.flag} alt={country.name} sx={{ width: 24, height: 24, marginRight: '8px' }} />
+      <Typography>{country.name}</Typography>
+    </div>
+  </MenuItem>
+))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -900,13 +924,15 @@ const SendMoneyPage = () => {
                     placeholder="Type a  User name or ID..."
                     InputProps={{
                       startAdornment: selectedUser && (
-                        <InputAdornment position="start">
+                        <InputAdornment position="start" sx={{
+                          marginBottom:'10px'
+                        }}>
                           <Avatar
                             //@ts-ignore
-                            src={selectedUser.profilePhoto}
+                            // src={selectedUser.profilePhoto}
                             alt={selectedUser.name}
                             style={{ marginRight: '8px' }}
-                          />
+                          >{selectedUser.name[0]}</Avatar>
                         </InputAdornment>
                       ),
                     }}

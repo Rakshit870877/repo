@@ -149,6 +149,19 @@ export interface TansactionOutwardCalculated {
   applicant: string
   activeStatus: boolean
 }
+
+export interface TransactionInward {
+  transactionNumberIw: string;
+  owTransactionNumber: string;
+  sendingCountry: string;
+  receivingCountry: string;
+  settlementCurrency: string;
+  settlementAmount: number;
+  reportingStatus: string;
+  destinationBankCode: string;
+  inCreatedDate: string; // ISO date string
+  inModifiedDate: string; // ISO date string
+}
 export interface Beneficiary {
   beneficiaryId: string
   residenceCountry: string

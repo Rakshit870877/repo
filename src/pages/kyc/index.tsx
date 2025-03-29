@@ -639,7 +639,7 @@ console.log(row)
                 <Box
                   width={100}
                   component="img"
-                  src={Chuks}
+              
                   height={100}
                   border="2px solid  green"
                   borderRadius="50%"
