@@ -6,4 +6,5 @@ import LogoWhite from './logo_white.png'
 import Passport from './passport.jpg'
 import Chuks from './chuks.jpg'
 import Success from './success.gif'
-export { Logo, Thumbnail, LoginBack, LogoWhite, Passport, Chuks, Success }
+import John from "./john.jpg"
+export { Logo, Thumbnail, LoginBack, LogoWhite, Passport, Chuks, Success,John }

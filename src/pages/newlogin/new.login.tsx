@@ -6,7 +6,7 @@ import { AuthService } from '@/services/auth.service'
 import { LocalStorageService } from '@/helpers/local-storage-service'
 import { Logo } from '@/assets/images' // Assuming the logo is properly imported
 import { useRecoilState } from 'recoil'
-import { alertState, alertTextState, alertTypeState, loaderState } from '@/states/state'
+import { alertState, alertTextState, alertTypeState, loaderState, selectedCountryState } from '@/states/state'
 import LoaderBackdrop from '@/components/loader/loader'
 import CustomSnackbar from '@/components/customsnackbar/snackbar'
 import CloseIcon from '@mui/icons-material/Close'
@@ -18,6 +18,7 @@ const LoginPage = () => {
   const [type, setType] = useState('')
   const [open, setOpen] = useState(false)
   const [commonloader, setcommonloader] = useRecoilState(loaderState)
+    const[selecteCountryState,setselectedCountryState]=useRecoilState(selectedCountryState)
 
   const [openSnackbar, setOpenSnackBar] = useState(false)
 
@@ -100,8 +101,22 @@ window.location.reload()
               local_service.set_accesstoken('"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic2hpdmFuc2hAaW1wcm9uaWNzLmNvbSIsInVzZXJfaWQiOiJjYmMzZDg3OS1iMTM2LTQyYTAtODY3Yy1mYjg2YTQ4MmI3ODciLCJyb2xlIjoiYWRtaW4ifSwiZXhwIjoxNzM4NTk3ODk1LCJqdGkiOiIwZTMxMDA1OS02ZTIyLTQ1MjgtYTliYS04OTA3MTNhZDZiMmYiLCJyZWZyZXNoIjpmYWxzZX0.06XT7DA3cs13hOIDyqlXcHElSXpFzHFO2L0y507Z0YQ"')
               local_service.set_user('{"email":"shivansh@impronics.com","user_id":"cbc3d879-b136-42a0-867c-fb86a482b787","role":"admin"}')
               local_service.set_role('user')
+              setselectedCountryState('SA')
 
       }
+      else 
+
+        if(email=='john@gmail.com'&&password=='forex@231'){
+          setText('User SuccesFully Logged In')
+                setType('success')
+                setOpen(true)
+                local_service.set_accesstoken('"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoic2hpdmFuc2hAaW1wcm9uaWNzLmNvbSIsInVzZXJfaWQiOiJjYmMzZDg3OS1iMTM2LTQyYTAtODY3Yy1mYjg2YTQ4MmI3ODciLCJyb2xlIjoiYWRtaW4ifSwiZXhwIjoxNzM4NTk3ODk1LCJqdGkiOiIwZTMxMDA1OS02ZTIyLTQ1MjgtYTliYS04OTA3MTNhZDZiMmYiLCJyZWZyZXNoIjpmYWxzZX0.06XT7DA3cs13hOIDyqlXcHElSXpFzHFO2L0y507Z0YQ"')
+                local_service.set_user('{"email":"shivansh@impronics.com","user_id":"cbc3d879-b136-42a0-867c-fb86a482b787","role":"admin"}')
+                local_service.set_role('user')
+                setselectedCountryState("IN")
+        }
+
+      
       else{
         setText('Unable to Verify Your Identity')
               setType('error')

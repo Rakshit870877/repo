@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from '@mui/material'
 import { styled } from '@mui/system'
-import { Chuks, Logo, LogoWhite } from '@/assets/images'
+import { Chuks, John, Logo, LogoWhite } from '@/assets/images'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 // import { sidbarSelectionState, studentListState } from "../../states/state";
@@ -24,7 +24,7 @@ import { useRecoilState } from 'recoil'
 // import { studentService } from "@/services/student.service";
 import { LocalStorageService } from '@/helpers/local-storage-service'
 
-import { alertState, alertTextState, alertTypeState, loaderState, role, sidbarSelectionState, selectedAppState, loaderStateNew } from '@/states/state'
+import { alertState, alertTextState, alertTypeState, loaderState, role, sidbarSelectionState, selectedAppState, loaderStateNew, selectedCountryState } from '@/states/state'
 import { useState } from 'react'
 import Fade from '@mui/material/Fade'
 import Backdrop from '@mui/material/Backdrop'
@@ -60,7 +60,8 @@ import SourceIcon from '@mui/icons-material/Source'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
 // import { IconButton } from '@mui/material';
 
-import { Us, Sa, Za } from 'react-flags-select'
+import { Us, Sa, Za,In } from 'react-flags-select'
+
 
 const RotatingImage = (
   //@ts-ignore
@@ -134,6 +135,7 @@ const DashboardLayout = () => {
   let navigate = useNavigate()
   const theme = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const[selecteCountryState,setselectedCountryState]=useRecoilState(selectedCountryState)
   const opendropdown = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -442,9 +444,15 @@ const DashboardLayout = () => {
               marginBottom: '6px',
             }}
           >
-            <Avatar src={Chuks}>SK</Avatar>
+       
 
-            <Box ml={1}>
+            {
+
+selecteCountryState=="SA"?<>
+
+<Avatar src={Chuks}>SK</Avatar>
+
+<Box ml={1}>
               <Typography
                 variant="subtitle1"
                 sx={{
@@ -454,16 +462,7 @@ const DashboardLayout = () => {
                 }}
               >
                 <strong>Chakshu Chopra </strong>
-                {/* {
-                  //@ts-ignore
-                  local_service.get_user()?.name
-                    ? //@ts-ignore
-                      local_service.get_user()?.name
-                    : //@ts-ignore
-                      local_service.get_user()?.firstName.toLocaleUpperCase() +
-                      " " +
-                      local_service.get_user()?.lastName.toLocaleUpperCase()
-                } */}
+              
               </Typography>
 
               <Stack direction="row">
@@ -490,6 +489,50 @@ const DashboardLayout = () => {
                 />
               </Stack>
             </Box>
+</>:<>
+<Avatar src={John}>SK</Avatar>
+
+<Box ml={1}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontFamily: 'sans-serif',
+                  fontSize: '12px',
+                  color: 'white',
+                }}
+              >
+                <strong>John  D'Souza </strong>
+               
+              </Typography>
+
+              <Stack direction="row">
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontFamily: 'sans-serif',
+                    fontSize: '11px',
+                    color: 'white',
+                  }}
+                >
+                  UID: 1422{' '}
+                      </Typography>
+
+                <In
+                  style={{
+                    height: '20px',
+                    width: '25px',
+                    marginLeft: '5%',
+                    // padding: '10px',
+                    borderRadius: '30%',
+                  }}
+                />
+              </Stack>
+            </Box>
+</>
+
+            }
+
+        
           </Box>
         </Toolbar>
       </AppBar>

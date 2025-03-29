@@ -73,3 +73,9 @@ export const selectedAppState = atom({
   default: 'Price',
   effects_UNSTABLE: [localStorageEffect('selectedAppState')],
 })
+
+export const selectedCountryState = atom({
+  key: 'selectedCountryState',
+  default: '',
+  effects_UNSTABLE: [localStorageEffect('selectedCountryState')],
+})
