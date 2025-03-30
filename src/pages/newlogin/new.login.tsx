@@ -186,7 +186,7 @@ window.location.reload()
           >
             <Box sx={{ width: '100%' }}>
               <Typography variant="h6" color={theme.palette.primary.main} textAlign="center" fontFamily="Inter">
-                Email
+              User Id
               </Typography>
               <TextField placeholder="User Id" variant="standard" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
 
