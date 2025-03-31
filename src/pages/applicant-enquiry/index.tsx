@@ -73,6 +73,7 @@ const ApplicantEnquiry = () => {
       <Typography variant="h4" gutterBottom>
         <strong>Applicant Enquiry</strong>
       </Typography>
+      
 
       <Grid container spacing={3} marginBottom={2} alignItems="center" >
         <Grid item xs={3}> {/* Both fields have equal width */}

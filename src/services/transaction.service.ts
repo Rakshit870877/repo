@@ -106,9 +106,11 @@ catch(err){
 }
 
 
-async getForexRate(country:any){
+async getForexRate(country:any,country_state:any){
 
-  let url=`https://data.fixer.io/api/latest?access_key=${VITE_FOREX_APP_CREDENTIALS}&base=ZAR&symbols=${country}`
+
+  console.log("Selected state",country_state)
+  let url=`https://data.fixer.io/api/latest?access_key=${VITE_FOREX_APP_CREDENTIALS}&base=${country_state=="IN"?"INR":"ZAR"}&symbols=${country}`
   
   try{
   let {data} =await axios.get(url)

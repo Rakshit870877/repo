@@ -47,6 +47,11 @@ import { alertState, alertTextState, alertTypeState, loaderStateNew, selectedCou
 import { Segment } from '@mui/icons-material'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import CashfreePayment from '@/components/cashfree'
+const { VITE_APP_BACKEND, VITE_APP_URL, VITE_APP_APPLICANT, VITE_APP_KYC, VITE_APP_TRANSACTION } = import.meta.env
+
+let cashfree;
+
 
 const users = [
   {
@@ -126,7 +131,8 @@ const SendMoneyPage = () => {
   const [selectedTime, setSelectedTime] = useState({})
   const [selectedTimeTableRow, setSelectedTimeTableRow] = useState<number | null>(null)
   const [finalamount, setFinalAmount] = useState(0)
-  const [sourceCountry, setSourceCountry] = useState('ZAR')
+  const[countrySelected,setCountrySelected]=useRecoilState(selectedCountryState)
+  const [sourceCountry, setSourceCountry] = useState(countrySelected=="IN"?"INR":"ZAR")
   const [gatewayCharge, setGatewayCharge] = useState(0)
   const [selectedBenficary, setSelectedBenificary] = useState({})
   const [userlist, setUserList] = useState([])
@@ -213,20 +219,33 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
 
   const handleCountryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const countryCode = event.target.value as string
+
+
+    console.log(countryCode)
+
+    console.log(countrySelected)
     setSelectedCountry(countryCode)
 
     // Find the selected country
-    const selected = countries.find((country) => country.code === countryCode)
+    // const selected = countries.find((country) => country.code === countryCode)
+console.log((countrySelected == "IN" ? countries_in:countries))
 
-    console.log(selected?.currency)
+    const selected = (countrySelected == "IN" ? countries_in :countries ).find(
+      (country) => country.code === countryCode
+    );
+
+
+    console.log("selected")
+    console.log(selected)
 
     if (selected) {
-      transaction_service.getForexRate(selected?.currency).then((data) => {
+      transaction_service.getForexRate(selected?.currency,countrySelected).then((data) => {
         console.log(data)
         setForexRate(data)
       })
       setCurrency(selected.currency)
       setsendCountry(selected.code)
+      setSourceCountry(countrySelected=="IN"?"INR":"ZAR")
     }
   }
   const handleRadioChange = (row: any) => {
@@ -413,10 +432,10 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
         gatewayId:'13122',
          //@ts-ignore
         timecharge:selectedTime?.time,
-        sourceCurrency:'ZAR',
+        sourceCurrency:selectedCountryoption=="SA"?"ZAR":"INR",
       
-        sourceCountry:"SA",
-        destinationCurrency:'INR',
+        sourceCountry:selectedCountryoption=='SA'?"ZA":"IN",
+        destinationCurrency:selectedCountryoption=='SA'?"INR":"ZAR",
        totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
       
        }
@@ -467,9 +486,62 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
       // })
        })
 
-       if (data.id) {
-        // HTML content for the new window
-        const htmlContent = `
+      //  if (data.id) {
+      //   // HTML content for the new window
+      //   const htmlContent = `
+      //     <!DOCTYPE html>
+      //     <html lang="en">
+      //     <head>
+      //         <meta charset="UTF-8">
+      //         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      //         <title>Peach Payments</title>
+      //         <script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${data.id}"></script>
+      //     </head>
+      //     <body>
+      //         <h2>Complete Your Payment</h2>
+      //         <form action=${VITE_APP_URL}/transaction/create class="paymentWidgets">
+      //             VISA MASTER
+      //         </form>
+      //         <button id="closeBtn">Close</button>
+      //         <script>
+      //           document.getElementById('closeBtn').addEventListener('click', function() {
+      //             window.close();
+      //           });
+      //         </script>
+      //     </body>
+      //     </html>
+      //   `;
+      
+      //   // Open a new window and write the HTML content
+      //   const paymentWindow = window.open("", "_blank", "width=600,height=800");
+      //   if (paymentWindow) {
+      //     paymentWindow.document.open();
+      //     paymentWindow.document.write(htmlContent);
+      //     paymentWindow.document.close();
+      
+      //     // Check if the window is closed
+      //     const interval = setInterval(() => {
+      //       if (paymentWindow.closed) {
+      //         clearInterval(interval);
+      //         navigate('/transaction/create'); // Navigate when the window is closed
+            
+      //       }
+          
+      //     }, 50);
+
+
+
+      //   } else {
+      //     alert("Popup blocked! Please allow popups for this site.");
+      //   }
+      // }
+
+
+
+      if (data.id) {
+        // HTML content for the current tab
+        document.open();
+        document.write(`
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -480,42 +552,21 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
           </head>
           <body>
               <h2>Complete Your Payment</h2>
-              <form action="https://reactnative.dev/" class="paymentWidgets">
+              <form action="${VITE_APP_URL}/transaction/create" class="paymentWidgets">
                   VISA MASTER
               </form>
               <button id="closeBtn">Close</button>
               <script>
                 document.getElementById('closeBtn').addEventListener('click', function() {
-                  window.close();
+                  window.location.href = '/transaction/create'; // Navigate when closing
                 });
               </script>
           </body>
           </html>
-        `;
-      
-        // Open a new window and write the HTML content
-        const paymentWindow = window.open("", "_blank", "width=600,height=800");
-        if (paymentWindow) {
-          paymentWindow.document.open();
-          paymentWindow.document.write(htmlContent);
-          paymentWindow.document.close();
-      
-          // Check if the window is closed
-          const interval = setInterval(() => {
-            if (paymentWindow.closed) {
-              clearInterval(interval);
-              navigate('/transaction/create'); // Navigate when the window is closed
-            
-            }
-          
-          }, 50);
-
-
-
-        } else {
-          alert("Popup blocked! Please allow popups for this site.");
-        }
+        `);
+        document.close();
       }
+      
       
     } catch (error) {
       console.error("Payment initiation failed:", error);
@@ -692,7 +743,7 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
                 {/* Amount Input */}
                 <Grid item xs={12} md={3}>
                   <TextField
-                    label={` Amount in ${sourceCountry}`}
+                    label={` Amount `}
                     variant="filled"
                     fullWidth
                     onChange={(e) => {
@@ -709,7 +760,7 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
                 {/* Currency (Auto-populated and Disabled) */}
                 <Grid item xs={12} md={3}>
                   <TextField
-                    label="Currency"
+                    label="Destination Currency"
                     variant="filled"
                     value={currency}
                     InputProps={{
@@ -1109,8 +1160,10 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
 
 
 
+{
 
-            <Button variant="outlined" color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={() => {
+selectedCountryoption=="SA"?<>
+         <Button variant="outlined" color="primary" sx={{ marginTop: 3,display: "flex", alignItems: "center", gap: 1, padding: "6px 16px" }} onClick={() => {
   setcommonloader(true)
   
   let payload={
@@ -1126,10 +1179,13 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
     gatewayId:'13122',
      //@ts-ignore
     timecharge:selectedTime?.time,
-    sourceCurrency:'ZAR',
-  
-    sourceCountry:"SA",
-    destinationCurrency:'INR',
+    
+
+
+    sourceCurrency:selectedCountryoption=="SA"?"ZAR":"INR",
+      
+    sourceCountry:selectedCountryoption=='SA'?"ZA":"IN",
+    destinationCurrency:selectedCountryoption=='SA'?"INR":"ZAR",
    totalpaybleamount: (Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))
   
    }
@@ -1185,6 +1241,16 @@ const[selectedCountryoption,setSelectedCountryOption]=useRecoilState(selectedCou
 
               Confirm & Pay
             </Button>
+  </>:<>
+  <CashfreePayment amount={(Number(amount)+  Number(selecteTimeChange)+ Number(gatewayCharge))} /> 
+  </>
+}
+
+
+     
+            
+         
+
           </Box>
         </TabPanel>
         ,

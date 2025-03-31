@@ -29,54 +29,6 @@ function formatDateTime(timestamp:any) {
   return `${formattedDate} and ${formattedTime}`;
 }
 
-const sampleInwardsData: Array<TransactionInwardCalclulated> = [
-  {
-    //@ts-ignore
-    id: 'IMP11231',
-    destination: 'USA',
-    value: 1000,
-    currency: 'USD',
-    settlement: '2025-01-01',
-    destinationBank: 'Bank of America',
-    reportedToSARB: 'Yes',
-    date: '2025-01-02',
-    holderName: 'Siddhant kaushik',
-    accountNumber: '23322 23232 2323 343434',
-    bankCode: 'IC2345',
-    ///Transaction
-
-    transactionNumberIw: 'IW001',
-    owTransactionNumber: 'T002',
-    sendingCountry: 'US',
-    receivingCountry: 'GB',
-    settlementCurrency: 'USD',
-    settlementAmount: 1000.5,
-    reportingStatus: 'RS',
-    destinationBankCode: 'BANKCODE01',
-    beneficiaryId: 'B001',
-    residenceCountry: 'USA',
-    nationality: 'American',
-    beneficiaryName: 'Alice Johnson',
-    idType: 'Passport',
-    idNumber: 'P123456789',
-    physicalAddressLine1: '456 Oak St',
-    physicalAddressLine2: 'Apt 7B',
-    physicalAddressLine3: 'Floor 4',
-    suburb: 'Uptown',
-    city: 'New York',
-    postCode: '10002',
-    country: 'USA',
-    bankName: 'XYZ Bank',
-    bankBicCode: 'BIC123XYZ',
-    sortCode: '678901',
-    iban: 'US9876543210',
-    profileStatus: true,
-    sanctionStatus: false,
-    fraudStatus: false,
-    applicant: 'A001',
-    activeStatus: true,
-  },
-]
 
 
 const TransactionPage = () => {
@@ -321,7 +273,7 @@ const TransactionPage = () => {
           params.value.status
         ) : (
           (
-            params.value.status
+            params?.value?.status
              )
         ),
     },
@@ -351,12 +303,12 @@ const TransactionPage = () => {
       flex: 1,
       headerClassName: "super-app-theme--header",
       renderCell: (params) =>
-        params.value.status == 'Pending' ? (
-          <Tooltip title={params.value.status || "Unknown Error"} arrow>
+        params?.value?.status == 'Pending' ? (
+          <Tooltip title={params?.value?.status || "Unknown Error"} arrow>
             <Chip label="Pending" color="error" />
           </Tooltip>
         ) : (
-       params.value.status
+       params?.value?.status
         ),
     },
 
@@ -376,7 +328,7 @@ const TransactionPage = () => {
     { field: 'settlementCurrency', headerName: 'Settlement Currency', width: 150 , headerClassName: 'super-app-theme--header' },
     { field: 'settlementAmount', headerName: 'Settlement Amount', type: 'number', width: 150, headerClassName: 'super-app-theme--header'  },
     { field: 'reportingStatus', headerName: 'Reporting Status', width: 130, headerClassName: 'super-app-theme--header'  },
-    { field: 'destinationBankCode', headerName: 'Destination Bank Code', width: 180, headerClassName: 'super-app-theme--header'  },
+    // { field: 'destinationBankCode', headerName: 'Destination Bank Code', width: 180, headerClassName: 'super-app-theme--header'  },
     // {
     //   field: 'inCreatedDate',
     //   headerName: 'Created Date',
@@ -539,17 +491,17 @@ const[selectedCountryOption,setSelectedCountryOption]=useRecoilState(selectedCou
             applicant: e?.applicant,
           };
         })
-        ?.filter((transaction) => {
-          if (selectedCountryOption === "IN") {
-            return (transaction.destination?.toLowerCase() !== "in");
-          }
-          else{
-            return (transaction.destination?.toLowerCase() !== "za");
+        // ?.filter((transaction) => {
+        //   if (selectedCountryOption === "IN") {
+        //     return (transaction.destination?.toLowerCase() !== "in");
+        //   }
+        //   else{
+        //     return (transaction.destination?.toLowerCase() !== "za");
 
-          }
+        //   }
 
-          return true; // If selectedCountryOption is not "IN", include all destinations
-        });
+        //   return true; // If selectedCountryOption is not "IN", include all destinations
+        // });
       
 
 
