@@ -195,7 +195,7 @@ const BopScreen: React.FC = () => {
           Release
         </Button>
         <Button variant="contained" color="primary" sx={{ marginLeft: '10px' }}
-          // disabled={!(bopData?.sap_status === 'Nack')}
+          disabled={!(bopData?.sap_status === 'Nack')}
           onClick={() => handleCancelReplaceBopFunc()}>
           Cancel Replace Bop
         </Button>
