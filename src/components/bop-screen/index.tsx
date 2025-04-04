@@ -7,7 +7,9 @@ import dayjs from 'dayjs'
 import { useParams } from 'react-router-dom'
 
 const { VITE_FOREX_NODE_APP_URL } = import.meta.env;
-const backendUrl = VITE_FOREX_NODE_APP_URL
+
+// const backendUrl = VITE_FOREX_NODE_APP_URL
+const backendUrl = 'http://localhost:9000'
 
 const disableFormFieldsViaStatus = 'Released'
 const genderArry = [
@@ -110,7 +112,31 @@ const BopScreen: React.FC = () => {
   //   }))
   // }
 
-  const handleSapStatusChange = () => { }
+  const handleReleaseBopData = () => {
+    const myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+
+    const payload = JSON.stringify({
+      transaction_attempt,
+      transaction_number:transactionId,
+      sap_status: 'Released'
+    })
+
+    const requestOptions: any = {
+      method: 'POST',
+      headers: myHeaders,
+      body: payload,
+      redirect: 'follow',
+    }
+
+    fetch(`${backendUrl}/bop/release-bopdata`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result, 'payal')
+        window.location.reload()
+      })
+      .catch((error) => console.error(error))
+  }
 
   const handleCancelReplaceBopFunc = () => {
     console.log(formData, 'formdata')
@@ -195,7 +221,7 @@ const BopScreen: React.FC = () => {
     <Box style={{ width: '80vw' }}>
       <Box sx={{ textAlign: 'right' }}>
         <Button variant="outlined" color="primary"
-          onClick={() => handleSapStatusChange()}>
+          onClick={() => handleReleaseBopData()}>
           Release
         </Button>
         <Button variant="contained" color="primary" sx={{ marginLeft: '10px' }}
