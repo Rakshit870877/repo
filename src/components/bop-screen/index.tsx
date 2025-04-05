@@ -117,7 +117,7 @@ const BopScreen: React.FC = () => {
     myHeaders.append('Content-Type', 'application/json')
 
     const payload = JSON.stringify({
-      transaction_attempt,
+      transaction_attempt: Number(transaction_attempt),
       transaction_number: transactionId,
       sap_status: 'Released',
     })
@@ -133,7 +133,7 @@ const BopScreen: React.FC = () => {
       .then((response) => response.json())
       .then((result) => {
         console.log(result, 'payal')
-        window.location.reload()
+        // window.location.reload()
       })
       .catch((error) => console.error(error))
   }
@@ -221,7 +221,7 @@ const BopScreen: React.FC = () => {
   return (
     <Box style={{ width: '80vw' }}>
       <Box sx={{ textAlign: 'right' }}>
-        <Button variant="outlined" color="primary" onClick={() => handleReleaseBopData()}>
+        <Button variant="outlined" color="primary" onClick={() => handleReleaseBopData()} disabled={formData.sap_status === 'Released'}>
           Release
         </Button>
         <Button
