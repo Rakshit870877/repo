@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom'
 const { VITE_FOREX_NODE_APP_URL } = import.meta.env
 
 // const backendUrl = VITE_FOREX_NODE_APP_URL
-const backendUrl = 'http://64.227.139.142:9000'
+const backendUrl = VITE_FOREX_NODE_APP_URL
 
 const disableFormFieldsViaStatus = 'Released'
 const genderArry = [
